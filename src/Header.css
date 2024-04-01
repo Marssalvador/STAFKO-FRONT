@@ -1,0 +1,33 @@
+.header{
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    position: fixed; 
+    z-index: 1 
+}
+
+.logo{
+    width: 150px; 
+    height: auto; 
+}
+
+.nav-list{
+    font-family: 'Lato', sans-serif;
+    color: white;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+a{
+    font-weight: 500;
+    color: white;
+    text-decoration: inherit;
+    margin-left: 20%;
+}
+
+a:hover{
+    color: #fbc700;
+}
+  

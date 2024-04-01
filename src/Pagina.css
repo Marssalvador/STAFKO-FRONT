@@ -1,0 +1,133 @@
+.header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #a18205;
+    color: white;
+    padding: 10px 20px;
+}
+
+.nav{
+    display: inline-block;
+}
+
+.nav-list{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-list li{
+    display: inline;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7; 
+}
+  
+.main {
+    margin: 80px auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+  
+h1{
+    color: #3e3e3e;
+    position: relative;
+    z-index: 2;
+    margin-left: 7rem;
+    font-family: 'Lato', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+@keyframes jump{
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px); 
+    }
+    75% {
+      transform: translateY(-10px); 
+    }
+    100% {
+      transform: translateY(0); 
+    }
+}
+  
+.jump-animation {
+    animation: jump 0.4s ease 3; 
+}
+  
+.button4{
+    background-color: #ffcc00; 
+    color: #3e3e3e; 
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 50px;
+}
+  
+.button4:hover{
+    background-color: #ffdb4d; 
+}
+  
+.add-button{
+    margin-bottom: 20px;
+}
+  
+.space{
+    font-size: 24px;
+    color: #3e3e3e; 
+    position: relative;
+    z-index: 2;
+    margin-left: 7rem;
+    font-family: 'Lato', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+  
+.proyecto{
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc;
+    align-items: center;
+    margin-bottom: 10px;
+}
+  
+.nombre-proyecto{
+    flex-grow: 1;
+    font-size: 18px;
+    color: #3e3e3e;
+}
+  
+.ed-button{
+    display: flex;
+    gap: 10px;
+}
+
+.espacio{
+    width: 30rem;
+}
+  
+.ed-button .button{
+    background-color: #e68a00; 
+}
+  
+.ed-button .button:hover{
+    background-color: #fac473; 
+}
+  

@@ -1,0 +1,68 @@
+form{
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+}
+  
+.input-group{
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+  
+.input-group label{
+    margin-right: 10px;
+    width: 120px;
+    text-align: right;
+}
+  
+.input-group input{
+    flex: 1;
+}
+  
+h2{
+    position: relative;
+    z-index: 2;
+    margin-left: 7rem;
+    font-family: 'Lato', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+  
+.button2{
+    background-color: #ca8a01;
+    color: #3e3e3e;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 7rem;
+}
+  
+.button2:hover{
+    background-color: #ffdb4d;
+}
+  
+.panal-superior-derecho{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 600px;
+    height: auto;
+    z-index: 0;
+}
+  
+.panal-inferior-izquierdo{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 600px;
+    height: auto;
+    z-index: 0;
+}
+  
+  
