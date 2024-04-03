@@ -1,70 +1,120 @@
-import { useState } from 'react';
-import './Identificacion.css'; 
+import React, { Component, ChangeEvent, FormEvent } from 'react';
+import './Identificacion.css';
 import axios from 'axios';
-import React from 'react';
+import md5 from 'md5';
+import Cookies from 'universal-cookie';
 
-const Identificacion = () => {
-  const [nombre, setNombre] = useState('');
-  const [contraseña, setContraseña] = useState('');
-  const [error, setError] = useState(''); 
+const baseUrl = "http://localhost:4000/usuarios";
+const cookies = new Cookies();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+interface FormState {
+    username: string;
+    password: string;
+}
 
-    try {
-      const response = await axios.post('http://localhost:5432/api/login', {
-        nombre,
-        contraseña,
-      });
+interface IdentificacionState {
+    form: FormState;
+    error: string;
+}
 
-      const token = response.data.token;
-
-      // Guardar el token en el almacenamiento local o de sesión
-      localStorage.setItem('token', token);
-
-      // Redirigir a la página de inicio después de iniciar sesión exitosamente
-      window.location.href = '/home';
-    } catch (error) {
-      setError('Credenciales inválidas'); // Utiliza la función setError para manejar errores
+class Identificacion extends Component<{}, IdentificacionState> {
+    constructor(props: {}) {
+        super(props);
+        this.state = {
+            form: {
+                username: '',
+                password: ''
+            },
+            error: ''
+        };
     }
-  };
 
-  const loginNombre = (e) => {
-    setNombre(e.target.value);
-  };
+    handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        await this.setState((prevState) => ({
+            form: {
+                ...prevState.form,
+                [name]: value
+            },
+            error: prevState.error // Conserva el error si lo hay
+        }));
+        console.log(this.state.form);
+    };
 
-  const loginContraseña = (e) => {
-    setContraseña(e.target.value);
-  };
+    handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        await this.iniciarSesion();
+    };
 
-  return (
-    <>
-      {error && <p>{error}</p>}
+    iniciarSesion = async () => {
+        await axios.get(baseUrl, {
+            params: {
+                username: this.state.form.username,
+                password: md5(this.state.form.password)
+            }
+        })
+            .then(response => {
+                return response.data;
+            })
+            .then(response => {
+                if (response.length > 0) {
+                    var respuesta = response[0];
+                    cookies.set('id', respuesta.id, { path: "/" });
+                    cookies.set('apellido', respuesta.apellido, { path: "/" });
+                    cookies.set('nombre', respuesta.nombre, { path: "/" });
+                    cookies.set('username', respuesta.username, { path: "/" });
 
-      <img src="/panal.png" alt="Panal" className='panal-superior-derecho'/>
-      <img src="/panal.png" alt="Panal" className='panal-inferior-izquierdo'/> 
-      <main>
-        <h1 className='jump-animation'>STAFKO</h1>
-        <form onSubmit={handleSubmit} className="login-container">
-          <h2 className="login-header">Iniciar sesión</h2>
+                    alert(`Bienvenido ${respuesta.nombre} ${respuesta.apellido}`);
 
-          <div className="login-input-container">
-            <label htmlFor="nombre" className="login-input-label">Nombre de usuario:</label>
-            <input type="text" id="nombre" value={nombre} onChange={loginNombre} className="login-input"/>
-          </div>
+                    window.location.href = "./pagina";
+                } else {
+                    this.setState({ error: 'El usuario o la contraseña no son correctos' });
+                }
+            })
+            .catch(error => {
+                console.log(error);
+                this.setState({ error: 'Error en la conexión' });
+            });
+    }
 
-          <div className="login-input-container"> 
-            <label htmlFor="contraseña" className="login-input-label">Contraseña:</label>
-            <input type="contraseña" id="contraseña" value={contraseña} onChange={loginContraseña} className="login-input"/>
-          </div>
+    componentDidMount() {
+        if (cookies.get('username')) {
+            window.location.href = "./pagina";
+        }
+    }
 
-          <button type="submit" className="login-button">Iniciar sesión</button>
-        </form>
-      </main>
-    </>
+    render() {
+        const { form, error } = this.state;
 
-  );
-};
+        return (
+            <>
+                {error && <p>{error}</p>}
+
+                <img src="/panal.png" alt="Panal" className='panal-superior-derecho' />
+                <img src="/panal.png" alt="Panal" className='panal-inferior-izquierdo' />
+                <main>
+                    <h1 className='jump-animation'>STAFKO</h1>
+                    <form onSubmit={this.handleSubmit} className="login-container">
+                        <h2 className="login-header">Iniciar sesión</h2>
+
+                        <div className="login-input-container">
+                            <label htmlFor="username" className="login-input-label">Nombre de usuario:</label>
+                            <input type="text" name="username" id="username" value={form.username} onChange={this.handleChange} className="login-input" />
+                        </div>
+
+                        <div className="login-input-container">
+                            <label htmlFor="password" className="login-input-label">Contraseña:</label>
+                            <input type="password" name="password" id="password" value={form.password} onChange={this.handleChange} className="login-input" />
+                        </div>
+
+                        <button type="submit" className="login-button">Iniciar sesión</button>
+                    </form>
+                </main>
+            </>
+        );
+    };
+}
+
 
 
 export default Identificacion;

@@ -8,13 +8,18 @@ import ModificarProject from './ModificarProject'
 import ModificarStaff from './ModificarStaff'
 import Pagina from './Pagina'
 import Pagina2 from './Pagina2'
-//import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const App = () => {
   return (
     <>
       <Header/>
-      <Pagina/>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Identificacion />} />
+          <Route path='/pagina' element={<Pagina />} />
+        </Routes>
+      </BrowserRouter>
       <Footer/>
     </>
   )

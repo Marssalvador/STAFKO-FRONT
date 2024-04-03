@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Pagina.css';
 import AñadirProj from './AñadirProj';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 interface ProyectoProps {
   id: number;
@@ -18,28 +21,50 @@ const Proyecto: React.FC<ProyectoProps> = ({ id }) => (
 );
 
 const Pagina: React.FC = () => {
+  useEffect(() => {
+    if (!cookies.get('username')) {
+      window.location.href = "./";
+    }
+  }, []);
+
   const proyectos: number[] = [1, 2, 3, 4, 5]; // Lista de proyectos con un ID único
+
+  const cerrarSesion = () => {
+    cookies.remove('id', { path: "/" });
+    cookies.remove("apellido", { path: "/" });
+    cookies.remove("nombre", { path: "/" });
+    cookies.remove("username", { path: "/" });
+
+    window.location.href = './';
+  }
+
+  console.log('id: ' + cookies.get('id'));
+  console.log('apellido: ' + cookies.get('apellido'));
+  console.log('nombre: ' + cookies.get('nombre'));
+  console.log('username: ' + cookies.get('username'));
 
   return (
     <>
-      <body>
-        <main className="main">
-          <h1 className="jump-animation">STAFKO</h1>
-          <div className="space">Proyectos</div><br />
-          <div className="add-button">
-            <button className="button4">+</button>
-          </div>
-          <br />
-          {proyectos.map((proyectoId) => (
-            <Proyecto key={proyectoId} id={proyectoId} />
-          ))}
-        </main>
-      </body>
+      <main className="main">
+        <h1 className="jump-animation">STAFKO</h1>
+        <div className="space">Proyectos</div><br />
+        <div className="add-button">
+          <button className="button4">+</button>
+          <button onClick={cerrarSesion}>Cerrar sesión</button>
+        </div>
+        <br />
+        {proyectos.map((proyectoId) => (
+          <Proyecto key={proyectoId} id={proyectoId} />
+        ))}
+      </main>
     </>
-  );
-};
+  )
+}
 
 export default Pagina;
+
+
+
 
 
 //se pondria debajo del map
