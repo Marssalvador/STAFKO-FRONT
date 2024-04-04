@@ -24,7 +24,7 @@ const Proyecto: React.FC<Proyecto> = ({ id, nombre }) => (
     <div className="espacio"></div>
     <div className="ed-button">
       <button className="button" onClick={modificarProyecto}>Editar</button>
-      <button className="button">Eliminar</button>
+      <button className="button" onClick={eliminarProyecto}>Eliminar</button>
     </div>
   </div>
 );
