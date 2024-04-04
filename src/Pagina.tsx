@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './Pagina.css';
-import AñadirProj from './AñadirProj';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 
@@ -34,17 +33,24 @@ const Pagina: React.FC = () => {
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
 
   useEffect(() => {
+    const obtenerProyectosUsuario = async () => {
+      try {
+        // Realizar la solicitud GET al backend para obtener los proyectos del usuario actual
+        const response = await axios.get('http://localhost:4000/proyecto', {
+          headers: {
+            'Authorization': `Bearer ${cookies.get('token')}` // Suponiendo que hay un token de autenticación en la cookie
+          }
+        });
+        setProyectos(response.data);
+      } catch (error) {
+        console.error('Error al obtener proyectos del usuario:', error);
+      }
+    };
+
     if (!cookies.get('username')) {
       window.location.href = "./";
     } else {
-      // Realizar la solicitud GET al backend para obtener los proyectos
-      axios.get('http://localhost:4000/proyecto')
-        .then(response => {
-          setProyectos(response.data);
-        })
-        .catch(error => {
-          console.error('Error al obtener proyectos:', error);
-        });
+      obtenerProyectosUsuario();
     }
   }, []);
 

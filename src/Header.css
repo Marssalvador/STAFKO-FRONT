@@ -3,7 +3,10 @@
     color: white;
     padding: 10px 20px;
     position: fixed; 
-    z-index: 1 
+    z-index: 1; 
+    display: flex; /* Añadido */
+    justify-content: space-between; /* Añadido */
+    align-items: center; /* Añadido */
 }
 
 .logo{
@@ -32,6 +35,7 @@ a:hover{
 }
 
 .cerrarSesion{
-    margin-left: 30rem;
+    margin-right: 3rem; 
+    margin-left: auto; 
 }
   

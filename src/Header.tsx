@@ -43,6 +43,7 @@ const Header: React.FC = () => {
       </nav>
       <button onClick={cerrarSesion} className='cerrarSesion'>Cerrar sesión</button>
     </header>
+
   );
 };
 
