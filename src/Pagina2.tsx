@@ -6,16 +6,24 @@ interface StaffProps {
   id: number;
 }
 
+const modificarProyecto = () => {
+  window.location.href = './modificarProj';
+};
+
 const Staff: React.FC<StaffProps> = ({ id }) => (
   <div key={id} className="staff">
     <div className="nombre-staff">Staff {id}</div>
     <div className="espacio"></div>
     <div className="ed-button">
-      <button className="button">Editar</button>
+      <button className="button" onClick={modificarProyecto}>Editar</button>
       <button className="button">Eliminar</button>
     </div>
   </div>
 );
+
+const añadirStaff = () => {
+  window.location.href = './añadirStaff';
+};
 
 export const Pagina2: React.FC = () => {
   const staffs: number[] = [1, 2, 3, 4, 5]; // Lista de staffs (ID)
@@ -27,7 +35,7 @@ export const Pagina2: React.FC = () => {
           <h1 className="jump-animation">STAFKO</h1><br />
           <div className="space">Staffs</div><br />
           <div className="add-button">
-            <button className="button5">+</button>
+            <button className="button5" onClick={añadirStaff}>+</button>
           </div>
           <br />
           {staffs.map((staffId) => (

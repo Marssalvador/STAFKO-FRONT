@@ -9,12 +9,20 @@ interface ProyectoProps {
   id: number;
 }
 
+const modificarProyecto = () => {
+  window.location.href = './modificarProject';
+};
+
+const eliminarProyecto = () => {
+  window.location.href = './editarProj';
+};
+
 const Proyecto: React.FC<ProyectoProps> = ({ id }) => (
   <div key={id} className="proyecto">
     <div className="nombre-proyecto">Proyecto {id}</div>
     <div className="espacio"></div>
     <div className="ed-button">
-      <button className="button">Editar</button>
+      <button className="button" onClick={modificarProyecto}>Editar</button>
       <button className="button">Eliminar</button>
     </div>
   </div>
@@ -43,16 +51,22 @@ const Pagina: React.FC = () => {
   console.log('nombre: ' + cookies.get('nombre'));
   console.log('username: ' + cookies.get('username'));
 
+  const añadirProyecto = () => {
+    window.location.href = './añadirProj';
+  };
+
   return (
     <>
       <main className="main">
         <h1 className="jump-animation">STAFKO</h1>
+
         <div className="space">Proyectos</div><br />
+
         <div className="add-button">
-          <button className="button4">+</button>
-          <button onClick={cerrarSesion}>Cerrar sesión</button>
+          <button className="button4" onClick={añadirProyecto}>+</button>
         </div>
         <br />
+
         {proyectos.map((proyectoId) => (
           <Proyecto key={proyectoId} id={proyectoId} />
         ))}
@@ -62,8 +76,6 @@ const Pagina: React.FC = () => {
 }
 
 export default Pagina;
-
-
 
 
 
