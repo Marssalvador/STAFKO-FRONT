@@ -36,7 +36,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
                 ...prevState.form,
                 [name]: value
             },
-            error: prevState.error // Conserva el error si lo hay
+            error: prevState.error //Conserva el error si lo hay
         }));
         console.log(this.state.form);
     };
@@ -53,28 +53,28 @@ class Identificacion extends Component<{}, IdentificacionState> {
                 password: md5(this.state.form.password)
             }
         })
-            .then(response => {
+        .then(response => {
                 return response.data;
-            })
-            .then(response => {
-                if (response.length > 0) {
-                    var respuesta = response[0];
-                    cookies.set('id', respuesta.id, { path: "/" });
-                    cookies.set('apellido', respuesta.apellido, { path: "/" });
-                    cookies.set('nombre', respuesta.nombre, { path: "/" });
-                    cookies.set('username', respuesta.username, { path: "/" });
+        })
+        .then(response => {
+            if (response.length > 0) {
+                var respuesta = response[0];
+                cookies.set('id', respuesta.id, { path: "/" });
+                cookies.set('apellido', respuesta.apellido, { path: "/" });
+                cookies.set('nombre', respuesta.nombre, { path: "/" });
+                cookies.set('username', respuesta.username, { path: "/" });
 
-                    alert(`Bienvenido ${respuesta.nombre} ${respuesta.apellido}`);
+                alert(`Bienvenido ${respuesta.nombre} ${respuesta.apellido}`);
 
-                    window.location.href = "./pagina";
-                } else {
-                    this.setState({ error: 'El usuario o la contraseña no son correctos' });
-                }
-            })
-            .catch(error => {
-                console.log(error);
-                this.setState({ error: 'Error en la conexión' });
-            });
+                window.location.href = "./pagina";
+            } else {
+                this.setState({ error: 'El usuario o la contraseña no son correctos' });
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            this.setState({ error: 'Error en la conexión' });
+        });
     }
 
     componentDidMount() {
@@ -114,8 +114,6 @@ class Identificacion extends Component<{}, IdentificacionState> {
         );
     };
 }
-
-
 
 export default Identificacion;
 
