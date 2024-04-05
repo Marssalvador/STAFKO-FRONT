@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AñadirProj.css';
 
 interface Staff {
   id: string;
+  nombre: string;
 }
 
 interface Proyecto {
@@ -14,12 +15,8 @@ interface Proyecto {
   id_staff: string;
 }
 
-interface Props {
-  staffs: Staff[];
-}
-
-const AñadirProj: React.FC<Props> = ({ staffs }) => {
-
+const AñadirProj: React.FC = () => {
+  const [staffs, setStaffs] = useState<Staff[]>([]);
   const [proyecto, setProyecto] = useState<Proyecto>({
     nombre: '',
     descripcion: '',
@@ -28,6 +25,18 @@ const AñadirProj: React.FC<Props> = ({ staffs }) => {
     fecha_fin: '',
     id_staff: ''
   });
+
+  useEffect(() => {
+    // Realizar solicitud HTTP para obtener los usuarios del backend
+    fetch('http://localhost:4000/usuarios/ids-nombres') // Cambiar la URL según la configuración de tu backend
+      .then(response => response.json())
+      .then(data => {
+        setStaffs(data); // Almacena los usuarios en el estado
+      })
+      .catch(error => {
+        console.error('Error al obtener usuarios:', error);
+      });
+  }, []); 
 
   const cambiar = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -85,8 +94,8 @@ const AñadirProj: React.FC<Props> = ({ staffs }) => {
           <label>Staff: </label>
           <select name="id_staff" value={proyecto.id_staff} onChange={cambiar}>
             <option value="">Selecciona un staff</option>
-            {Array.isArray(staffs) && staffs.map((staff: Staff) => (
-              <option key={staff.id} value={staff.id}>Staff {staff.id}</option>
+            {staffs.map((staff: Staff) => (
+              <option key={staff.id} value={staff.id}>{staff.nombre}</option>
             ))}
           </select>
         </div>
@@ -98,3 +107,5 @@ const AñadirProj: React.FC<Props> = ({ staffs }) => {
 };
 
 export default AñadirProj;
+
+
