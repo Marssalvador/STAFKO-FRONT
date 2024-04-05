@@ -45,7 +45,22 @@ const AñadirProj: React.FC = () => {
 
   const añadir = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Nuevo proyecto:', proyecto);
+    fetch('http://localhost:4000/proyecto/insertar', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(proyecto),
+    })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message); // Muestra el mensaje de éxito
+      // También puedes hacer otras acciones aquí si es necesario
+    })
+    .catch(error => {
+      console.error('Error al añadir proyecto:', error);
+    });
+  
     setProyecto({
       nombre: '',
       descripcion: '',
