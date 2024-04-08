@@ -97,6 +97,7 @@ h1,
     border-bottom: 1px solid #ccc;
     align-items: center;
     margin-bottom: 20px;
+    max-width: 90%;
 }
   
 .nombre-staff{

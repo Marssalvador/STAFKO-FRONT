@@ -19,9 +19,9 @@ const eliminarStaff = () => {
   window.location.href = './editarStaff';
 };
 
-const Staff: React.FC<Staff> = ({ id }) => (
-  <div key={id} className="staff">
-    <div className="nombre-staff">Staff {id}</div>
+const Staff: React.FC<Staff> = ({ nombre }) => (
+  <div key={nombre} className="staff">
+    <div className="nombre-staff">{nombre}</div>
     <div className="espacio"></div>
     <div className="ed-button">
       <button className="button" onClick={modificarStaff}>Editar</button>
