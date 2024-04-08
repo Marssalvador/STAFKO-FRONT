@@ -1,48 +1,82 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Pagina2.css';
 import AñadirStaff from './AñadirStaff';
+import Cookies from 'universal-cookie';
+import axios from 'axios';
 
-interface StaffProps {
+const cookies = new Cookies();
+
+interface Staff {
   id: number;
+  nombre: string;
 }
 
-const modificarProyecto = () => {
-  window.location.href = './modificarProj';
+const modificarStaff = () => {
+  window.location.href = './modificarStaff';
 };
 
-const Staff: React.FC<StaffProps> = ({ id }) => (
+const eliminarStaff = () => {
+  window.location.href = './editarStaff';
+};
+
+const Staff: React.FC<Staff> = ({ id }) => (
   <div key={id} className="staff">
     <div className="nombre-staff">Staff {id}</div>
     <div className="espacio"></div>
     <div className="ed-button">
-      <button className="button" onClick={modificarProyecto}>Editar</button>
-      <button className="button">Eliminar</button>
+      <button className="button" onClick={modificarStaff}>Editar</button>
+      <button className="button" onClick={eliminarStaff}>Eliminar</button>
     </div>
   </div>
 );
 
-const añadirStaff = () => {
-  window.location.href = './añadirStaff';
-};
 
 export const Pagina2: React.FC = () => {
-  const staffs: number[] = [1, 2, 3, 4, 5]; // Lista de staffs (ID)
+  const [staffs, setStaffs] = useState<Staff[]>([]);
+
+  useEffect(() => {
+    const obtenerStaffs = async () => {
+      try {
+        // Realizar la solicitud GET al backend para obtener los proyectos del usuario actual
+        const response = await axios.get('http://localhost:4000/usuarios/datos', {
+          headers: {
+            'Authorization': `Bearer ${cookies.get('token')}` // Suponiendo que hay un token de autenticación en la cookie
+          }
+        });
+        setStaffs(response.data);
+      } catch (error) {
+        console.error('Error al obtener proyectos del usuario:', error);
+      }
+    };
+
+    if (!cookies.get('username')) {
+      window.location.href = "./";
+    } else {
+      obtenerStaffs();
+    }
+  }, []);
+
+  const añadirStaff = () => {
+    window.location.href = './añadirStaff';
+  };
+
 
   return (
     <>
-      <body>
         <main className="main">
           <h1 className="jump-animation">STAFKO</h1><br />
+
           <div className="space">Staffs</div><br />
+
           <div className="add-button">
             <button className="button5" onClick={añadirStaff}>+</button>
           </div>
           <br />
-          {staffs.map((staffId) => (
-            <Staff key={staffId} id={staffId} />
+
+          {staffs.map((staff) => (
+            <Staff key={staff.id} id={staff.id} nombre={staff.nombre}/>
           ))}
         </main>
-      </body>
     </>
   );
 };
@@ -50,66 +84,5 @@ export const Pagina2: React.FC = () => {
 export default Pagina2;
 
 
-//Se pondria debajo del map
-//<AñadirStaff staffs={staffs} />
-
-
-//Con todo lo asociado a editar   PRUEBA
-/*
-import React, { useState } from 'react'
-import './Pagina2.css';
-import AñadirStaff from './AñadirStaff';
-
-const Staff = ({ id }) => (
-    <div key={id} className="staff">
-    <div className="nombre-staff">Staff {id}</div>
-    <div className="espacio"></div>
-    <div className="ed-button">
-    <button className="button" onClick={() => onEditar(id)}>Editar</button>
-      <button className="button">Eliminar</button>
-    </div>
-  </div>
-);
-
-
-export const Pagina2 = () => {
-
-    const [staffEditadoId, setStaffEditadoId] = useState(null); // Estado para almacenar el ID del miembro del personal editado
-
-    const staffs = [1, 2, 3, 4, 5]; // Lista de miembros del personal (ID único)
-  
-    const handleEditar = (id) => {
-      setStaffEditadoId(id); // Actualiza el estado con el ID del miembro del personal editado
-    };
-  
-    return (
-        <>
-
-            <body>
-                <main className="main">
-                    <h1 className="jump-animation">STAFKO</h1>
-                    <div className="add-button">
-                        <button className="button">+</button>
-                    </div>
-
-                    <br />
-                    <div className="space">Staffs</div>
-                    <br />
-
-                    {staffs.map((staffId) => (
-                        <Staff key={staffId} id={staffId} onEditar={handleEditar} />
-                    ))}
-
-                    {staffEditadoId && <ModificarStaff staffId={staffEditadoId} />
-        
-
-                    <AñadirStaff staffs={staffs} />
-                    
-                </main>
-            </body>
-
-        </>
-    )
-}*/
 
 
