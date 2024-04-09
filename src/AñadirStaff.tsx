@@ -30,7 +30,7 @@ const NuevoStaff: React.FC = () => {
 
   const agregarStaff = () => {
     // Agregar campos faltantes al objeto nuevoStaff
-    const hashedPassword = md5(md5(nuevoStaff.password));
+    const hashedPassword = md5(nuevoStaff.password);
     const nuevoStaffCompleto = {
       ...nuevoStaff,
       apellido: nuevoStaff.apellidos, // Asignamos el valor de 'apellidos' a 'apellido'
