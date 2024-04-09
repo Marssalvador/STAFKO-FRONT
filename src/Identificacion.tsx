@@ -64,7 +64,6 @@ class Identificacion extends Component<{}, IdentificacionState> {
                 cookies.set('nombre', respuesta.nombre, { path: "/" });
                 cookies.set('username', respuesta.username, { path: "/" });
 
-                alert(`Bienvenido ${respuesta.nombre} ${respuesta.apellido}`);
 
                 window.location.href = "./pagina";
             } else {
@@ -116,50 +115,3 @@ class Identificacion extends Component<{}, IdentificacionState> {
 }
 
 export default Identificacion;
-
-
-//Intento de dividir las pantallas
-
-/*import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom'; // Importa useHistory para redireccionar
-import './Identificacion.css'; // Importa los estilos CSS
-
-const Identificacion = () => {
-  const [nombre, setNombre] = useState('');
-  const [contraseña, setContraseña] = useState('');
-  const history = useHistory(); // Obtiene el objeto history para redireccionar
-
-  const loginNombre = (event) => {
-    setNombre(event.target.value);
-  };
-
-  const loginContraseña = (event) => {
-    setContraseña(event.target.value);
-  };
-
-  const enviar = (event) => {
-    event.preventDefault();
-    // Aquí puedes enviar los datos de inicio de sesión al servidor para su autenticación
-    console.log('Nombre de usuario:', nombre);
-    console.log('Contraseña:', contraseña);
-    // Lógica de autenticación aquí
-
-    // Redirecciona a la página deseada
-    history.push('/pagina');
-  };
-
-  // Resto del código...
-
-  return (
-    <>
-      <Header />
-      <main className="main">
-        <form onSubmit={enviar} className="login-container">
-          {}
-        </form>
-      </main>
-    </>
-  );
-};
-
-export default Identificacion;*/

@@ -35,7 +35,7 @@ const Pagina: React.FC = () => {
   useEffect(() => {
     const obtenerProyectosUsuario = async () => {
       try {
-        // Realizar la solicitud GET al backend para obtener los proyectos del usuario actual
+        //realizar la solicitud GET al backend para obtener los proyectos del usuario actual
         const response = await axios.get('http://localhost:4000/proyecto', {
           headers: {
             'Authorization': `Bearer ${cookies.get('token')}` // Suponiendo que hay un token de autenticación en la cookie
