@@ -47,10 +47,11 @@ class Identificacion extends Component<{}, IdentificacionState> {
     };
 
     iniciarSesion = async () => {
+        const { username, password } = this.state.form;
         await axios.get(baseUrl, {
             params: {
-                username: this.state.form.username,
-                password: md5(this.state.form.password)
+                username,
+                password: md5(password) 
             }
         })
         .then(response => {
@@ -64,10 +65,10 @@ class Identificacion extends Component<{}, IdentificacionState> {
                 cookies.set('nombre', respuesta.nombre, { path: "/" });
                 cookies.set('username', respuesta.username, { path: "/" });
 
-
                 window.location.href = "./pagina";
             } else {
                 this.setState({ error: 'El usuario o la contraseña no son correctos' });
+                console.log('Datos enviados:', { username, password }); // Mostrar los datos enviados en la consola
             }
         })
         .catch(error => {
