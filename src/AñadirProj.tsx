@@ -54,7 +54,7 @@ const AñadirProj: React.FC = () => {
     })
     .then(response => response.json())
     .then(data => {
-      alert(data.message); // Muestra el mensaje de éxito
+      alert(data.message); //mensaje de éxito
     })
     .catch(error => {
       console.error('Error al añadir proyecto:', error);
