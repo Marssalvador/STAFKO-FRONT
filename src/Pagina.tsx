@@ -4,9 +4,9 @@ import Cookies from 'universal-cookie';
 import axios from 'axios';
 import ModificarProject from './ModificarProject';
 
-const cookies = new Cookies();
+const cookies = new Cookies(); 
 
-interface Proyecto {
+interface Proyecto { //proyecto con los datos y sus tipos
   id: number;
   nombre: string;
   descripcion: string;
@@ -22,14 +22,18 @@ const ProyectoComponente: React.FC<{
   <div key={proyecto.id} className="proyecto">
     <div className="nombre-proyecto">{proyecto.nombre}</div>
     <div className="espacio"></div>
+
     <div className="ed-button">
       <button className="button" onClick={() => onEditar(proyecto)}>Editar</button>
       <button className="button">Eliminar</button>
     </div>
+
   </div>
 );
 
 const Pagina: React.FC = () => {
+
+  //hacemos uso del useState para guardar el estado del proyecto y del proyecto seleccionado
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
   const [proyectoSeleccionado, setProyectoSeleccionado] = useState<Proyecto | null>(null);
 
@@ -47,6 +51,8 @@ const Pagina: React.FC = () => {
       }
     };
 
+
+    //usamos los datos de la cookie creada al hacer el login
     if (!cookies.get('username')) {
       window.location.href = "./";
     } else {
@@ -55,11 +61,11 @@ const Pagina: React.FC = () => {
   }, []);
 
   const añadirProyecto = () => {
-    window.location.href = './añadirProj';
+    window.location.href = './añadirProj';  //para redirigir a la pagina añadirProj
   };
 
   const editarProyecto = (proyecto: Proyecto) => {
-    setProyectoSeleccionado(proyecto);
+    setProyectoSeleccionado(proyecto);  //cogemos el estado
   };
 
   return (

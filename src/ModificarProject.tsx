@@ -18,14 +18,16 @@ interface Props {
   onGuardar: (proyectoEditado: Proyecto) => void;
 }
 
+//para modificar projectos
 const ModificarProject: React.FC<Props> = ({ proyecto, onGuardar }) => {
-  const [datosProyecto, setDatosProyecto] = useState<Proyecto>(proyecto);
+  const [datosProyecto, setDatosProyecto] = useState<Proyecto>(proyecto); //guardamos en un estado
 
   const cambiar = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setDatosProyecto({ ...datosProyecto, [name]: value });
   };
 
+  //formateamos la fecha para que coincida 
   const formatearFecha = (fecha: string): string => {
     const date = new Date(fecha);
     const year = date.getFullYear();
@@ -39,13 +41,14 @@ const ModificarProject: React.FC<Props> = ({ proyecto, onGuardar }) => {
     try {
       const proyectoFormateado = {
         ...datosProyecto,
-        fecha_inicio: formatearFecha(datosProyecto.fecha_inicio),
+        fecha_inicio: formatearFecha(datosProyecto.fecha_inicio), //cambiamos formato fecha
         fecha_fin: formatearFecha(datosProyecto.fecha_fin)
       };
   
+      //usamos el id para identificar el proyecto donde se van a hacer los cambios
       await axios.put(`http://localhost:4000/proyecto/${datosProyecto.id}`, proyectoFormateado);
       console.log('Proyecto actualizado correctamente');
-      onGuardar(proyectoFormateado); // Pasar proyectoFormateado en lugar de datosProyecto
+      onGuardar(proyectoFormateado); 
     } catch (error) {
       console.error('Error al actualizar el proyecto:', error);
     }
