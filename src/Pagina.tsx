@@ -2,43 +2,43 @@ import React, { useState, useEffect } from 'react';
 import './Pagina.css';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
+import ModificarProject from './ModificarProject';
 
 const cookies = new Cookies();
 
 interface Proyecto {
   id: number;
   nombre: string;
+  descripcion: string;
+  cuantia: string;
+  fecha_inicio: string;
+  fecha_fin: string;
 }
 
-const modificarProyecto = () => {
-  window.location.href = './modificarProject';
-};
-
-const eliminarProyecto = () => {
-  window.location.href = './editarProj';
-};
-
-const Proyecto: React.FC<Proyecto> = ({ id, nombre }) => (
-  <div key={id} className="proyecto">
-    <div className="nombre-proyecto">{nombre}</div>
+const ProyectoComponente: React.FC<{
+  proyecto: Proyecto;
+  onEditar: (proyecto: Proyecto) => void;
+}> = ({ proyecto, onEditar }) => (
+  <div key={proyecto.id} className="proyecto">
+    <div className="nombre-proyecto">{proyecto.nombre}</div>
     <div className="espacio"></div>
     <div className="ed-button">
-      <button className="button" onClick={modificarProyecto}>Editar</button>
-      <button className="button" onClick={eliminarProyecto}>Eliminar</button>
+      <button className="button" onClick={() => onEditar(proyecto)}>Editar</button>
+      <button className="button">Eliminar</button>
     </div>
   </div>
 );
 
 const Pagina: React.FC = () => {
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
+  const [proyectoSeleccionado, setProyectoSeleccionado] = useState<Proyecto | null>(null);
 
   useEffect(() => {
     const obtenerProyectosUsuario = async () => {
       try {
-        //realizar la solicitud GET al backend para obtener los proyectos del usuario actual
         const response = await axios.get('http://localhost:4000/proyecto', {
           headers: {
-            'Authorization': `Bearer ${cookies.get('token')}` // Suponiendo que hay un token de autenticación en la cookie
+            'Authorization': `Bearer ${cookies.get('token')}`
           }
         });
         setProyectos(response.data);
@@ -58,6 +58,10 @@ const Pagina: React.FC = () => {
     window.location.href = './añadirProj';
   };
 
+  const editarProyecto = (proyecto: Proyecto) => {
+    setProyectoSeleccionado(proyecto);
+  };
+
   return (
     <>
       <main className="main">
@@ -71,9 +75,23 @@ const Pagina: React.FC = () => {
         <br />
 
         {proyectos.map((proyecto) => (
-          <Proyecto key={proyecto.id} id={proyecto.id} nombre={proyecto.nombre} />
+          <ProyectoComponente
+            key={proyecto.id}
+            proyecto={proyecto}
+            onEditar={editarProyecto}
+          />
         ))}
       </main>
+      
+      {proyectoSeleccionado && (
+        <ModificarProject
+          proyecto={proyectoSeleccionado}
+          onGuardar={(proyectoEditado) => {
+            console.log('Guardar cambios:', proyectoEditado);
+            setProyectoSeleccionado(null);
+          }}
+        />
+      )}
     </>
   )
 }
