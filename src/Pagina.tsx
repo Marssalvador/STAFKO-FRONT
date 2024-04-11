@@ -4,7 +4,7 @@ import Cookies from 'universal-cookie';
 import axios from 'axios';
 import ModificarProject from './ModificarProject';
 
-const cookies = new Cookies(); 
+const cookies = new Cookies();
 
 interface Proyecto {
   id: number;
@@ -16,18 +16,18 @@ interface Proyecto {
   id_staff: string;
 }
 
-
 const ProyectoComponente: React.FC<{
   proyecto: Proyecto;
   onEditar: (proyecto: Proyecto) => void;
-}> = ({ proyecto, onEditar }) => (
+  onEliminar: (id: number) => void; // Agregamos esta prop para manejar la eliminación
+}> = ({ proyecto, onEditar, onEliminar }) => (
   <div key={proyecto.id} className="proyecto">
     <div className="nombre-proyecto">{proyecto.nombre}</div>
     <div className="espacio"></div>
 
     <div className="ed-button">
       <button className="button" onClick={() => onEditar(proyecto)}>Editar</button>
-      <button className="button">Eliminar</button>
+      <button className="button" onClick={() => onEliminar(proyecto.id)}>Eliminar</button>
     </div>
 
   </div>
@@ -35,7 +35,6 @@ const ProyectoComponente: React.FC<{
 
 const Pagina: React.FC = () => {
 
-  //hacemos uso del useState para guardar el estado del proyecto y del proyecto seleccionado
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
   const [proyectoSeleccionado, setProyectoSeleccionado] = useState<Proyecto | null>(null);
 
@@ -53,8 +52,6 @@ const Pagina: React.FC = () => {
       }
     };
 
-
-    //usamos los datos de la cookie creada al hacer el login
     if (!cookies.get('username')) {
       window.location.href = "./";
     } else {
@@ -63,11 +60,25 @@ const Pagina: React.FC = () => {
   }, []);
 
   const añadirProyecto = () => {
-    window.location.href = './añadirProj';  //para redirigir a la pagina añadirProj
+    window.location.href = './añadirProj';
   };
 
   const editarProyecto = (proyecto: Proyecto) => {
-    setProyectoSeleccionado(proyecto);  //cogemos el estado
+    setProyectoSeleccionado(proyecto);
+  };
+
+  const eliminarProyecto = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:4000/proyectoEliminar/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${cookies.get('token')}`
+        }
+      });
+      // Si la eliminación es exitosa, actualizamos la lista de proyectos
+      setProyectos(proyectos.filter(proyecto => proyecto.id !== id));
+    } catch (error) {
+      console.error('Error al eliminar proyecto:', error);
+    }
   };
 
   return (
@@ -87,10 +98,11 @@ const Pagina: React.FC = () => {
             key={proyecto.id}
             proyecto={proyecto}
             onEditar={editarProyecto}
+            onEliminar={eliminarProyecto} // Pasamos la función eliminarProyecto como prop
           />
         ))}
       </main>
-      
+
       {proyectoSeleccionado && (
         <ModificarProject
           proyecto={proyectoSeleccionado}
