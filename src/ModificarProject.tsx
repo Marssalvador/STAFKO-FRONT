@@ -94,7 +94,7 @@ const ModificarProject: React.FC<Props> = ({ proyecto, onGuardar }) => {
           <input type="date" name="fecha_fin" value={datosProyecto.fecha_fin} onChange={cambiar} />
         </div>
         <div className="input-group">
-        <label>ID del Staff:</label>
+        <label>Staff:</label>
         <select name="id_staff" value={datosProyecto.id_staff} onChange={cambiar}>
           {usuarios.map((usuario) => (
             <option key={usuario.id} value={usuario.id}>{usuario.nombre}</option>
