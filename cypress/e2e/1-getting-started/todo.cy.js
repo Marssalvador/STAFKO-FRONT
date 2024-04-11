@@ -1,7 +1,7 @@
 //Identificacion.tsx
 describe('Identificacion Component', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:5174'); 
+    cy.visit('http://localhost:5173'); 
   });
 
 
@@ -39,7 +39,35 @@ describe('Identificacion Component', () => {
     //verificación que al menos un proyecto se muestra en la página
     cy.get('.proyecto').should('have.length.greaterThan', 0);
 
-    // Clicking the add project button
+    //comprobacion de que se elimina el proyecto
+    it('Eliminar proyecto', () => {
+      //click en el botón de eliminar del primer proyecto
+      cy.get('.proyecto:first-child .eliminar-btn').click();
+  
+      //comprobamos que el proyecto se ha eliminado
+      cy.get('.proyecto').should('have.length.lessThan', initialProjectsCount);
+    });
+  
+    it('Editar proyecto', () => {
+      //click en el botón de editar del primer proyecto
+      cy.get('.proyecto:first-child .editar-btn').click();
+  
+      //modificar los datos del proyecto
+      cy.get('input[name="nombre"]').clear().type('Nuevo nombre');
+      cy.get('input[name="descripcion"]').clear().type('Nueva descripción');
+      cy.get('input[name="cuantia"]').clear().type('5000');
+  
+      //guardar los cambios
+      cy.get('.guardar-btn').click();
+  
+      //comprobamos que los cambios se han guardado correctamente
+      cy.get('.proyecto:first-child').contains('Nuevo nombre').should('exist');
+      cy.get('.proyecto:first-child').contains('Nueva descripción').should('exist');
+      cy.get('.proyecto:first-child').contains('$5000').should('exist');
+    });
+
+
+    //boton para cambiar a la pagina de añadir proyecto
     cy.get('.button4').click();
 
     
@@ -100,10 +128,10 @@ describe('Identificacion Component', () => {
     //Pagina2.tsx
     cy.get('.staff').should('have.length.greaterThan', 0);
 
-    cy.get('.button5').should('exist').should('be.visible');
+    cy.get('.button4').should('exist').should('be.visible');
 
     // Clicking the add project button
-    cy.get('.button5').click();
+    cy.get('.button4').click();
 
 
 
@@ -142,7 +170,7 @@ describe('Identificacion Component', () => {
     //Cerramos sesion y destruimos cookie
     cy.get('.cerrarSesion').click();
     cy.getCookie('username').should('not.exist');
-    cy.url().should('eq', 'http://localhost:5174/');
+    cy.url().should('eq', 'http://localhost:5173/');
     
   });
 });
