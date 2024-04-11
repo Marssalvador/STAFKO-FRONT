@@ -1,6 +1,4 @@
-// En ModificarProject.tsx
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ModificarProject.css';
 import axios from 'axios';
 
@@ -11,6 +9,12 @@ interface Proyecto {
   cuantia: string;
   fecha_inicio: string;
   fecha_fin: string;
+  id_staff: string;
+}
+
+interface Usuario {
+  id: string;
+  nombre: string;
 }
 
 interface Props {
@@ -18,22 +22,26 @@ interface Props {
   onGuardar: (proyectoEditado: Proyecto) => void;
 }
 
-//para modificar projectos
 const ModificarProject: React.FC<Props> = ({ proyecto, onGuardar }) => {
-  const [datosProyecto, setDatosProyecto] = useState<Proyecto>(proyecto); //guardamos en un estado
+  const [datosProyecto, setDatosProyecto] = useState<Proyecto>(proyecto);
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]); // Estado para almacenar la lista de usuarios
 
-  const cambiar = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    const obtenerUsuarios = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/usuarios/ids-nombres'); // Endpoint para obtener los usuarios
+        setUsuarios(response.data);
+      } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+      }
+    };
+
+    obtenerUsuarios();
+  }, []);
+
+  const cambiar = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setDatosProyecto({ ...datosProyecto, [name]: value });
-  };
-
-  //formateamos la fecha para que coincida 
-  const formatearFecha = (fecha: string): string => {
-    const date = new Date(fecha);
-    const year = date.getFullYear();
-    let month = (1 + date.getMonth()).toString().padStart(2, '0');
-    let day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
   };
 
   const enviar = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -41,17 +49,24 @@ const ModificarProject: React.FC<Props> = ({ proyecto, onGuardar }) => {
     try {
       const proyectoFormateado = {
         ...datosProyecto,
-        fecha_inicio: formatearFecha(datosProyecto.fecha_inicio), //cambiamos formato fecha
+        fecha_inicio: formatearFecha(datosProyecto.fecha_inicio),
         fecha_fin: formatearFecha(datosProyecto.fecha_fin)
       };
-  
-      //usamos el id para identificar el proyecto donde se van a hacer los cambios
+
       await axios.put(`http://localhost:4000/proyecto/${datosProyecto.id}`, proyectoFormateado);
       console.log('Proyecto actualizado correctamente');
-      onGuardar(proyectoFormateado); 
+      onGuardar(proyectoFormateado);
     } catch (error) {
       console.error('Error al actualizar el proyecto:', error);
     }
+  };
+
+  const formatearFecha = (fecha: string): string => {
+    const date = new Date(fecha);
+    const year = date.getFullYear();
+    let month = (1 + date.getMonth()).toString().padStart(2, '0');
+    let day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
   return (
@@ -78,6 +93,14 @@ const ModificarProject: React.FC<Props> = ({ proyecto, onGuardar }) => {
           <label>Fecha de fin:</label>
           <input type="date" name="fecha_fin" value={datosProyecto.fecha_fin} onChange={cambiar} />
         </div>
+        <div className="input-group">
+        <label>ID del Staff:</label>
+        <select name="id_staff" value={datosProyecto.id_staff} onChange={cambiar}>
+          {usuarios.map((usuario) => (
+            <option key={usuario.id} value={usuario.id}>{usuario.nombre}</option>
+          ))}
+        </select>
+      </div>
         <button type="submit" className="button4">Guardar Cambios</button>
       </form>
     </div>

@@ -6,14 +6,16 @@ import ModificarProject from './ModificarProject';
 
 const cookies = new Cookies(); 
 
-interface Proyecto { //proyecto con los datos y sus tipos
+interface Proyecto {
   id: number;
   nombre: string;
   descripcion: string;
   cuantia: string;
   fecha_inicio: string;
   fecha_fin: string;
+  id_staff: string;
 }
+
 
 const ProyectoComponente: React.FC<{
   proyecto: Proyecto;
