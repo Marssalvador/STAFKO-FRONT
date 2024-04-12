@@ -10,6 +10,8 @@ import Pagina from './Pagina'
 import Pagina2 from './Pagina2'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+import 'tailwindcss/tailwind.css';
+
 const App = () => {
   return (
     <>

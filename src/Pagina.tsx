@@ -98,20 +98,22 @@ const Pagina: React.FC = () => {
             key={proyecto.id}
             proyecto={proyecto}
             onEditar={editarProyecto}
-            onEliminar={eliminarProyecto} // Pasamos la función eliminarProyecto como prop
+            onEliminar={eliminarProyecto} 
           />
         ))}
-      </main>
+      
 
-      {proyectoSeleccionado && (
-        <ModificarProject
-          proyecto={proyectoSeleccionado}
-          onGuardar={(proyectoEditado) => {
-            console.log('Guardar cambios:', proyectoEditado);
-            setProyectoSeleccionado(null);
-          }}
-        />
-      )}
+        {proyectoSeleccionado && (
+          <ModificarProject
+            proyecto={proyectoSeleccionado}
+            onGuardar={(proyectoEditado) => {
+              console.log('Guardar cambios:', proyectoEditado);
+              setProyectoSeleccionado(null);
+            }}
+          />
+        )}
+
+      </main>
     </>
   )
 }

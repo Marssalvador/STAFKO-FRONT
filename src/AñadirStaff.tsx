@@ -65,55 +65,58 @@ const NuevoStaff: React.FC = () => {
   };
 
   return (
-    <div className="nuevo-staff-container">
-      <img src="/panal2.png" alt="Panal" className='panal-superior-derecho'/>
-      <img src="/panal2.png" alt="Panal" className='panal-inferior-izquierdo'/> 
-      
-      <h2>Agregar Nuevo Staff</h2>
+    <div className="flex justify-center items-center w-full h-full">
+  <div className="nuevo-staff-container bg-gradient-to-r from-orange-200 to-orange-100 p-8 rounded-lg shadow-lg mb-6">
+    <img src="/panal2.png" alt="Panal" className="panal-superior-derecho" />
+    <img src="/panal2.png" alt="Panal" className="panal-inferior-izquierdo" />
+    
+    <h2 className="text-3xl font-semibold mb-6">Agregar Nuevo Staff</h2>
 
-      <div className="nuevo-staff-form">
-        <div className="input-group">
-          <label>Nombre:</label>
-          <input type="text" name="nombre" value={nuevoStaff.nombre} onChange={cambio} />
-        </div>
-
-        <div className="input-group">
-          <label>Apellidos:</label>
-          <input type="text" name="apellidos" value={nuevoStaff.apellidos} onChange={cambio} />
-        </div>
-
-        <div className="input-group">
-          <label>Teléfono:</label>
-          <input type="text" name="telefono" value={nuevoStaff.telefono} onChange={cambio} />
-        </div>
-
-        <div className="input-group">
-          <label>Username:</label>
-          <input type="text" name="username" value={nuevoStaff.username} onChange={cambio} />
-        </div>
-
-        <div className="input-group">
-          <label>Password:</label>
-          <input type="password" name="password" value={nuevoStaff.password} onChange={cambio} />
-        </div>
-
-        <div className="input-group">
-          <label>Fecha de Nacimiento:</label>
-          <input type="date" name="fechaNacimiento" value={nuevoStaff.fechaNacimiento} onChange={cambio} />
-        </div>
-
-        <button type="button" className="button3" onClick={agregarStaff}>Agregar Staff</button>
+    <div className="nuevo-staff-form space-y-4">
+      <div className="flex flex-col">
+        <label className="text-sm font-semibold mb-1">Nombre:</label>
+        <input type="text" name="nombre" value={nuevoStaff.nombre} onChange={cambio} className="input-group" />
       </div>
 
-      <h2>Staffs Agregados</h2>
-      <ul>
-        {staffs.map((staff, index) => (
-          <li key={index}>
-            <strong>{staff.nombre} {staff.apellidos}</strong> - Teléfono: {staff.telefono}, Fecha de Nacimiento: {staff.fechaNacimiento}
-          </li>
-        ))}
-      </ul>
+      <div className="flex flex-col">
+        <label className="text-sm font-semibold mb-1">Apellidos:</label>
+        <input type="text" name="apellidos" value={nuevoStaff.apellidos} onChange={cambio} className="input-group" />
+      </div>
+
+      <div className="flex flex-col">
+        <label className="text-sm font-semibold mb-1">Teléfono:</label>
+        <input type="text" name="telefono" value={nuevoStaff.telefono} onChange={cambio} className="input-group" />
+      </div>
+
+      <div className="flex flex-col">
+        <label className="text-sm font-semibold mb-1">Username:</label>
+        <input type="text" name="username" value={nuevoStaff.username} onChange={cambio} className="input-group" />
+      </div>
+
+      <div className="flex flex-col">
+        <label className="text-sm font-semibold mb-1">Password:</label>
+        <input type="password" name="password" value={nuevoStaff.password} onChange={cambio} className="input-group" />
+      </div>
+
+      <div className="flex flex-col">
+        <label className="text-sm font-semibold mb-1">Fecha de Nacimiento:</label>
+        <input type="date" name="fechaNacimiento" value={nuevoStaff.fechaNacimiento} onChange={cambio} className="input-group" />
+      </div>
+
+      <button type="button" className="button3 w-full" onClick={agregarStaff}>Agregar Staff</button>
     </div>
+
+    <h2 className="text-3xl font-semibold mb-4 mt-6">Staffs Agregados</h2>
+    <ul className="space-y-2">
+      {staffs.map((staff, index) => (
+        <li key={index} className="text-sm">
+          <strong>{staff.nombre} {staff.apellidos}</strong> - Teléfono: {staff.telefono}, Fecha de Nacimiento: {staff.fechaNacimiento}
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
   );
 };
 

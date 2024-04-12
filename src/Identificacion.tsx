@@ -92,23 +92,22 @@ class Identificacion extends Component<{}, IdentificacionState> {
 
                 <img src="/panal.png" alt="Panal" className='panal-superior-derecho' />
                 <img src="/panal.png" alt="Panal" className='panal-inferior-izquierdo' />
-                <main>
-                    <h1 className='jump-animation'>STAFKO</h1>
-                    <form onSubmit={this.handleSubmit} className="login-container">
-                        <h2 className="login-header">Iniciar sesión</h2>
-
-                        <div className="login-input-container">
-                            <label htmlFor="username" className="login-input-label">Nombre de usuario:</label>
-                            <input type="text" name="username" id="username" value={form.username} onChange={this.handleChange} className="login-input" />
-                        </div>
-
-                        <div className="login-input-container">
-                            <label htmlFor="password" className="login-input-label">Contraseña:</label>
-                            <input type="password" name="password" id="password" value={form.password} onChange={this.handleChange} className="login-input" />
-                        </div>
-
-                        <button type="submit" className="login-button">Iniciar sesión</button>
+                <main className="flex items-center justify-center h-screen">
+                <div className="bg-orange-200 rounded-lg p-8 shadow-md">
+                    <h1 className='text-4xl font-bold mb-4 text-center jump-animation'>STAFKO</h1>
+                    <form onSubmit={this.handleSubmit} className="space-y-4">
+                    <h2 className="text-xl font-semibold mb-2">Iniciar sesión</h2>
+                    <div>
+                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">Nombre de usuario:</label>
+                        <input type="text" name="username" id="username" value={form.username} onChange={this.handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50" />
+                    </div>
+                    <div>
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña:</label>
+                        <input type="password" name="password" id="password" value={form.password} onChange={this.handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50" />
+                    </div>
+                    <button type="submit" className="w-full bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-600 transition duration-300">Iniciar sesión</button>
                     </form>
+                </div>
                 </main>
             </>
         );
