@@ -19,7 +19,7 @@ interface Proyecto {
 const ProyectoComponente: React.FC<{
   proyecto: Proyecto;
   onEditar: (proyecto: Proyecto) => void;
-  onEliminar: (id: number) => void; // Agregamos esta prop para manejar la eliminación
+  onEliminar: (id: number) => void; //agregamos prop para manejar la eliminación
 }> = ({ proyecto, onEditar, onEliminar }) => (
   <div key={proyecto.id} className="proyecto">
     <div className="nombre-proyecto">{proyecto.nombre}</div>

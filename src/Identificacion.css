@@ -35,24 +35,24 @@ body{
     margin-right: 10px;
 }
 
-/*Animación que se va a ejecutar al acceder a la página*/
+/*animación que se va a ejecutar al acceder a la página*/
 @keyframes jump{
     0% {
       transform: translateY(0);
     }
     50% {
-      transform: translateY(-20px); /*Primer salto*/
+      transform: translateY(-20px); /*primer salto*/
     }
     75% {
-      transform: translateY(-10px); /*Segundo salto*/
+      transform: translateY(-10px); /*segundo salto*/
     }
     100% {
-      transform: translateY(0); /*Vuelta a la posición original*/
+      transform: translateY(0); /*vuelta a la posición original*/
     }
 }
   
 .jump-animation {
-    animation: jump 0.4s ease 3; /*Esto hace que la animación se repita 3 veces (de tres saltos)*/
+    animation: jump 0.4s ease 3; /*esto hace que la animación se repita 3 veces (de tres saltos)*/
 }
 
 .login-container{
@@ -78,7 +78,7 @@ body{
 
 .login-input{
     margin-bottom: 20px;
-    padding: 10px;
+    padding: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
