@@ -4,6 +4,8 @@ import AñadirStaff from './AñadirStaff';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 
+import { Button } from 'primereact/button'; 
+
 const cookies = new Cookies();
 
 interface Staff {
@@ -77,7 +79,7 @@ export const Pagina2: React.FC = () => {
           <div className="space">Staffs</div><br />
 
           <div className="add-button">
-            <button className="button4" onClick={añadirStaff}>+</button>
+            <Button label="+" className="p-button-raised p-button-success custom-orange-button" onClick={añadirStaff} />
           </div>
           <br />
 

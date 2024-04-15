@@ -4,6 +4,8 @@ import Cookies from 'universal-cookie';
 import axios from 'axios';
 import ModificarProject from './ModificarProject';
 
+import { Button } from 'primereact/button'; 
+
 const cookies = new Cookies();
 
 interface Proyecto {
@@ -26,8 +28,8 @@ const ProyectoComponente: React.FC<{
     <div className="espacio"></div>
 
     <div className="ed-button">
-      <button className="button" onClick={() => onEditar(proyecto)}>Editar</button>
-      <button className="button" onClick={() => onEliminar(proyecto.id)}>Eliminar</button>
+      <Button label="Editar" className="p-button-raised p-button-info" onClick={() => onEditar(proyecto)} />
+      <Button label="Eliminar" className="p-button-raised p-button-danger" onClick={() => onEliminar(proyecto.id)} />
     </div>
 
   </div>
@@ -89,7 +91,7 @@ const Pagina: React.FC = () => {
         <div className="space">Proyectos</div><br />
 
         <div className="add-button">
-          <button className="button4" onClick={añadirProyecto}>+</button>
+          <Button label="+" className="p-button-raised p-button-success custom-orange-button" onClick={añadirProyecto} />
         </div>
         <br />
 
