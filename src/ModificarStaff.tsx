@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import './ModificarStaff.css';
 
-interface Staff {
+interface Staff{
   nombre: string;
   apellido: string;
   telefono: string;
   fechaNacimiento: string;
 }
 
-interface Props {
+interface Props{
   staff: Staff;
   onGuardar: (staff: Staff) => void;
 }

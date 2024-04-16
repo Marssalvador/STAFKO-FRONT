@@ -31,27 +31,27 @@ export const Pagina2: React.FC = () => {
   useEffect(() => {
     //función para obtener el listado de staffs
     const obtenerStaffs = async () => {
-      try {
+      try{
         const response = await axios.get('http://localhost:4000/usuarios/datos', {
           headers: {
             'Authorization': `Bearer ${cookies.get('token')}` 
           }
         });
 
-        if (Array.isArray(response.data.rows)) {
+        if(Array.isArray(response.data.rows)){
           setStaffs(response.data.rows); //actualizar el estado staffs con la respuesta de la API
-        } else {
+        }else{
           console.error('La respuesta de la API no es un arreglo de staff:', response.data);
         }
-      } catch (error) {
+      }catch (error){
         console.error('Error al obtener staff:', error);
       }
     };
 
     //verificar si hay un usuario autenticado
-    if (!cookies.get('username')) {
+    if(!cookies.get('username')){
       window.location.href = "./"; //redireccionar a la página de inicio de sesión si no hay usuario autenticado
-    } else {
+    }else{
       obtenerStaffs(); //obtener el listado de staffs
     }
   }, []);

@@ -22,36 +22,54 @@ const NuevoStaff: React.FC = () => {
   });
 
   const [staffs, setStaffs] = useState<Staff[]>([]);
+  const [mensaje, setMensaje] = useState<string>('');
 
   const cambio = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNuevoStaff({ ...nuevoStaff, [name]: value });
   };
 
+  const mostrarAlerta = (mensaje: string) => {
+    alert(mensaje);
+  };
+
   const agregarStaff = () => {
-    //agregamos campos faltantes a nuevoStaff
+    // Validar si todos los campos están llenos
+    if (
+      nuevoStaff.nombre.trim() === '' ||
+      nuevoStaff.apellidos.trim() === '' ||
+      nuevoStaff.telefono.trim() === '' ||
+      nuevoStaff.username.trim() === '' ||
+      nuevoStaff.password.trim() === '' ||
+      nuevoStaff.fechaNacimiento.trim() === ''
+    ) {
+      mostrarAlerta('¡Todos los campos son obligatorios!');
+      return;
+    }
+
+    // Agregar lógica para el hash de la contraseña
     const hashedPassword = md5(nuevoStaff.password);
     const nuevoStaffCompleto = {
       ...nuevoStaff,
-      apellido: nuevoStaff.apellidos, //asignamos el valor de 'apellidos' a 'apellido'
-      fecha_nacimiento: nuevoStaff.fechaNacimiento, //cmbiamos el nombre del campo a 'fecha_nacimiento'
+      apellido: nuevoStaff.apellidos,
+      fecha_nacimiento: nuevoStaff.fechaNacimiento,
       password: hashedPassword
     };
-  
+
+    // Enviar solicitud para agregar el staff
     fetch('http://localhost:4000/usuarios/insertar', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(nuevoStaffCompleto), //enviamos el objeto completo con todos los campos
+      body: JSON.stringify(nuevoStaffCompleto),
     })
     .then(response => response.json())
     .then(data => {
-
-      //si la solicitud fue exitosa, agregamos el nuevo staff a la lista
+      // Si la solicitud fue exitosa, agregar el nuevo staff a la lista
       setStaffs([...staffs, nuevoStaff]);
 
-      //y limpiamos los campos del formulario
+      // Limpiar los campos del formulario y el mensaje
       setNuevoStaff({
         nombre: '',
         apellidos: '',
@@ -60,6 +78,7 @@ const NuevoStaff: React.FC = () => {
         password: '',
         fechaNacimiento: ''
       });
+      mostrarAlerta('¡Staff añadido con éxito!');
     })
     .catch(error => {
       console.error('Error al agregar staff:', error);
@@ -108,7 +127,6 @@ const NuevoStaff: React.FC = () => {
         </div>
       </div>
     </div>
-
   );
 };
 

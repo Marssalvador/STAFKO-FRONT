@@ -36,10 +36,10 @@ const ProyectoComponente: React.FC<{
   </div>
 );
 
-
 const Pagina: React.FC = () => {
   const [proyectos, setProyectos] = useState<Proyecto[]>([]); // Estado para almacenar proyectos
   const [proyectoSeleccionado, setProyectoSeleccionado] = useState<Proyecto | null>(null); // Estado para almacenar el proyecto seleccionado
+  const [mensaje, setMensaje] = useState<string>(''); // Estado para almacenar el mensaje de edición exitosa
 
   useEffect(() => {
     //función para obtener los proyectos del usuario
@@ -90,6 +90,7 @@ const Pagina: React.FC = () => {
           'Authorization': `Bearer ${cookies.get('token')}`
         }
       });
+
       //si la eliminación es exitosa, actualizar la lista de proyectos
       setProyectos(proyectos.filter(proyecto => proyecto.id !== id));
     } catch (error) {
@@ -126,9 +127,15 @@ const Pagina: React.FC = () => {
             proyecto={proyectoSeleccionado}
             onGuardar={(proyectoEditado) => {
               console.log('Guardar cambios:', proyectoEditado);
+              setMensaje('¡Proyecto editado correctamente!'); //actualizamos el mensaje de edición exitosa
               setProyectoSeleccionado(null);
             }}
           />
+        )}
+
+        {/*mostramos el mensaje de edición exitosa */}
+        {mensaje && (
+          <div className="mensaje-exito">{mensaje}</div>
         )}
 
       </main>

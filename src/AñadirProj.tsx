@@ -52,6 +52,22 @@ const AñadirProj: React.FC = () => {
 
   const añadir = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+  
+    // Verificar si todos los campos del proyecto están llenos
+    if (
+      proyecto.nombre.trim() === '' ||
+      proyecto.descripcion.trim() === '' ||
+      proyecto.cuantia.trim() === '' ||
+      proyecto.fecha_inicio.trim() === '' ||
+      proyecto.fecha_fin.trim() === '' ||
+      proyecto.id_staff.trim() === ''
+    ) {
+      // Mostrar un mensaje de error si algún campo está vacío
+      alert('¡Todos los campos son obligatorios!');
+      return; // Detener el proceso de añadir el proyecto
+    }
+  
+    // Si todos los campos están llenos, enviar la solicitud para añadir el proyecto
     fetch('http://localhost:4000/proyecto/insertar', {
       method: 'POST',
       headers: {
@@ -59,14 +75,15 @@ const AñadirProj: React.FC = () => {
       },
       body: JSON.stringify(proyecto),
     })
-    .then(response => response.json())
-    .then(data => {
-      alert(data.message); //mensaje de éxito
-    })
-    .catch(error => {
-      console.error('Error al añadir proyecto:', error);
-    });
+      .then(response => response.json())
+      .then(data => {
+        alert('¡Proyecto añadido con éxito!');
+      })
+      .catch(error => {
+        console.error('Error al añadir proyecto:', error);
+      });
   
+    // Limpiar el formulario después de enviar la solicitud
     setProyecto({
       nombre: '',
       descripcion: '',
@@ -76,6 +93,7 @@ const AñadirProj: React.FC = () => {
       id_staff: ''
     });
   };
+  
 
   return (
     <div className="añadir-proyecto-container bg-gradient-to-r from-orange-200 to-orange-100 p-8 rounded-lg shadow-lg mb-6 max-w-md w-full">
