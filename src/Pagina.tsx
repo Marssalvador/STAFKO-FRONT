@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import './Pagina.css';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
-import ModificarProject from './ModificarProject';
+import ModificarProject from './ModificarProject'; // Importación del componente ModificarProject
 
 import { Button } from 'primereact/button'; 
 
 const cookies = new Cookies();
 
+//definición de la interfaz Proyecto
 interface Proyecto {
   id: number;
   nombre: string;
@@ -18,10 +19,11 @@ interface Proyecto {
   id_staff: string;
 }
 
+//componente ProyectoComponente
 const ProyectoComponente: React.FC<{
   proyecto: Proyecto;
   onEditar: (proyecto: Proyecto) => void;
-  onEliminar: (id: number) => void; //agregamos prop para manejar la eliminación
+  onEliminar: (id: number) => void; 
 }> = ({ proyecto, onEditar, onEliminar }) => (
   <div key={proyecto.id} className="proyecto">
     <div className="nombre-proyecto">{proyecto.nombre}</div>
@@ -31,16 +33,16 @@ const ProyectoComponente: React.FC<{
       <Button label="Editar" className="p-button-raised p-button-info" onClick={() => onEditar(proyecto)} />
       <Button label="Eliminar" className="p-button-raised p-button-danger" onClick={() => onEliminar(proyecto.id)} />
     </div>
-
   </div>
 );
 
-const Pagina: React.FC = () => {
 
-  const [proyectos, setProyectos] = useState<Proyecto[]>([]);
-  const [proyectoSeleccionado, setProyectoSeleccionado] = useState<Proyecto | null>(null);
+const Pagina: React.FC = () => {
+  const [proyectos, setProyectos] = useState<Proyecto[]>([]); // Estado para almacenar proyectos
+  const [proyectoSeleccionado, setProyectoSeleccionado] = useState<Proyecto | null>(null); // Estado para almacenar el proyecto seleccionado
 
   useEffect(() => {
+    //función para obtener los proyectos del usuario
     const obtenerProyectosUsuario = async () => {
       try {
         const response = await axios.get('http://localhost:4000/proyecto', {
@@ -54,7 +56,7 @@ const Pagina: React.FC = () => {
           //si es un arreglo, actualizar el estado proyectos
           setProyectos(response.data.rows);
         } else {
-          //si no es un arreglo, imprimir un mensaje de error
+          //si no es un arreglo, mostramos un mensaje de error
           console.error('La propiedad rows de la respuesta de la API no es un arreglo:', response.data.rows);
         }
       } catch (error) {
@@ -62,22 +64,25 @@ const Pagina: React.FC = () => {
       }
     };
   
+    //verificar si hay un usuario autenticado
     if (!cookies.get('username')) {
-      window.location.href = "./";
+      window.location.href = "./"; //redireccionamos a la página de inicio de sesión si no hay usuario autenticado
     } else {
-      obtenerProyectosUsuario();
+      obtenerProyectosUsuario(); //obtenemos proyectos del usuario
     }
   }, []);
-  
 
+  //función para añadir un proyecto
   const añadirProyecto = () => {
-    window.location.href = './añadirProj';
+    window.location.href = './añadirProj'; //redireccionamos a la página de añadir proyecto
   };
 
+  //función para editar un proyecto
   const editarProyecto = (proyecto: Proyecto) => {
-    setProyectoSeleccionado(proyecto);
+    setProyectoSeleccionado(proyecto); //establecer el proyecto seleccionado para editar
   };
 
+  //función para eliminar un proyecto
   const eliminarProyecto = async (id: number) => {
     try {
       await axios.delete(`http://localhost:4000/proyectoEliminar/${id}`, {
@@ -85,7 +90,7 @@ const Pagina: React.FC = () => {
           'Authorization': `Bearer ${cookies.get('token')}`
         }
       });
-      //si la eliminación es exitosa, actualizamos la lista de proyectos
+      //si la eliminación es exitosa, actualizar la lista de proyectos
       setProyectos(proyectos.filter(proyecto => proyecto.id !== id));
     } catch (error) {
       console.error('Error al eliminar proyecto:', error);
@@ -100,10 +105,12 @@ const Pagina: React.FC = () => {
         <div className="space">Proyectos</div><br />
 
         <div className="add-button">
+          {/*botón para añadir proyecto*/}
           <Button label="+" className="p-button-raised p-button-success custom-orange-button" onClick={añadirProyecto} />
         </div>
         <br />
 
+        {/*renderizar cada proyecto*/}
         {Array.isArray(proyectos) && proyectos.map((proyecto) => (
           <ProyectoComponente
             key={proyecto.id}
@@ -113,6 +120,7 @@ const Pagina: React.FC = () => {
           />
         ))}
 
+        {/*renderizar el componente ModificarProject si hay un proyecto seleccionado */}
         {proyectoSeleccionado && (
           <ModificarProject
             proyecto={proyectoSeleccionado}

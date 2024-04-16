@@ -3,7 +3,7 @@ import './ModificarStaff.css';
 
 interface Staff {
   nombre: string;
-  apellidos: string;
+  apellido: string;
   telefono: string;
   fechaNacimiento: string;
 }
@@ -39,7 +39,7 @@ const ModificarStaff: React.FC<Props> = ({ staff, onGuardar }) => {
 
         <div className="input-group">
           <label>Apellidos:</label>
-          <input type="text" name="apellidos" value={datosStaff.apellidos} onChange={cambiar} />
+          <input type="text" name="apellidos" value={datosStaff.apellido} onChange={cambiar} />
         </div>
 
         <div className="input-group">

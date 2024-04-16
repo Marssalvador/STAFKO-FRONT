@@ -24,13 +24,13 @@ interface Props {
 
 const ModificarProject: React.FC<Props> = ({ proyecto, onGuardar }) => {
   const [datosProyecto, setDatosProyecto] = useState<Proyecto>(proyecto);
-  const [usuarios, setUsuarios] = useState<Usuario[]>([]); // Estado para almacenar la lista de usuarios
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]); 
 
   useEffect(() => {
     const obtenerUsuarios = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/usuarios/ids-nombres'); // Endpoint para obtener los usuarios
-        setUsuarios(response.data.rows); // Corrección aquí: Acceder a response.data.rows en lugar de solo response.data
+        const response = await axios.get('http://localhost:4000/usuarios/ids-nombres');
+        setUsuarios(response.data.rows); 
       } catch (error) {
         console.error('Error al obtener usuarios:', error);
       }
