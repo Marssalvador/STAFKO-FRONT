@@ -148,17 +148,17 @@ h1{
 }
 
 
-.toggle-label {
+.toggle-label{
     position: relative;
     display: inline-block;
     cursor: pointer;
   }
   
-  .toggle-label input {
+  .toggle-label input{
     display: none;
   }
   
-  .toggle-button {
+  .toggle-button{
     position: absolute;
     top: 0;
     left: 0;
@@ -170,13 +170,19 @@ h1{
     transition: background-color 0.3s ease;
   }
   
-  .toggle-label input:checked + .toggle-button {
+  .toggle-label input:checked + .toggle-button{
     background-color: #f57c00;
   }
   
-  .toggle-text {
+  .toggle-text{
     margin-left: 50px;
     color: #333;
   }
+
+  .proyectos-container{
+    min-height: 300px; 
+    overflow-y: auto; 
+  }
+  
   
   

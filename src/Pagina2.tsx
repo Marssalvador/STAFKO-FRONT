@@ -61,8 +61,9 @@ export const Pagina2: React.FC = () => {
     window.location.href = './añadirStaff'; //redireccionar a la página de añadir staff
   };
 
-  //función para eliminar un staff
-  const eliminarStaff = async (id: number) => {
+
+  //función para eliminar el staff después de la confirmación
+  const eliminarStaffConfirmado = async (id: number) => {
     try {
       await axios.delete(`http://localhost:4000/usuEliminar/${id}`, {
         headers: {
@@ -71,9 +72,20 @@ export const Pagina2: React.FC = () => {
       });
       setStaffs(staffs.filter(staff => staff.id !== id)); // filtramos para actualizar el estado staffs excluyendo el staff eliminado
     } catch (error) {
-      console.error('Error al eliminar staff:', error);
+      alert('Cancelación: El Staff tiene un proyecto asociado');
     }
   };
+
+  //función para mostrar la alerta y luego eliminar el staff
+  const confirmarEliminarStaff = (id: number) => {
+    //mostrar una confirmación antes de eliminar el staff
+    if (window.confirm("¿Estás seguro de que deseas eliminar este staff?")) {
+      //si se confirma la eliminación, verificar si tiene proyectos asociados y luego eliminar el staff
+      eliminarStaffConfirmado(id);
+    }
+  };
+
+
 
   //función para editar un staff
   const editarStaff = (staff: Staff) => {
@@ -99,8 +111,8 @@ export const Pagina2: React.FC = () => {
             <div className="nombre-staff">{staff.nombre}</div>
             <div className="espacio"></div>
             <div className="ed-button">
-              {/* Botón para eliminar el staff */}
-              <Button label="Eliminar" className="p-button-raised p-button-danger" onClick={() => eliminarStaff(staff.id)} />
+              {/*botón para eliminar el staff */}
+              <Button label="Eliminar" className="p-button-raised p-button-danger" onClick={() => confirmarEliminarStaff(staff.id)} />
             </div>
           </div>
         ))}

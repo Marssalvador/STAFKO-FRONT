@@ -138,37 +138,38 @@ const Pagina: React.FC = () => {
         </div>
         <br />
 
-        {/*renderizar cada proyecto*/}
-        {Array.isArray(proyectos) && proyectos
-        .filter(proyecto => !filtrarActivado || proyecto.id_staff === userId)
-        .map((proyecto) => (
-          <ProyectoComponente
-            key={proyecto.id}
-            proyecto={proyecto}
-            onEditar={editarProyecto}
-            onEliminar={eliminarProyecto} 
-          />
-        ))
-      }
-
+        <div className="proyectos-container">
+          {/*renderizar cada proyecto*/}
+            {Array.isArray(proyectos) &&
+              proyectos
+                .filter(proyecto => !filtrarActivado || proyecto.id_staff === userId)
+                .map(proyecto => (
+                  <ProyectoComponente
+                    key={proyecto.id}
+                    proyecto={proyecto}
+                    onEditar={editarProyecto}
+                    onEliminar={eliminarProyecto}
+                  />
+            ))}
+        </div>
 
 
         {/*renderizar el componente ModificarProject si hay un proyecto seleccionado */}
-        {proyectoSeleccionado && (
-          <ModificarProject
-            proyecto={proyectoSeleccionado}
-            onGuardar={(proyectoEditado) => {
-              console.log('Guardar cambios:', proyectoEditado);
-              setMensaje('¡Proyecto editado correctamente!'); //actualizamos el mensaje de edición exitosa
-              setProyectoSeleccionado(null);
-            }}
-          />
-        )}
+          {proyectoSeleccionado && (
+            <ModificarProject
+              proyecto={proyectoSeleccionado}
+              onGuardar={(proyectoEditado) => {
+                console.log('Guardar cambios:', proyectoEditado);
+                setMensaje('¡Proyecto editado correctamente!'); //actualizamos el mensaje de edición exitosa
+                setProyectoSeleccionado(null);
+              }}
+            />
+          )}
 
         {/*mostramos el mensaje de edición exitosa */}
-        {mensaje && (
-          <div className="mensaje-exito">{mensaje}</div>
-        )}
+          {mensaje && (
+            <div className="mensaje-exito">{mensaje}</div>
+          )}
 
       </main>
     </>
