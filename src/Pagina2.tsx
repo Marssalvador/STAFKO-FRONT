@@ -89,7 +89,7 @@ export const Pagina2: React.FC = () => {
 
         <div className="add-button">
           {/*botón para añadir un nuevo staff */}
-          <Button label="+" className="p-button-raised p-button-success custom-orange-button" onClick={añadirStaff} />
+          <Button label="+" className="p-button-raised p-button-success custom-orange-button botoncin" onClick={añadirStaff} />
         </div>
         <br />
 

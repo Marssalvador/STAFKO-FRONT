@@ -107,7 +107,7 @@ const Pagina: React.FC = () => {
 
         <div className="add-button">
           {/*botón para añadir proyecto*/}
-          <Button label="+" className="p-button-raised p-button-success custom-orange-button" onClick={añadirProyecto} />
+          <Button label="+" className="p-button-raised p-button-success custom-orange-button botoncin" onClick={añadirProyecto} />
         </div>
         <br />
 

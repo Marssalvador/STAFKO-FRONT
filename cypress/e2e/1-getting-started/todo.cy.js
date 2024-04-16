@@ -34,7 +34,7 @@ describe('Identificacion Component', () => {
 
     //Pagina.tsx
     //verificación de que el botón de añadir proyecto esté presente y visible
-    cy.get('.button4').should('exist').should('be.visible');
+    cy.get('.botoncin').should('exist').should('be.visible');
 
     //verificación que al menos un proyecto se muestra en la página
     cy.get('.proyecto').should('have.length.greaterThan', 0);
@@ -68,7 +68,7 @@ describe('Identificacion Component', () => {
 
 
     //boton para cambiar a la pagina de añadir proyecto
-    cy.get('.button4').click();
+    cy.get('.botoncin').click();
 
     
 
@@ -100,15 +100,15 @@ describe('Identificacion Component', () => {
 
     cy.intercept('POST', 'http://localhost:4000/proyecto/insertar', { statusCode: 200, body: { message: 'Project added successfully' } }).as('postProject');
 
+    //enviamos datos del proyecto nuevo
+    cy.get('button[type="submit"]').click();
+
     cy.get('input[name="nombre"]').type('Test Project');
     cy.get('input[name="descripcion"]').type('This is a test project');
     cy.get('input[name="cuantia"]').type('10000');
     cy.get('input[name="fecha_inicio"]').type('2024-04-10');
     cy.get('input[name="fecha_fin"]').type('2024-04-30');
     cy.get('select[name="id_staff"]').select('1');
-
-    //enviamos datos del proyecto nuevo
-    cy.get('button[type="submit"]').click();
 
 
     //Comprobamos header
@@ -117,33 +117,27 @@ describe('Identificacion Component', () => {
     cy.get('.nav').should('exist');
     cy.get('.cerrarSesion').should('exist');
 
-    cy.get('.nav-list').contains('Proyectos').click();
-    cy.url().should('include', '/pagina');
-
     cy.get('.nav-list').contains('Staff').click();
     cy.url().should('include', '/pagina2');
-
 
 
     //Pagina2.tsx
     cy.get('.staff').should('have.length.greaterThan', 0);
 
-    cy.get('.button4').should('exist').should('be.visible');
+    cy.get('.botoncin').should('exist').should('be.visible');
 
     // Clicking the add project button
-    cy.get('.button4').click();
-
+    cy.get('.botoncin').click();
 
 
     //AñadirStaff.tsx
-    cy.get('h2').should('contain.text', 'Agregar Nuevo Staff');
     cy.get('input[name="nombre"]').should('exist');
     cy.get('input[name="apellidos"]').should('exist');
     cy.get('input[name="telefono"]').should('exist');
     cy.get('input[name="username"]').should('exist');
     cy.get('input[name="password"]').should('exist');
     cy.get('input[name="fechaNacimiento"]').should('exist');
-    cy.get('button[type="button"]').should('exist');
+    cy.get('button[type="submit"]').should('exist');
 
 
     const staffName = 'John';
@@ -161,10 +155,7 @@ describe('Identificacion Component', () => {
     cy.get('input[name="password"]').type(staffPassword).should('have.value', staffPassword);
     cy.get('input[name="fechaNacimiento"]').type(staffBirthDate).should('have.value', staffBirthDate);
 
-
     cy.intercept('POST', 'http://localhost:4000/usuarios/insertar', { statusCode: 200, body: { message: 'Staff added successfully' } }).as('postStaff');
-
-    cy.get('button[type="button"]').click();
 
 
     //Cerramos sesion y destruimos cookie

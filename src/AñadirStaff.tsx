@@ -34,7 +34,7 @@ const NuevoStaff: React.FC = () => {
   };
 
   const agregarStaff = () => {
-    // Validar si todos los campos están llenos
+    //validar si todos los campos están llenos
     if (
       nuevoStaff.nombre.trim() === '' ||
       nuevoStaff.apellidos.trim() === '' ||
@@ -47,7 +47,7 @@ const NuevoStaff: React.FC = () => {
       return;
     }
 
-    // Agregar lógica para el hash de la contraseña
+    //agregar lógica para el hash de la contraseña
     const hashedPassword = md5(nuevoStaff.password);
     const nuevoStaffCompleto = {
       ...nuevoStaff,
@@ -56,7 +56,7 @@ const NuevoStaff: React.FC = () => {
       password: hashedPassword
     };
 
-    // Enviar solicitud para agregar el staff
+    //enviar solicitud para agregar el staff
     fetch('http://localhost:4000/usuarios/insertar', {
       method: 'POST',
       headers: {
@@ -66,10 +66,10 @@ const NuevoStaff: React.FC = () => {
     })
     .then(response => response.json())
     .then(data => {
-      // Si la solicitud fue exitosa, agregar el nuevo staff a la lista
+      //si la solicitud fue exitosa, agregar el nuevo staff a la lista
       setStaffs([...staffs, nuevoStaff]);
 
-      // Limpiar los campos del formulario y el mensaje
+      //limpiamos los campos del formulario y el mensaje
       setNuevoStaff({
         nombre: '',
         apellidos: '',
@@ -123,7 +123,7 @@ const NuevoStaff: React.FC = () => {
             <input type="date" name="fechaNacimiento" value={nuevoStaff.fechaNacimiento} onChange={cambio} className="input-group" />
           </div>
 
-          <button type="button" className="button3" onClick={agregarStaff}>Agregar Staff</button>
+          <button type="submit" className="button3" onClick={agregarStaff}>Agregar Staff</button>
         </div>
       </div>
     </div>
