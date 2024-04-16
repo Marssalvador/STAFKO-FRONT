@@ -30,7 +30,7 @@ const ModificarProject: React.FC<Props> = ({ proyecto, onGuardar }) => {
     const obtenerUsuarios = async () => {
       try {
         const response = await axios.get('http://localhost:4000/usuarios/ids-nombres'); // Endpoint para obtener los usuarios
-        setUsuarios(response.data);
+        setUsuarios(response.data.rows); // Corrección aquí: Acceder a response.data.rows en lugar de solo response.data
       } catch (error) {
         console.error('Error al obtener usuarios:', error);
       }
@@ -104,45 +104,6 @@ const ModificarProject: React.FC<Props> = ({ proyecto, onGuardar }) => {
         <button type="submit" className="bg-orange-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-orange-600 transition duration-300 w-full">Guardar Cambios</button>
       </form>
     </div>
-
-
-    /*
-      <div className="modificar-proyecto-container">
-        <h2>Modificar Proyecto</h2>
-        <form onSubmit={enviar} className="modificar-proyecto-form">
-          <div className="input-group">
-            <label>Nombre:</label>
-            <input type="text" name="nombre" value={datosProyecto.nombre} onChange={cambiar} />
-          </div>
-          <div className="input-group">
-            <label>Descripción:</label>
-            <input type="text" name="descripcion" value={datosProyecto.descripcion} onChange={cambiar} />
-          </div>
-          <div className="input-group">
-            <label>Cuantía:</label>
-            <input type="text" name="cuantia" value={datosProyecto.cuantia} onChange={cambiar} />
-          </div>
-          <div className="input-group">
-            <label>Fecha de inicio:</label>
-            <input type="date" name="fecha_inicio" value={datosProyecto.fecha_inicio} onChange={cambiar} />
-          </div>
-          <div className="input-group">
-            <label>Fecha de fin:</label>
-            <input type="date" name="fecha_fin" value={datosProyecto.fecha_fin} onChange={cambiar} />
-          </div>
-          <div className="input-group">
-          <label>Staff:</label>
-          <select name="id_staff" value={datosProyecto.id_staff} onChange={cambiar}>
-            {usuarios.map((usuario) => (
-              <option key={usuario.id} value={usuario.id}>{usuario.nombre}</option>
-            ))}
-          </select>
-        </div>
-          <button type="submit" className="button4">Guardar Cambios</button>
-        </form>
-      </div>
-    */
-
   );
 };
 

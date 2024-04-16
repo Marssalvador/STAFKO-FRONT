@@ -48,18 +48,27 @@ const Pagina: React.FC = () => {
             'Authorization': `Bearer ${cookies.get('token')}`
           }
         });
-        setProyectos(response.data);
+  
+        //verificar si response.data.rows es un arreglo
+        if (Array.isArray(response.data.rows)) {
+          //si es un arreglo, actualizar el estado proyectos
+          setProyectos(response.data.rows);
+        } else {
+          //si no es un arreglo, imprimir un mensaje de error
+          console.error('La propiedad rows de la respuesta de la API no es un arreglo:', response.data.rows);
+        }
       } catch (error) {
         console.error('Error al obtener proyectos del usuario:', error);
       }
     };
-
+  
     if (!cookies.get('username')) {
       window.location.href = "./";
     } else {
       obtenerProyectosUsuario();
     }
   }, []);
+  
 
   const añadirProyecto = () => {
     window.location.href = './añadirProj';
@@ -76,7 +85,7 @@ const Pagina: React.FC = () => {
           'Authorization': `Bearer ${cookies.get('token')}`
         }
       });
-      // Si la eliminación es exitosa, actualizamos la lista de proyectos
+      //si la eliminación es exitosa, actualizamos la lista de proyectos
       setProyectos(proyectos.filter(proyecto => proyecto.id !== id));
     } catch (error) {
       console.error('Error al eliminar proyecto:', error);
@@ -95,7 +104,7 @@ const Pagina: React.FC = () => {
         </div>
         <br />
 
-        {proyectos.map((proyecto) => (
+        {Array.isArray(proyectos) && proyectos.map((proyecto) => (
           <ProyectoComponente
             key={proyecto.id}
             proyecto={proyecto}
@@ -103,7 +112,6 @@ const Pagina: React.FC = () => {
             onEliminar={eliminarProyecto} 
           />
         ))}
-      
 
         {proyectoSeleccionado && (
           <ModificarProject
