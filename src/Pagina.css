@@ -137,6 +137,7 @@ h1{
     background-color: #ff9800; 
     border-color: #ff9800; 
     margin-right: 3.5rem;
+    margin-top: 20px;
 }
   
 .custom-orange-button:hover{
@@ -145,4 +146,37 @@ h1{
     transition: background-color 0.3s ease, border-color 0.3s ease; 
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5); 
 }
+
+
+.toggle-label {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  .toggle-label input {
+    display: none;
+  }
+  
+  .toggle-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-right: 30rem;
+    width: 40px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .toggle-label input:checked + .toggle-button {
+    background-color: #f57c00;
+  }
+  
+  .toggle-text {
+    margin-left: 50px;
+    color: #333;
+  }
+  
   

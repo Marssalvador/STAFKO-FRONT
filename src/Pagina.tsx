@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Pagina.css';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
-import ModificarProject from './ModificarProject'; // Importación del componente ModificarProject
-
+import ModificarProject from './ModificarProject'; 
 import { Button } from 'primereact/button'; 
 
 const cookies = new Cookies();
@@ -40,6 +39,8 @@ const Pagina: React.FC = () => {
   const [proyectos, setProyectos] = useState<Proyecto[]>([]); // Estado para almacenar proyectos
   const [proyectoSeleccionado, setProyectoSeleccionado] = useState<Proyecto | null>(null); // Estado para almacenar el proyecto seleccionado
   const [mensaje, setMensaje] = useState<string>(''); // Estado para almacenar el mensaje de edición exitosa
+  const [filtrarActivado, setFiltrarActivado] = useState<boolean>(false); // Estado para controlar el switch de filtrado
+  const userId = cookies.get('id'); // Obtener el id del usuario logueado desde la cookie
 
   useEffect(() => {
     //función para obtener los proyectos del usuario
@@ -53,8 +54,12 @@ const Pagina: React.FC = () => {
   
         //verificar si response.data.rows es un arreglo
         if (Array.isArray(response.data.rows)) {
-          //si es un arreglo, actualizar el estado proyectos
-          setProyectos(response.data.rows);
+          // Filtrar proyectos según el id_staff igual al id del usuario logueado si el filtrado está activado
+          if (filtrarActivado) {
+            setProyectos(response.data.rows.filter(proyecto => proyecto.id_staff === userId));
+          } else {
+            setProyectos(response.data.rows);
+          }
         } else {
           //si no es un arreglo, mostramos un mensaje de error
           console.error('La propiedad rows de la respuesta de la API no es un arreglo:', response.data.rows);
@@ -70,7 +75,7 @@ const Pagina: React.FC = () => {
     } else {
       obtenerProyectosUsuario(); //obtenemos proyectos del usuario
     }
-  }, []);
+  }, [filtrarActivado]); //se ejecuta nuevamente cuando cambia el estado de filtrarActivado
 
   //función para añadir un proyecto
   const añadirProyecto = () => {
@@ -98,6 +103,11 @@ const Pagina: React.FC = () => {
     }
   };
 
+  // Función para cambiar el estado del switch de filtrado
+  const toggleFiltrar = () => {
+    setFiltrarActivado(!filtrarActivado);
+  };
+
   return (
     <>
       <main className="main">
@@ -105,6 +115,23 @@ const Pagina: React.FC = () => {
 
         <div className="space">Proyectos</div><br />
 
+        <div className="filtrar-switch">
+          {/*Switch para filtrar proyectos*/}
+          <label className="toggle-label">
+          <input
+            type="checkbox"
+            checked={filtrarActivado}
+            onChange={toggleFiltrar}
+          />
+          <span className="toggle-button"></span>
+          <span className="toggle-text">
+            {filtrarActivado ? "Todos los proyectos" : "Mis proyectos"}
+          </span>
+        </label>
+
+
+        </div>
+        
         <div className="add-button">
           {/*botón para añadir proyecto*/}
           <Button label="+" className="p-button-raised p-button-success custom-orange-button botoncin" onClick={añadirProyecto} />
@@ -112,14 +139,19 @@ const Pagina: React.FC = () => {
         <br />
 
         {/*renderizar cada proyecto*/}
-        {Array.isArray(proyectos) && proyectos.map((proyecto) => (
+        {Array.isArray(proyectos) && proyectos
+        .filter(proyecto => !filtrarActivado || proyecto.id_staff === userId)
+        .map((proyecto) => (
           <ProyectoComponente
             key={proyecto.id}
             proyecto={proyecto}
             onEditar={editarProyecto}
             onEliminar={eliminarProyecto} 
           />
-        ))}
+        ))
+      }
+
+
 
         {/*renderizar el componente ModificarProject si hay un proyecto seleccionado */}
         {proyectoSeleccionado && (

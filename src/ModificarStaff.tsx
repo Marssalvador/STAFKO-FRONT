@@ -29,7 +29,7 @@ const ModificarStaff: React.FC<Props> = ({ staff, onGuardar }) => {
   return (
     <div className="modificar-staff-container">
 
-      <h2>Modificar Staff</h2>
+      <h2>Información</h2>
 
       <form onSubmit={enviar} className="modificar-staff-form">
         <div className="input-group">
