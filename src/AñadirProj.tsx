@@ -43,7 +43,6 @@ const AñadirProj: React.FC = () => {
         console.error('Error al obtener usuarios:', error);
       });
   }, []);
-  
 
   const cambiar = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -52,8 +51,29 @@ const AñadirProj: React.FC = () => {
 
   const añadir = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
-    //verifico si todos los campos del proyecto están llenos
+
+    // Obtener la fecha actual en formato ISO (YYYY-MM-DD)
+    const fechaActual = new Date().toISOString().split('T')[0];
+
+    // Verificar si la fecha de inicio es menor que la fecha actual
+    if (proyecto.fecha_inicio < fechaActual) {
+      alert('La fecha de inicio no puede ser menor que la fecha actual.');
+      return; // Detener el proceso de añadir el proyecto
+    }
+
+    // Verificar si la fecha de fin es menor que la fecha actual
+    if (proyecto.fecha_fin < fechaActual) {
+      alert('La fecha de fin no puede ser menor que la fecha actual.');
+      return; // Detener el proceso de añadir el proyecto
+    }
+
+    // Verificar si la fecha de fin es menor que la fecha de inicio
+    if (proyecto.fecha_fin < proyecto.fecha_inicio) {
+      alert('La fecha de fin no puede ser menor que la fecha de inicio.');
+      return; // Detener el proceso de añadir el proyecto
+    }
+
+    // Verificar si todos los campos del proyecto están llenos
     if (
       proyecto.nombre.trim() === '' ||
       proyecto.descripcion.trim() === '' ||
@@ -62,12 +82,12 @@ const AñadirProj: React.FC = () => {
       proyecto.fecha_fin.trim() === '' ||
       proyecto.id_staff.trim() === ''
     ) {
-      //muestro un mensaje de error si algún campo está vacío
+      // Mostrar un mensaje de error si algún campo está vacío
       alert('¡Todos los campos son obligatorios!');
       return; // Detener el proceso de añadir el proyecto
     }
-  
-    //si todos los campos están llenos, enviar la solicitud para añadir el proyecto
+
+    // Si todos los campos están llenos y las fechas son válidas, enviar la solicitud para añadir el proyecto
     fetch('http://localhost:4000/proyecto/insertar', {
       method: 'POST',
       headers: {
@@ -82,8 +102,8 @@ const AñadirProj: React.FC = () => {
       .catch(error => {
         console.error('Error al añadir proyecto:', error);
       });
-  
-    //limpio el formulario después de enviar la solicitud
+
+    // Limpiar el formulario después de enviar la solicitud
     setProyecto({
       nombre: '',
       descripcion: '',
@@ -93,15 +113,12 @@ const AñadirProj: React.FC = () => {
       id_staff: ''
     });
   };
-  
 
   return (
     <main>
-    
       <div className="añadir-proyecto-container bg-gradient-to-r from-orange-200 to-orange-100 p-8 rounded-lg shadow-lg mb-6 max-w-md w-full">
-      
-        <img src="/panal2.png" alt="Panal" className='panal-superior-derecho'/>
-        <img src="/panal2.png" alt="Panal" className='panal-inferior-izquierdo'/> 
+        <img src="/panal2.png" alt="Panal" className="panal-superior-derecho" />
+        <img src="/panal2.png" alt="Panal" className="panal-inferior-izquierdo" />
 
         <h2 className="text-3xl font-semibold mb-6">Añadir Proyecto</h2>
 
@@ -133,7 +150,6 @@ const AñadirProj: React.FC = () => {
 
           <div className="flex flex-col">
             <label className="text-sm font-semibold mb-1">Staff: </label>
-            
             <select name="id_staff" value={proyecto.id_staff} onChange={cambiar} className="input-group">
               <option value="">Selecciona un staff</option>
               {staffs.map((staff: Staff) => (
@@ -141,8 +157,8 @@ const AñadirProj: React.FC = () => {
               ))}
             </select>
           </div>
-          
-          <Button type="submit" label="Añadir Proyecto" className="button2" />        
+
+          <Button type="submit" label="Añadir Proyecto" className="button2" />
         </form>
       </div>
     </main>
@@ -150,5 +166,3 @@ const AñadirProj: React.FC = () => {
 };
 
 export default AñadirProj;
-
-
