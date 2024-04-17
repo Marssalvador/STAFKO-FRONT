@@ -1,5 +1,5 @@
 .header {
-    background: linear-gradient(to right, #a18205, #9e6106);
+    background: linear-gradient(to right, #a18205, #ff9800);
     color: white;
     padding: 10px 20px;
     position: fixed; 
@@ -8,7 +8,6 @@
     justify-content: space-between;
     align-items: center;
 }
-
 
 .logo{
     width: 150px; 
@@ -41,3 +40,13 @@ a:hover{
     color: black;
 }
   
+@media screen and (max-width: 768px) {
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .cerrarSesion {
+      margin-right: 10px;
+    }
+}

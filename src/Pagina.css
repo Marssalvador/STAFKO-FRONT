@@ -160,5 +160,66 @@ h1{
     overflow-y: auto; 
 }
   
-  
+@media (max-width: 800px) {
+    .space {
+        font-size: 24px;
+        color: #3e3e3e; 
+        font-family: 'Lato', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-left: 0;
+    }
+    
+    .proyecto {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-bottom: 2px solid #dad9d9;
+        margin-bottom: 20px;
+    }
+    
+    .nombre-proyecto {
+        font-size: 18px;
+        color: #3e3e3e;
+        margin-bottom: 10px;
+    }
+    
+    .ed-button {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .espacio {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .ed-button .button {
+        background-color: #e68a00; 
+    }
+    
+    .ed-button .button:hover {
+        background-color: #fac473; 
+    }
+    
+    .custom-orange-button {
+        color: #fff; 
+        background-color: #ff9800; 
+        border-color: #ff9800; 
+        margin-right: 0;
+        margin-top: 20px;
+    }
+    
+    .custom-orange-button:hover {
+        background-color: #f57c00; 
+        border-color: #f57c00; 
+        transition: background-color 0.3s ease, border-color 0.3s ease; 
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5); 
+    }
+}
   
