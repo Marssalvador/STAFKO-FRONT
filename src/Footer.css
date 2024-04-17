@@ -1,7 +1,7 @@
 .footer{
     color: #333;
     padding: 10px 20px;
-    position: absolute;
+    position: fixed;
     z-index: 0;
     bottom: 0;
     left: 50%; 

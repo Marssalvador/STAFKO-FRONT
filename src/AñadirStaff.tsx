@@ -35,7 +35,7 @@ const NuevoStaff: React.FC = () => {
   };
 
   const agregarStaff = () => {
-    //validar si todos los campos están llenos
+    // Validar si todos los campos están llenos
     if (
       nuevoStaff.nombre.trim() === '' ||
       nuevoStaff.apellidos.trim() === '' ||
@@ -48,7 +48,16 @@ const NuevoStaff: React.FC = () => {
       return;
     }
 
-    //agregar lógica para el hash de la contraseña
+    // Obtener la fecha actual en formato ISO (YYYY-MM-DD)
+    const fechaActual = new Date().toISOString().split('T')[0];
+
+    // Verificar si la fecha de nacimiento es mayor que la fecha actual
+    if (nuevoStaff.fechaNacimiento > fechaActual) {
+      mostrarAlerta('La fecha de nacimiento no puede ser mayor que la fecha actual.');
+      return;
+    }
+
+    // Agregar lógica para el hash de la contraseña
     const hashedPassword = md5(nuevoStaff.password);
     const nuevoStaffCompleto = {
       ...nuevoStaff,
@@ -57,7 +66,7 @@ const NuevoStaff: React.FC = () => {
       password: hashedPassword
     };
 
-    //enviar solicitud para agregar el staff
+    // Enviar solicitud para agregar el staff
     fetch('http://localhost:4000/usuarios/insertar', {
       method: 'POST',
       headers: {
@@ -67,10 +76,10 @@ const NuevoStaff: React.FC = () => {
     })
     .then(response => response.json())
     .then(data => {
-      //si la solicitud fue exitosa, agregar el nuevo staff a la lista
+      // Si la solicitud fue exitosa, agregar el nuevo staff a la lista
       setStaffs([...staffs, nuevoStaff]);
 
-      //limpiamos los campos del formulario y el mensaje
+      // Limpiamos los campos del formulario y el mensaje
       setNuevoStaff({
         nombre: '',
         apellidos: '',
@@ -124,7 +133,7 @@ const NuevoStaff: React.FC = () => {
             <input type="date" name="fechaNacimiento" value={nuevoStaff.fechaNacimiento} onChange={cambio} className="input-group" />
           </div>
 
-          <Button type="submit" label="Añadir Staff" className="button3" onClick={agregarStaff}/>        
+          <Button type="button" label="Añadir Staff" className="button3" onClick={agregarStaff}/>        
         </div>
       </div>
     </div>
