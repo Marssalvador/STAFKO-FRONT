@@ -70,7 +70,7 @@ const ModificarProject: React.FC<Props> = ({ proyecto, onGuardar }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-gradient-to-r from-orange-200 to-orange-100 p-5 rounded-lg shadow-lg mb-6 max-w-md w-full">
+    <div className="flex flex-col items-center justify-center bg-gradient-to-r from-orange-200 p-5 rounded-lg shadow-lg mb-6 max-w-md w-full">
       <h2 className="text-3xl font-semibold mb-6">Información</h2>
       <form onSubmit={enviar} className="space-y-6 w-full">
         <div className="flex flex-col">

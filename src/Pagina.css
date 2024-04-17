@@ -1,32 +1,5 @@
-.header{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #a18205;
-    color: white;
-    padding: 10px 20px;
-}
-
-.nav{
-    display: inline-block;
-}
-
-.nav-list{
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-.nav-list li{
-    display: inline;
-    vertical-align: middle;
-    margin-right: 10px;
-}
-
 body{
     font-family: Arial, sans-serif;
-    background-color: #f7f7f7; 
 }
   
 .main {
@@ -35,6 +8,10 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: #c0bcbc; 
+    border-radius: 10px; 
+    box-shadow: 0 8px 6px rgba(0, 0, 0, 0.5); 
+    padding: 20px; 
 }
   
 h1{
@@ -103,7 +80,7 @@ h1{
 .proyecto{
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 2px solid #dad9d9;
     align-items: center;
     margin-bottom: 20px;
     max-width: 99%;
@@ -147,42 +124,41 @@ h1{
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5); 
 }
 
-
 .toggle-label{
     position: relative;
     display: inline-block;
     cursor: pointer;
-  }
+}
   
-  .toggle-label input{
+.toggle-label input{
     display: none;
-  }
+}
   
-  .toggle-button{
+.toggle-button{
     position: absolute;
     top: 0;
     left: 0;
     margin-right: 30rem;
     width: 40px;
     height: 20px;
-    background-color: #ccc;
+    background-color: #747171;
     border-radius: 20px;
     transition: background-color 0.3s ease;
-  }
+}
   
-  .toggle-label input:checked + .toggle-button{
-    background-color: #f57c00;
-  }
+.toggle-label input:checked + .toggle-button{
+    background-color: #ff9800;
+}
   
-  .toggle-text{
+.toggle-text{
     margin-left: 50px;
     color: #333;
-  }
+}
 
-  .proyectos-container{
+.proyectos-container{
     min-height: 300px; 
     overflow-y: auto; 
-  }
+}
   
   
   

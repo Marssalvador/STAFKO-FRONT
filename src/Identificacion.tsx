@@ -94,8 +94,9 @@ class Identificacion extends Component<{}, IdentificacionState> {
 
                 <img src="/panal.png" alt="Panal" className='panal-superior-derecho' />
                 <img src="/panal.png" alt="Panal" className='panal-inferior-izquierdo' />
+                
                 <main className="flex items-center justify-center h-screen">
-                    <div className="bg-gradient-to-r from-orange-200 to-orange-100 p-8 rounded-lg shadow-lg mb-6 max-w-md w-full">
+                    <div className="bg-gradient-to-r from-orange-200 to-orange-99 p-12 rounded-lg shadow-lg mb-6 max-w-md w-full">
                         <h1 className='text-4xl font-bold mb-4 text-center jump-animation'>STAFKO</h1>
                         <form onSubmit={this.handleSubmit} className="space-y-4">
                             <h2 className="text-xl font-semibold mb-2">Iniciar sesión</h2>

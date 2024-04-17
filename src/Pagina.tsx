@@ -3,6 +3,7 @@ import './Pagina.css';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 import ModificarProject from './ModificarProject'; 
+
 import { Button } from 'primereact/button'; 
 
 const cookies = new Cookies();
@@ -103,7 +104,7 @@ const Pagina: React.FC = () => {
     }
   };
 
-  // Función para cambiar el estado del switch de filtrado
+  //función para cambiar el estado del switch de filtrado
   const toggleFiltrar = () => {
     setFiltrarActivado(!filtrarActivado);
   };
@@ -125,7 +126,7 @@ const Pagina: React.FC = () => {
           />
           <span className="toggle-button"></span>
           <span className="toggle-text">
-            {filtrarActivado ? "Todos los proyectos" : "Mis proyectos"}
+            {filtrarActivado ? "Mis proyectos" : "Todos los proyectos"}
           </span>
         </label>
 
@@ -152,7 +153,6 @@ const Pagina: React.FC = () => {
                   />
             ))}
         </div>
-
 
         {/*renderizar el componente ModificarProject si hay un proyecto seleccionado */}
           {proyectoSeleccionado && (
