@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './AñadirStaff.css';
 import md5 from 'md5';
+import { Button } from 'primereact/button';
 
 interface Staff {
   nombre: string;
@@ -123,7 +124,7 @@ const NuevoStaff: React.FC = () => {
             <input type="date" name="fechaNacimiento" value={nuevoStaff.fechaNacimiento} onChange={cambio} className="input-group" />
           </div>
 
-          <button type="submit" className="button3" onClick={agregarStaff}>Agregar Staff</button>
+          <Button type="submit" label="Añadir Staff" className="button3" onClick={agregarStaff}/>        
         </div>
       </div>
     </div>
