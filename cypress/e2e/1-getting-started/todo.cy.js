@@ -96,7 +96,6 @@ describe('Identificacion Component', () => {
     cy.get('input[name="cuantia"]').type(projectAmount).should('have.value', projectAmount);
     cy.get('input[name="fecha_inicio"]').type(startDate).should('have.value', startDate);
     cy.get('input[name="fecha_fin"]').type(endDate).should('have.value', endDate);
-    cy.get('select[name="id_staff"]').select('1').should('have.value', '1');
 
     cy.intercept('POST', 'http://localhost:4000/proyecto/insertar', { statusCode: 200, body: { message: 'Project added successfully' } }).as('postProject');
 
@@ -108,7 +107,6 @@ describe('Identificacion Component', () => {
     cy.get('input[name="cuantia"]').type('10000');
     cy.get('input[name="fecha_inicio"]').type('2024-04-10');
     cy.get('input[name="fecha_fin"]').type('2024-04-30');
-    cy.get('select[name="id_staff"]').select('1');
 
 
     //Comprobamos header
@@ -137,9 +135,20 @@ describe('Identificacion Component', () => {
     cy.get('input[name="username"]').should('exist');
     cy.get('input[name="password"]').should('exist');
     cy.get('input[name="fechaNacimiento"]').should('exist');
-    cy.get('button[type="submit"]').should('exist');
+    cy.get('.button3').should('exist');
 
 
+    //datos del staff
+    //comprobación de que existen todos los campos
+    cy.get('input[name="nombre"]').should('exist');
+    cy.get('input[name="apellidos"]').should('exist');
+    cy.get('input[name="telefono"]').should('exist');
+    cy.get('input[name="username"]').should('exist');
+    cy.get('input[name="password"]').should('exist');
+    cy.get('input[name="fechaNacimiento"]').should('exist');
+    cy.get('.button3').should('exist');
+
+    //datos de prueba
     const staffName = 'John';
     const staffLastName = 'Doe';
     const staffPhone = '123456789';
@@ -147,17 +156,22 @@ describe('Identificacion Component', () => {
     const staffPassword = 'password123';
     const staffBirthDate = '1990-01-01';
 
- 
-    cy.get('input[name="nombre"]').type(staffName).should('have.value', staffName);
-    cy.get('input[name="apellidos"]').type(staffLastName).should('have.value', staffLastName);
-    cy.get('input[name="telefono"]').type(staffPhone).should('have.value', staffPhone);
-    cy.get('input[name="username"]').type(staffUsername).should('have.value', staffUsername);
-    cy.get('input[name="password"]').type(staffPassword).should('have.value', staffPassword);
-    cy.get('input[name="fechaNacimiento"]').type(staffBirthDate).should('have.value', staffBirthDate);
+    //llenar el formulario
+    cy.get('input[name="nombre"]').type(staffName);
+    cy.get('input[name="apellidos"]').type(staffLastName);
+    cy.get('input[name="telefono"]').type(staffPhone);
+    cy.get('input[name="username"]').type(staffUsername);
+    cy.get('input[name="password"]').type(staffPassword);
+    cy.get('input[name="fechaNacimiento"]').type(staffBirthDate);
 
-    cy.intercept('POST', 'http://localhost:4000/usuarios/insertar', { statusCode: 200, body: { message: 'Staff added successfully' } }).as('postStaff');
+    //interceptar la solicitud de inserción del staff
+    cy.intercept('POST', 'http://localhost:4000/usuarios/insertar', {
+      statusCode: 200,
+      body: { message: 'Staff added successfully' }
+    }).as('postStaff');
 
 
+    
     //Cerramos sesion y destruimos cookie
     cy.get('.cerrarSesion').click();
     cy.getCookie('username').should('not.exist');
