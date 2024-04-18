@@ -9,11 +9,23 @@ export const Contacto = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const mailtoLink = `mailto:stafko@gmail.com?subject=Contacto desde formulario&body=Nombre: ${name}%0DEmail: ${email}%0DMensaje: ${message}`;
-        window.location.href = mailtoLink;
+        if (!name || !email || !message) {
+            alert('Por favor, complete todos los campos.');
+            return;
+        }
     };
+    
+    const sendEmail = (e) => {
+      e.preventDefault();
+      const mailtoLink = `mailto:stafko@gmail.com?subject=Contacto desde formulario&body=Nombre: ${name}%0DEmail: ${email}%0DMensaje: ${message}`;
+      window.location.href = mailtoLink;
+  };
 
     const handleShowAlert = () => {
+        if (!name || !email || !message) {
+            alert('Por favor, complete todos los campos.');
+            return;
+        }
         alert('¡Mensaje enviado con éxito!');
     };
 
@@ -44,7 +56,7 @@ export const Contacto = () => {
             </div><br />
             
             <div className="p-field">
-                <Button type="submit" label="Prefiero mandar email" icon="pi pi-info-circle" />
+                <Button type="submit" onClick={sendEmail} label="Prefiero mandar email" icon="pi pi-info-circle" />
             </div>
 
         </form>
