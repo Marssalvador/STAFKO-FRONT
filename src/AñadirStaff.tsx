@@ -76,10 +76,10 @@ const NuevoStaff: React.FC = () => {
     })
     .then(response => response.json())
     .then(data => {
-      // Si la solicitud fue exitosa, agregar el nuevo staff a la lista
+      //si la solicitud fue exitosa, agregar el nuevo staff a la lista
       setStaffs([...staffs, nuevoStaff]);
 
-      // Limpiamos los campos del formulario y el mensaje
+      //limpiamos los campos del formulario y el mensaje
       setNuevoStaff({
         nombre: '',
         apellidos: '',

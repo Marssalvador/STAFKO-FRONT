@@ -9,12 +9,15 @@ import ModificarStaff from './ModificarStaff'
 import Pagina from './Pagina'
 import Pagina2 from './Pagina2'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { PoliticaPrivacidad } from './PoliticaPrivacidad'
+import { Contacto } from './Contacto'
 
 import 'tailwindcss/tailwind.css';
 
 import 'primereact/resources/themes/saga-blue/theme.css'; 
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
+
 
 
 const App = () => {
@@ -30,6 +33,8 @@ const App = () => {
           <Route path='/añadirStaff' element={<AñadirStaff />} />
           <Route path='/modificarProject' element={<ModificarProject />} />
           <Route path='/modificarStaff' element={<ModificarStaff />} />
+          <Route path='/poliPriv' element={<PoliticaPrivacidad />} />
+          <Route path='/contacto' element={<Contacto />} />
         </Routes>
       </BrowserRouter>
       <Footer/>
