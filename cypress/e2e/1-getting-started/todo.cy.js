@@ -171,6 +171,31 @@ describe('Identificacion Component', () => {
     }).as('postStaff');
 
 
+    //Footer
+    cy.get('.footer').should('exist');
+
+    cy.contains('Politica de privacidad').click()
+    cy.url().should('include', '/poliPriv')
+    cy.get('.cerrarPP').should('exist');
+    cy.get('.cerrarPP').click();
+
+    cy.contains('Contacto').click()
+    cy.url().should('include', '/contacto')
+
+    cy.get('input[id="name"]').should('exist');
+    cy.get('input[id="email"]').should('exist');
+    cy.get('textarea[id="message"]').should('exist');
+
+    const name = 'John';
+    const email = 'john@gmail.com';
+    const message = 'Prueba';
+
+    //llenar el formulario
+    cy.get('input[id="name"]').type(name);
+    cy.get('input[id="email"]').type(email);
+    cy.get('textarea[id="message"]').type(message);
+
+    cy.get('.enviar').click();
     
     //Cerramos sesion y destruimos cookie
     cy.get('.cerrarSesion').click();

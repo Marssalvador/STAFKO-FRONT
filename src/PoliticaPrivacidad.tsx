@@ -12,7 +12,7 @@ export const PoliticaPrivacidad = () => {
 
     const footer = (
         <div>
-            <Button label="Aceptar" icon="pi pi-check" onClick={onHide} autoFocus />
+            <Button className='cerrarPP' label="Aceptar" icon="pi pi-check" onClick={onHide} autoFocus />
         </div>
     );
 

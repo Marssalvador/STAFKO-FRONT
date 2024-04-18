@@ -52,11 +52,11 @@ export const Contacto = () => {
             </div><br />
 
             <div className="p-field">
-                <Button onClick={handleShowAlert} label="Enviar mensaje" icon="pi pi-send" />
+                <Button className='enviar' onClick={handleShowAlert} label="Enviar mensaje" icon="pi pi-send" />
             </div><br />
             
             <div className="p-field">
-                <Button type="submit" onClick={sendEmail} label="Prefiero mandar email" icon="pi pi-info-circle" />
+                <Button className='correo' type="submit" onClick={sendEmail} label="Prefiero mandar email" icon="pi pi-info-circle" />
             </div>
 
         </form>
