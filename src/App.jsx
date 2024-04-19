@@ -8,6 +8,7 @@ import ModificarProject from './ModificarProject'
 import ModificarStaff from './ModificarStaff'
 import Pagina from './Pagina'
 import Pagina2 from './Pagina2'
+import Registro from './Registro'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { PoliticaPrivacidad } from './PoliticaPrivacidad'
 import { Contacto } from './Contacto'
@@ -35,6 +36,7 @@ const App = () => {
           <Route path='/modificarStaff' element={<ModificarStaff />} />
           <Route path='/poliPriv' element={<PoliticaPrivacidad />} />
           <Route path='/contacto' element={<Contacto />} />
+          <Route path='/registro' element={<Registro />} />
         </Routes>
       </BrowserRouter>
       <Footer/>

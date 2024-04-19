@@ -109,7 +109,10 @@ class Identificacion extends Component<{}, IdentificacionState> {
                                 <input type="password" name="password" id="password" value={form.password} onChange={this.handleChange} className="login-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50" />
                             </div>
 
-                            <Button label="Iniciar sesión" type="submit" className="p-button-outlined custom-orange-button w-full" /> {/* Añade la clase p-button-outlined para un estilo chulo */}                        </form>
+                            <Button label="Iniciar sesión" type="submit" className="p-button-outlined custom-orange-button w-full" /> {}
+
+                            <p className="text-center text-black mt-4">Si no estás registrado, <a href="/registro" className="text-orange-500">regístrate aquí</a>.</p>
+                        </form>
                     </div>
                 </main>
             </>
