@@ -3,10 +3,9 @@ import './Pagina.css';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 
-import VerInformacion from './VerInformacion';
-
 import { Button } from 'primereact/button';
 import ModificarProject from './ModificarProject';
+import VerInformacion from './VerInformacion';
 
 const cookies = new Cookies();
 
@@ -25,6 +24,8 @@ const Pagina: React.FC = () => {
   const [proyectoSeleccionado, setProyectoSeleccionado] = useState<Proyecto | null>(null);
   const [mensaje, setMensaje] = useState<string>('');
   const [filtrarActivado, setFiltrarActivado] = useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [modalContent, setModalContent] = useState<React.ReactNode>(null);
   const userId = cookies.get('id');
 
   useEffect(() => {
@@ -37,9 +38,9 @@ const Pagina: React.FC = () => {
         });
     
         if (Array.isArray(response.data.rows)) {
-          const userIdNumber = parseInt(userId); //convertir userId a número
+          const userIdNumber = parseInt(userId);
           const proyectosUsuario = response.data.rows.filter(proyecto => {
-            const idStaffNumber = parseInt(proyecto.id_staff); //convertir id_staff a número
+            const idStaffNumber = parseInt(proyecto.id_staff);
             return idStaffNumber === userIdNumber;
           });
           setProyectos(filtrarActivado ? proyectosUsuario : response.data.rows);
@@ -50,7 +51,6 @@ const Pagina: React.FC = () => {
         console.error('Error al obtener proyectos del usuario:', error);
       }
     };
-    
 
     if (!cookies.get('username')) {
       window.location.href = "./";
@@ -65,7 +65,27 @@ const Pagina: React.FC = () => {
 
   const editarProyecto = (proyecto: Proyecto) => {
     setProyectoSeleccionado(proyecto);
+    setModalContent(
+      <>
+        <ModificarProject
+          proyecto={proyecto}
+          onGuardar={(proyectoEditado) => {
+            console.log('Guardar cambios:', proyectoEditado);
+            setMensaje('¡Proyecto editado correctamente!');
+            setProyectoSeleccionado(null);
+            setModalVisible(false);
+          }}
+        />
+        <button className="close-modal" onClick={() => {
+          setProyectoSeleccionado(null);
+          setModalVisible(false);
+        }}>Cerrar sin guardar</button>
+      </>
+    );
+    setModalVisible(true);
   };
+  
+  
 
   const eliminarProyecto = async (id: number) => {
     try {
@@ -80,8 +100,15 @@ const Pagina: React.FC = () => {
     }
   };
 
-  const verMasInformacion = (proyecto: Proyecto) => {
+  const verInformacion = (proyecto: Proyecto) => {
     setProyectoSeleccionado(proyecto);
+    setModalContent(
+      <VerInformacion
+        proyecto={proyecto}
+        onClose={() => setModalVisible(false)}
+      />
+    );
+    setModalVisible(true);
   };
 
   const toggleFiltrar = () => {
@@ -112,44 +139,42 @@ const Pagina: React.FC = () => {
         <br />
         <div className="proyectos-container">
           {Array.isArray(proyectos) &&
-          proyectos.map(proyecto => (
-            <div key={proyecto.id} className="proyecto">
-            <div className="nombre-proyecto">{proyecto.nombre}</div>
-            <div className="espacio"></div>
-            <div className="ed-button">
-                
-          {filtrarActivado ? (
-            <>
-              <Button
-                label="Editar"
-                className="p-button-raised p-button-info"
-                onClick={() => editarProyecto(proyecto)}
-                style={{ display: parseInt(proyecto.id_staff) === parseInt(userId) ? 'block' : 'none' }}
-              />
-              <Button
-                label="Eliminar"
-                className="p-button-raised p-button-danger"
-                onClick={() => eliminarProyecto(proyecto.id)}
-                style={{ display: parseInt(proyecto.id_staff) === parseInt(userId) ? 'block' : 'none' }}
-              />
-            </>
-          ) : (
-            <Button
-              label="Ver más"
-              className="p-button-raised p-button-info"
-              onClick={() => verMasInformacion(proyecto)}
-            />
-          )}
+            proyectos.map(proyecto => (
+              <div key={proyecto.id} className="proyecto">
+                <div className="nombre-proyecto">{proyecto.nombre}</div>
+                <div className="espacio"></div>
+                <div className="ed-button">
+                  {filtrarActivado ? (
+                    <>
+                      <Button
+                        label="Editar"
+                        className="p-button-raised p-button-info"
+                        onClick={() => editarProyecto(proyecto)}
+                        style={{ display: parseInt(proyecto.id_staff) === parseInt(userId) ? 'block' : 'none' }}
+                      />
+                      <Button
+                        label="Eliminar"
+                        className="p-button-raised p-button-danger"
+                        onClick={() => eliminarProyecto(proyecto.id)}
+                        style={{ display: parseInt(proyecto.id_staff) === parseInt(userId) ? 'block' : 'none' }}
+                      />
+                    </>
+                  ) : (
+                    <Button
+                      label="Ver más"
+                      className="p-button-raised p-button-info"
+                      onClick={() => verInformacion(proyecto)}
+                    />
+                  )}
+                </div>
+              </div>
+            ))
+          }
         </div>
-    </div>
-  ))
-}
-
-        </div>
-        {proyectoSeleccionado && (
-          <div className="modal ">
+        {modalVisible && (
+          <div className="modal">
             <div className="modal-content flex flex-col items-center justify-center bg-gradient-to-r from-orange-200 p-5 rounded-lg shadow-lg mb-6 max-w-md w-full">
-              <VerInformacion proyecto={proyectoSeleccionado} onClose={() => setProyectoSeleccionado(null)} />
+              {modalContent}
             </div>
           </div>
         )}
