@@ -1,0 +1,38 @@
+.custom-button {
+    width: 120px; 
+}
+  
+.modal-content {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    max-width: 80%;
+}
+  
+.modal-content label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+  
+.modal-content input[type="text"],
+  .modal-content textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+  
+.modal-content button.close-modal {
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+  
+.modal-content button.close-modal:hover {
+    background-color: #c54119;
+}
+  

@@ -85,7 +85,6 @@ const Pagina: React.FC = () => {
     setModalVisible(true);
   };
   
-  
 
   const eliminarProyecto = async (id: number) => {
     try {
@@ -162,7 +161,7 @@ const Pagina: React.FC = () => {
                   ) : (
                     <Button
                       label="Ver más"
-                      className="p-button-raised p-button-info"
+                      className="p-button-raised p-button-info custom-button"
                       onClick={() => verInformacion(proyecto)}
                     />
                   )}
