@@ -29,7 +29,7 @@ const AñadirProj: React.FC = () => {
 
   useEffect(() => {
     //realizo una solicitud HTTP para obtener los usuarios del backend
-    fetch('http://localhost:4000/usuarios/ids-nombres') // Cambiar la URL según la configuración de tu backend
+    fetch('http://localhost:4000/usuarios/ids-nombres') 
       .then(response => response.json())
       .then(data => {
         //verifico si la respuesta contiene la propiedad 'rows'
@@ -52,28 +52,28 @@ const AñadirProj: React.FC = () => {
   const añadir = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Obtener la fecha actual en formato ISO (YYYY-MM-DD)
+    //fecha actual en formato ISO (YYYY-MM-DD)
     const fechaActual = new Date().toISOString().split('T')[0];
 
-    // Verificar si la fecha de inicio es menor que la fecha actual
+    //verificar si la fecha de inicio es menor que la fecha actual
     if (proyecto.fecha_inicio < fechaActual) {
       alert('La fecha de inicio no puede ser menor que la fecha actual.');
-      return; // Detener el proceso de añadir el proyecto
+      return; //detener el proceso de añadir el proyecto
     }
 
-    // Verificar si la fecha de fin es menor que la fecha actual
+    //verificar si la fecha de fin es menor que la fecha actual
     if (proyecto.fecha_fin < fechaActual) {
       alert('La fecha de fin no puede ser menor que la fecha actual.');
-      return; // Detener el proceso de añadir el proyecto
+      return; //detener el proceso de añadir el proyecto
     }
 
-    // Verificar si la fecha de fin es menor que la fecha de inicio
+    //verificar si la fecha de fin es menor que la fecha de inicio
     if (proyecto.fecha_fin < proyecto.fecha_inicio) {
       alert('La fecha de fin no puede ser menor que la fecha de inicio.');
-      return; // Detener el proceso de añadir el proyecto
+      return; //detener el proceso de añadir el proyecto
     }
 
-    // Verificar si todos los campos del proyecto están llenos
+    //verificar si todos los campos del proyecto están llenos
     if (
       proyecto.nombre.trim() === '' ||
       proyecto.descripcion.trim() === '' ||
@@ -82,12 +82,12 @@ const AñadirProj: React.FC = () => {
       proyecto.fecha_fin.trim() === '' ||
       proyecto.id_staff.trim() === ''
     ) {
-      // Mostrar un mensaje de error si algún campo está vacío
+      //mostrar un mensaje de error si algún campo está vacío
       alert('¡Todos los campos son obligatorios!');
-      return; // Detener el proceso de añadir el proyecto
+      return; //detener el proceso de añadir el proyecto
     }
 
-    // Si todos los campos están llenos y las fechas son válidas, enviar la solicitud para añadir el proyecto
+    //si todos los campos están llenos y las fechas son válidas, enviar la solicitud para añadir el proyecto
     fetch('http://localhost:4000/proyecto/insertar', {
       method: 'POST',
       headers: {
@@ -103,7 +103,7 @@ const AñadirProj: React.FC = () => {
         console.error('Error al añadir proyecto:', error);
       });
 
-    // Limpiar el formulario después de enviar la solicitud
+    //limpiar el formulario después de enviar la solicitud
     setProyecto({
       nombre: '',
       descripcion: '',

@@ -26,6 +26,7 @@ export const PoliticaPrivacidad = () => {
             modal
             className="p-dialog-content"
         >
+            
         <div>
             <p>
                 Esta Política de privacidad describe cómo se recopila, utiliza y comparte su información personal cuando visita o hace una compra en www.stafko.com 

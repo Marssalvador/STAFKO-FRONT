@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import md5 from 'md5';
 import { Button } from 'primereact/button';
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate desde React Router
+import { useNavigate } from 'react-router-dom'; 
 
 import './Registro.css';
 
@@ -26,7 +26,7 @@ const NuevoStaff: React.FC = () => {
 
   const [staffs, setStaffs] = useState<Staff[]>([]);
   const [mensaje, setMensaje] = useState<string>('');
-  const navigate = useNavigate(); // Obtener la función de navegación
+  const navigate = useNavigate(); //obtener la función de navegación
 
   const cambio = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,7 +38,7 @@ const NuevoStaff: React.FC = () => {
   };
 
   const agregarStaff = () => {
-    // Validar si todos los campos están llenos
+    //comprobación de datos vacíos 
     if (
       nuevoStaff.nombre.trim() === '' ||
       nuevoStaff.apellidos.trim() === '' ||
@@ -51,16 +51,16 @@ const NuevoStaff: React.FC = () => {
       return;
     }
 
-    // Obtener la fecha actual en formato ISO (YYYY-MM-DD)
+    //fecha actual en formato ISO (YYYY-MM-DD)
     const fechaActual = new Date().toISOString().split('T')[0];
 
-    // Verificar si la fecha de nacimiento es mayor que la fecha actual
+    //verificación si la fecha de nacimiento es mayor que la fecha actual
     if (nuevoStaff.fechaNacimiento > fechaActual) {
       mostrarAlerta('La fecha de nacimiento no puede ser mayor que la fecha actual.');
       return;
     }
 
-    // Agregar lógica para el hash de la contraseña
+    //hash de la contraseña
     const hashedPassword = md5(nuevoStaff.password);
     const nuevoStaffCompleto = {
       ...nuevoStaff,
@@ -69,7 +69,7 @@ const NuevoStaff: React.FC = () => {
       password: hashedPassword
     };
 
-    // Enviar solicitud para agregar el staff
+    //enviar solicitud para agregar el staff
     fetch('http://localhost:4000/usuarios/insertar', {
       method: 'POST',
       headers: {
@@ -92,10 +92,10 @@ const NuevoStaff: React.FC = () => {
         fechaNacimiento: ''
       });
 
-      // Establecer el mensaje de éxito
+      //enviar el mensaje 
       setMensaje('¡Staff añadido con éxito! Redirigiendo...');
 
-      // Esperar 5 segundos y luego redirigir
+      //esperar 5 segundos y luego redirigir
       setTimeout(() => {
         navigate('/pagina');
       }, 2000);
@@ -110,7 +110,7 @@ const NuevoStaff: React.FC = () => {
       <div className="nuevo-staff-container">
         <img src="/panal.png" alt="Panal" className='panal-superior-derecho' />
         <img src="/panal.png" alt="Panal" className='panal-inferior-izquierdo' />
-        {/* Mostrar el mensaje de éxito arriba del formulario */}
+        {/*mostramos el mensaje de éxito arriba del formulario */}
         {mensaje && (
           <div className="text-orange-500 text-center mt-2">{mensaje}</div>
         )}

@@ -35,7 +35,7 @@ const NuevoStaff: React.FC = () => {
   };
 
   const agregarStaff = () => {
-    // Validar si todos los campos están llenos
+    //validar si todos los campos están llenos
     if (
       nuevoStaff.nombre.trim() === '' ||
       nuevoStaff.apellidos.trim() === '' ||
@@ -48,16 +48,16 @@ const NuevoStaff: React.FC = () => {
       return;
     }
 
-    // Obtener la fecha actual en formato ISO (YYYY-MM-DD)
+    //fecha actual en formato ISO (YYYY-MM-DD)
     const fechaActual = new Date().toISOString().split('T')[0];
 
-    // Verificar si la fecha de nacimiento es mayor que la fecha actual
+    //verificar si la fecha de nacimiento es mayor que la fecha actual
     if (nuevoStaff.fechaNacimiento > fechaActual) {
       mostrarAlerta('La fecha de nacimiento no puede ser mayor que la fecha actual.');
       return;
     }
 
-    // Agregar lógica para el hash de la contraseña
+    //hash de la contraseña
     const hashedPassword = md5(nuevoStaff.password);
     const nuevoStaffCompleto = {
       ...nuevoStaff,
@@ -66,7 +66,7 @@ const NuevoStaff: React.FC = () => {
       password: hashedPassword
     };
 
-    // Enviar solicitud para agregar el staff
+    //enviar solicitud para agregar el staff
     fetch('http://localhost:4000/usuarios/insertar', {
       method: 'POST',
       headers: {

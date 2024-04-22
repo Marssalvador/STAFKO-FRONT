@@ -38,7 +38,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
                 ...prevState.form,
                 [name]: value
             },
-            error: prevState.error //Conserva el error si lo hay
+            error: prevState.error 
         }));
         console.log(this.state.form);
     };

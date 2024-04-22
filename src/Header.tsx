@@ -25,7 +25,7 @@ const Header: React.FC = () => {
   const isLoggedIn = cookies.get('username') !== undefined;
 
   if (!isLoggedIn) {
-    return null; // Si el usuario no está autenticado, no renderizar el header
+    return null; //si el usuario no está autenticado, no renderizar el header
   }
 
   return (
