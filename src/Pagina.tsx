@@ -3,6 +3,8 @@ import './Pagina.css';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 
+import VerInformacion from './VerInformacion';
+
 import { Button } from 'primereact/button';
 import ModificarProject from './ModificarProject';
 
@@ -33,13 +35,14 @@ const Pagina: React.FC = () => {
             'Authorization': `Bearer ${cookies.get('token')}`
           }
         });
-
+    
         if (Array.isArray(response.data.rows)) {
-          if (filtrarActivado) {
-            setProyectos(response.data.rows.filter(proyecto => proyecto.id_staff === userId));
-          } else {
-            setProyectos(response.data.rows);
-          }
+          const userIdNumber = parseInt(userId); //convertir userId a número
+          const proyectosUsuario = response.data.rows.filter(proyecto => {
+            const idStaffNumber = parseInt(proyecto.id_staff); //convertir id_staff a número
+            return idStaffNumber === userIdNumber;
+          });
+          setProyectos(filtrarActivado ? proyectosUsuario : response.data.rows);
         } else {
           console.error('La propiedad rows de la respuesta de la API no es un arreglo:', response.data.rows);
         }
@@ -47,13 +50,14 @@ const Pagina: React.FC = () => {
         console.error('Error al obtener proyectos del usuario:', error);
       }
     };
+    
 
     if (!cookies.get('username')) {
       window.location.href = "./";
     } else {
       obtenerProyectosUsuario();
     }
-  }, [filtrarActivado]);
+  }, [filtrarActivado, userId]);
 
   const añadirProyecto = () => {
     window.location.href = './añadirProj';
@@ -74,6 +78,10 @@ const Pagina: React.FC = () => {
     } catch (error) {
       console.error('Error al eliminar proyecto:', error);
     }
+  };
+
+  const verMasInformacion = (proyecto: Proyecto) => {
+    setProyectoSeleccionado(proyecto);
   };
 
   const toggleFiltrar = () => {
@@ -104,31 +112,44 @@ const Pagina: React.FC = () => {
         <br />
         <div className="proyectos-container">
           {Array.isArray(proyectos) &&
-            proyectos
-              .filter(proyecto => !filtrarActivado || proyecto.id_staff === userId)
-              .map(proyecto => (
-                <div key={proyecto.id} className="proyecto">
-                  <div className="nombre-proyecto">{proyecto.nombre}</div>
-                  <div className="espacio"></div>
-                  <div className="ed-button">
-                    <Button label="Editar" className="p-button-raised p-button-info" onClick={() => editarProyecto(proyecto)} />
-                    <Button label="Eliminar" className="p-button-raised p-button-danger" onClick={() => eliminarProyecto(proyecto.id)} />
-                  </div>
-                </div>
-          ))}
+          proyectos.map(proyecto => (
+            <div key={proyecto.id} className="proyecto">
+            <div className="nombre-proyecto">{proyecto.nombre}</div>
+            <div className="espacio"></div>
+            <div className="ed-button">
+                
+          {filtrarActivado ? (
+            <>
+              <Button
+                label="Editar"
+                className="p-button-raised p-button-info"
+                onClick={() => editarProyecto(proyecto)}
+                style={{ display: parseInt(proyecto.id_staff) === parseInt(userId) ? 'block' : 'none' }}
+              />
+              <Button
+                label="Eliminar"
+                className="p-button-raised p-button-danger"
+                onClick={() => eliminarProyecto(proyecto.id)}
+                style={{ display: parseInt(proyecto.id_staff) === parseInt(userId) ? 'block' : 'none' }}
+              />
+            </>
+          ) : (
+            <Button
+              label="Ver más"
+              className="p-button-raised p-button-info"
+              onClick={() => verMasInformacion(proyecto)}
+            />
+          )}
+        </div>
+    </div>
+  ))
+}
+
         </div>
         {proyectoSeleccionado && (
           <div className="modal ">
             <div className="modal-content flex flex-col items-center justify-center bg-gradient-to-r from-orange-200 p-5 rounded-lg shadow-lg mb-6 max-w-md w-full">
-              <ModificarProject
-                proyecto={proyectoSeleccionado}
-                onGuardar={(proyectoEditado) => {
-                  console.log('Guardar cambios:', proyectoEditado);
-                  setMensaje('¡Proyecto editado correctamente!');
-                  setProyectoSeleccionado(null);
-                }}
-              />
-              <button className="close-modal" onClick={() => setProyectoSeleccionado(null)}>Cerrar sin guardar</button>
+              <VerInformacion proyecto={proyectoSeleccionado} onClose={() => setProyectoSeleccionado(null)} />
             </div>
           </div>
         )}
