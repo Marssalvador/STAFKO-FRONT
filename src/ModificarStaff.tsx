@@ -7,7 +7,7 @@ interface Staff {
   nombre: string;
   apellido: string;
   telefono: string;
-  fechaNacimiento: string;
+  fecha_nacimiento: string;
   username: string;
 }
 
@@ -38,7 +38,7 @@ const ModificarStaff: React.FC<Props> = ({ staff, onGuardar }) => {
     try {
       const proyectoFormateado = {
         ...datosStaff,
-        fecha_nacimiento: formatearFecha(datosStaff.fechaNacimiento)
+        fecha_nacimiento: formatearFecha(datosStaff.fecha_nacimiento)
       };
 
       await axios.put(`http://localhost:4000/usuarios/modificar/${datosStaff.id}`, proyectoFormateado);
@@ -71,7 +71,7 @@ const ModificarStaff: React.FC<Props> = ({ staff, onGuardar }) => {
         </div>
         <div className="input-group">
           <label>Fecha de Nacimiento:</label>
-          <input type="date" name="fechaNacimiento" value={datosStaff.fechaNacimiento} onChange={cambiar} />
+          <input type="date" name="fechaNacimiento" value={datosStaff.fecha_nacimiento} onChange={cambiar} />
         </div>
         <button type="submit" className="button">Guardar Cambios</button>
       </form>

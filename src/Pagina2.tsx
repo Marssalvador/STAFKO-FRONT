@@ -3,6 +3,7 @@ import './Pagina2.css';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 import ModificarStaff from './ModificarStaff'; 
+import VerInformacion2 from './VerInformacion2';
 import { Button } from 'primereact/button'; 
 
 const cookies = new Cookies();
@@ -13,83 +14,79 @@ interface Staff {
   apellido: string; 
   username: string;
   telefono: string; 
-  fechaNacimiento: string; 
+  fecha_nacimiento: string; 
 }
 
 interface StaffProps {
   staff: Staff;
 }
 
-
-export const Pagina2: React.FC = () => {
-  const [staffs, setStaffs] = useState<Staff[]>([]); //estado para almacenar el listado de staffs
-  const [staffSeleccionado, setStaffSeleccionado] = useState<Staff | null>(null); //estado para almacenar el staff seleccionado
+const Pagina2: React.FC = () => {
+  const [staffs, setStaffs] = useState<Staff[]>([]);
+  const [staffSeleccionado, setStaffSeleccionado] = useState<Staff | null>(null);
+  const [mostrarEditar, setMostrarEditar] = useState<boolean>(false);
 
   useEffect(() => {
-    //función para obtener el listado de staffs
     const obtenerStaffs = async () => {
-      try{
+      try {
         const response = await axios.get('http://localhost:4000/usuarios/datos', {
           headers: {
             'Authorization': `Bearer ${cookies.get('token')}` 
           }
         });
 
-        if(Array.isArray(response.data.rows)){
-          setStaffs(response.data.rows); //actualizar el estado staffs con la respuesta de la API
-        }else{
+        if (Array.isArray(response.data.rows)) {
+          setStaffs(response.data.rows);
+        } else {
           console.error('La respuesta de la API no es un arreglo de staff:', response.data);
         }
-      }catch (error){
+      } catch (error) {
         console.error('Error al obtener staff:', error);
       }
     };
 
-    //verificar si hay un usuario autenticado
-    if(!cookies.get('username')){
-      window.location.href = "./"; //redireccionar a la página de inicio de sesión si no hay usuario autenticado
-    }else{
-      obtenerStaffs(); //obtener el listado de staffs
+    if (!cookies.get('username')) {
+      window.location.href = "./";
+    } else {
+      obtenerStaffs();
     }
   }, []);
 
+  const eliminarStaffConfirmado = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:4000/usuEliminar/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${cookies.get('token')}`
+        }
+      });
 
-    //función para eliminar el staff después de la confirmación
-    const eliminarStaffConfirmado = async (id: number) => {
-      try {
-        await axios.delete(`http://localhost:4000/usuEliminar/${id}`, {
-          headers: {
-            'Authorization': `Bearer ${cookies.get('token')}`
-          }
-        });
+      // Eliminar la cookie de inicio de sesión
+      cookies.remove('id', { path: "/" });
+      cookies.remove("apellido", { path: "/" });
+      cookies.remove("nombre", { path: "/" });
+      cookies.remove("username", { path: "/" });
 
-        // Eliminar la cookie de sesión
-        cookies.remove('id', { path: "/" });
-        cookies.remove("apellido", { path: "/" });
-        cookies.remove("nombre", { path: "/" });
-        cookies.remove("username", { path: "/" });
-  
-        // Redirigir al usuario a la página de inicio de sesión
-        window.location.href = "./";
-      } catch (error) {
-        alert('Cancelación: El Staff tiene un proyecto asociado');
-      }
-    };
+      // Redirigir al usuario a la página de inicio de sesión
+      window.location.href = "./";
+    } catch (error) {
+      alert('Cancelación: El Staff tiene un proyecto asociado');
+    }
+  };
 
-  
+  const confirmarEliminarStaff = (id: number) => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar este staff?")) {
+      eliminarStaffConfirmado(id);
+    }
+  };
 
-    //función para mostrar la alerta y luego eliminar el staff
-    const confirmarEliminarStaff = (id: number) => {
-      //mostrar una confirmación antes de eliminar el staff
-      if (window.confirm("¿Estás seguro de que deseas eliminar este staff?")) {
-        //si se confirma la eliminación, verificar si tiene proyectos asociados y luego eliminar el staff
-        eliminarStaffConfirmado(id);
-      }
-    };
-
-  //función para editar un staff
   const editarStaff = (staff: Staff) => {
-    setStaffSeleccionado(staff); //establecemos el staff seleccionado para editar
+    setStaffSeleccionado(staff);
+    setMostrarEditar(true);
+  };
+
+  const verInformacion = (staff: Staff) => {
+    setStaffSeleccionado(staff);
+    setMostrarEditar(false);
   };
   
   const StaffComponent: React.FC<StaffProps> = ({ staff }) => {
@@ -108,16 +105,15 @@ export const Pagina2: React.FC = () => {
             </>
           )}
           {!isUsuarioLogueado && (
-            <Button label="Ver más" className="p-button-raised p-button-info" onClick={() => console.log('Ver información')} />
+            <Button label="Ver más" className="p-button-raised p-button-info" onClick={() => verInformacion(staff)} />
           )}
         </div>
       </div>
     );
   };
 
-  //función para añadir un nuevo staff
   const añadirStaff = () => {
-    window.location.href = './añadirStaff'; //redireccionar a la página de añadir staff
+    window.location.href = './añadirStaff';
   };
 
   return (
@@ -128,25 +124,33 @@ export const Pagina2: React.FC = () => {
         <div className="space">Staffs</div><br />
 
         <div className="add-button">
-          {/*botón para añadir un nuevo staff */}
           <Button label="+" className="p-button-raised p-button-success custom-orange-button botoncin" onClick={añadirStaff} />
         </div>
         <br />
 
-        {/*renderizar cada staff */}
         {staffs.map((staff) => (
           <StaffComponent key={staff.id} staff={staff} />
         ))}
 
-        {/*renderizar el componente ModificarStaff si hay un staff seleccionado */}
         {staffSeleccionado && (
-          <ModificarStaff
-            staff={staffSeleccionado}
-            onGuardar={() => {
-              console.log('Guardar cambios');
-              setStaffSeleccionado(null);
-            }}
-          />
+          mostrarEditar ? (
+            <ModificarStaff
+              staff={staffSeleccionado}
+              onGuardar={() => {
+                console.log('Guardar cambios');
+                setStaffSeleccionado(null);
+                setMostrarEditar(false);
+              }}
+            />
+          ) : (
+            <VerInformacion2
+              staff={staffSeleccionado}
+              onClose={() => {
+                console.log('Cerrar VerInformacion2');
+                setStaffSeleccionado(null);
+              }}
+            />
+          )
         )}
 
       </main>
@@ -155,6 +159,8 @@ export const Pagina2: React.FC = () => {
 };
 
 export default Pagina2;
+
+
 
 
 
