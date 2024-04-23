@@ -42,16 +42,16 @@ const ModificarStaff: React.FC<Props> = ({ staff, onGuardar }) => {
       };
 
       await axios.put(`http://localhost:4000/usuarios/modificar/${datosStaff.id}`, proyectoFormateado);
-      alert('¡Proyecto actualizado correctamente!'); // Mostrar alerta de éxito
+      alert('¡Proyecto actualizado correctamente!'); //alerta de éxito
       onGuardar(proyectoFormateado);
     } catch (error) {
-      alert('Error al actualizar el proyecto. Por favor, intenta de nuevo más tarde.'); // Mostrar alerta de error
+      alert('Error al actualizar el proyecto. Por favor, intenta de nuevo más tarde.'); 
     }
   };
 
   return (
     <div className="modificar-staff-container">
-      <h2>Información</h2>
+      <h2>Edita tus datos</h2>
       <form onSubmit={enviar} className="modificar-staff-form">
         <div className="input-group">
           <label>Nombre:</label>

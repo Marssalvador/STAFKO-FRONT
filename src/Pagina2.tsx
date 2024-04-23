@@ -62,11 +62,20 @@ export const Pagina2: React.FC = () => {
             'Authorization': `Bearer ${cookies.get('token')}`
           }
         });
-        setStaffs(staffs.filter(staff => staff.id !== id)); // filtramos para actualizar el estado staffs excluyendo el staff eliminado
+
+        // Eliminar la cookie de sesión
+        cookies.remove('id', { path: "/" });
+        cookies.remove("apellido", { path: "/" });
+        cookies.remove("nombre", { path: "/" });
+        cookies.remove("username", { path: "/" });
+  
+        // Redirigir al usuario a la página de inicio de sesión
+        window.location.href = "./";
       } catch (error) {
         alert('Cancelación: El Staff tiene un proyecto asociado');
       }
     };
+
   
 
     //función para mostrar la alerta y luego eliminar el staff
@@ -93,9 +102,14 @@ export const Pagina2: React.FC = () => {
         <div className="espacio"></div>
         <div className="ed-button">
           {isUsuarioLogueado && (
-            <Button label="Editar" className="p-button-raised p-button-primary" onClick={() => editarStaff(staff)} />
+            <>
+              <Button label="Editar" className="p-button-raised p-button-primary" onClick={() => editarStaff(staff)} />
+              <Button label="Eliminar" className="p-button-raised p-button-danger" onClick={() => confirmarEliminarStaff(staff.id)}  />
+            </>
           )}
-          <Button label="Eliminar" className="p-button-raised p-button-danger" onClick={() => confirmarEliminarStaff(staff.id)}  />
+          {!isUsuarioLogueado && (
+            <Button label="Ver más" className="p-button-raised p-button-info" onClick={() => console.log('Ver información')} />
+          )}
         </div>
       </div>
     );
@@ -141,6 +155,8 @@ export const Pagina2: React.FC = () => {
 };
 
 export default Pagina2;
+
+
 
 
 
