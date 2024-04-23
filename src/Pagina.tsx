@@ -76,6 +76,7 @@ const Pagina: React.FC = () => {
             setModalVisible(false);
           }}
         />
+        
         <button className="close-modal" onClick={() => {
           setProyectoSeleccionado(null);
           setModalVisible(false);

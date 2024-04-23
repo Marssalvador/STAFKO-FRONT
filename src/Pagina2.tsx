@@ -77,20 +77,24 @@ export const Pagina2: React.FC = () => {
         eliminarStaffConfirmado(id);
       }
     };
-  
 
+  //función para editar un staff
+  const editarStaff = (staff: Staff) => {
+    setStaffSeleccionado(staff); //establecemos el staff seleccionado para editar
+  };
+  
   const StaffComponent: React.FC<StaffProps> = ({ staff }) => {
     const username = cookies.get('username');
     const isUsuarioLogueado = staff.username === username;
-  
-    console.log('Nombre del usuario:', username);
-    console.log('Nombre del staff:', staff.nombre);
   
     return (
       <div key={staff.id} className="staff" style={{ order: isUsuarioLogueado ? 0 : 1 }}> 
         <div className={staff.username === username ? "nombre-staff usuario-logueado" : "nombre-staff"}>{staff.nombre}</div>
         <div className="espacio"></div>
         <div className="ed-button">
+          {isUsuarioLogueado && (
+            <Button label="Editar" className="p-button-raised p-button-primary" onClick={() => editarStaff(staff)} />
+          )}
           <Button label="Eliminar" className="p-button-raised p-button-danger" onClick={() => confirmarEliminarStaff(staff.id)}  />
         </div>
       </div>
@@ -100,11 +104,6 @@ export const Pagina2: React.FC = () => {
   //función para añadir un nuevo staff
   const añadirStaff = () => {
     window.location.href = './añadirStaff'; //redireccionar a la página de añadir staff
-  };
-
-  //función para editar un staff
-  const editarStaff = (staff: Staff) => {
-    setStaffSeleccionado(staff); //establecemos el staff seleccionado para editar
   };
 
   return (
