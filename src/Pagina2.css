@@ -109,6 +109,7 @@ body {
     font-size: 18px;
     color: #3e3e3e;
     width: 110px;
+    display: flex;
 }
 
 .ed-button {

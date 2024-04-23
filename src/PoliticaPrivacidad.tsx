@@ -20,7 +20,7 @@ export const PoliticaPrivacidad = () => {
         <Dialog
             header="Política de privacidad de STAFKO"
             visible={visible}
-            style={{ width: '20vw' }}
+            style={{width: '20vw'}}
             onHide={onHide}
             footer={footer}
             modal

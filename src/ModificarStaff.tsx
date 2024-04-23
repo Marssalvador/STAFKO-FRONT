@@ -71,7 +71,7 @@ const ModificarStaff: React.FC<Props> = ({ staff, onGuardar }) => {
         </div>
         <div className="input-group">
           <label>Fecha de Nacimiento:</label>
-          <input type="date" name="fechaNacimiento" value={datosStaff.fecha_nacimiento} onChange={cambiar} />
+          <input type="date" name="fecha_nacimiento" value={datosStaff.fecha_nacimiento} onChange={cambiar} />
         </div>
         <button type="submit" className="button">Guardar Cambios</button>
       </form>

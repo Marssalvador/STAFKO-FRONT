@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import './VerInformacion2.css';
-import axios from 'axios';
+import React from 'react';
 
 interface Staff {
   id: number;
@@ -17,7 +15,7 @@ interface Props {
 
 const VerInformacion2: React.FC<Props> = ({ staff, onClose }) => {
 
-  //formateamos la fecha para que sea formato español
+  //formateamos la fecha para que tenga formato español
   const formatFecha = (fecha: string): string => {
     const fechaObj = new Date(fecha);
     const dia = fechaObj.getDate();
@@ -26,7 +24,7 @@ const VerInformacion2: React.FC<Props> = ({ staff, onClose }) => {
     return `${dia}/${mes}/${año}`;
   };
 
-
+  //mostramos los datos en un modal
   return (
     <div className="modal">
       <div className="modal-content flex flex-col items-center justify-center bg-gradient-to-r from-orange-200 p-5 rounded-lg shadow-lg mb-6 max-w-md w-full">
