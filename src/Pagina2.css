@@ -144,6 +144,10 @@ body {
     margin-bottom: 10px;
 }
 
+.usuario-logueado {
+    color: #f57c00;
+}
+
 
 /*estilos responsivos*/
 @media (max-width: 800px) {
