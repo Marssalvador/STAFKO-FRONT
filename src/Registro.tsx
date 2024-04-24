@@ -115,7 +115,7 @@ const NuevoStaff: React.FC = () => {
           <div className="text-orange-500 text-center mt-2">{mensaje}</div>
         )}
         <div className="nuevo-staff-form space-y-4 bg-gradient-to-r from-orange-200 to-orange-100 p-8 rounded-lg shadow-lg mb-6">
-          <h2 className="text-3xl font-semibold mb-6">Agregar Staff</h2>
+          <h2 className="text-3xl font-semibold mb-6">¡Regístrate aquí!</h2>
           <div className="flex flex-col">
             <label className="text-sm font-semibold mb-1">Nombre:</label>
             <input type="text" name="nombre" value={nuevoStaff.nombre} onChange={cambio} className="input-group" />
