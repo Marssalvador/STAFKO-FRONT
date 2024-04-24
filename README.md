@@ -56,6 +56,7 @@
 ## El usuario logueado aparecerá el primero y de color naranja
 <img src="screenshots/staffs.png">
 
+## Añadimso Staff con validación de formulario
 <img src="screenshots/añadirStaff.png">
 <img src="screenshots/validacionAñadirStaff.png">
 <img src="screenshots/validacionFechaAñadirStaff.png">
@@ -73,19 +74,22 @@
 ## Antes de eliminar la cuenta deberá confirmar la petición
 <img src="screenshots/eliminaCuentaConfirmacion.png">
 
-## Si tengo proyecto asignado no se podrá eliminar la cuenta
+## Si el usuario logueado tiene proyecto asignado no se podrá eliminar la cuenta
 <img src="screenshots/eliminaCuentaCancelacion.png">
+
+## Una vez eliminada la cuenta no podremos volver a acceder
 <img src="screenshots/exitoEliminaCuenta.png">
 
-## Al eliminar la cuenta se eliminará también la cookie y los datos de registro en la bd
+## Al eliminar la cuenta se eliminará también la cookie y los datos de registro de la bd
 <img src="screenshots/eliminaCuentaCookie.png">
 
 
-# Politica de privacidad
+
+# Pie de página
+## Politica de privacidad
 <img src="screenshots/politicaPrivacidad.png">
 
-
-# Contacto y envío de correo
+## Contacto y envío de correo
 <img src="screenshots/contacto.png">
 <img src="screenshots/exitoContacto.png">
 <img src="screenshots/exitoContactoEmail.png">
