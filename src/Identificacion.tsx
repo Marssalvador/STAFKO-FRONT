@@ -57,7 +57,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
             }
         })
         .then(response => {
-                return response.data;
+            return response.data;
         })
         .then(response => {
             if (response.length > 0) {
@@ -66,18 +66,19 @@ class Identificacion extends Component<{}, IdentificacionState> {
                 cookies.set('apellido', respuesta.apellido, { path: "/" });
                 cookies.set('nombre', respuesta.nombre, { path: "/" });
                 cookies.set('username', respuesta.username, { path: "/" });
-
+    
                 window.location.href = "./pagina";
             } else {
-                this.setState({ error: 'El usuario o la contraseña no son correctos' });
-                console.log('Datos enviados:', { username, password }); // Mostrar los datos enviados en la consola
+                console.log('Datos enviados:', { username, password });
+                alert('El usuario o la contraseña no son correctos'); // Mostrar alerta
             }
         })
         .catch(error => {
             console.log(error);
-            this.setState({ error: 'Error en la conexión' });
+            alert('Error en la conexión'); // Mostrar alerta
         });
     }
+    
 
     componentDidMount() {
         if (cookies.get('username')) {
@@ -90,7 +91,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
 
         return (
             <>
-                {error && <p>{error}</p>}
+                {/*error && <p className="error-message">{error}</p>*/}
 
                 <img src="/panal.png" alt="Panal" className='panal-superior-derecho' />
                 <img src="/panal.png" alt="Panal" className='panal-inferior-izquierdo' />
