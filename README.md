@@ -36,16 +36,19 @@
 <img src="screenshots/exitoAñadirProyecto.png">
 <img src="screenshots/exitoAñadirProyecto2.png">
 
+
 ## Visualización de los datos de los proyectos
 <img src="screenshots/proyectosVerMas.png">
 
-## Aplicamos filtro para visualizar mis proyectos (proyectos para los que me han asignado como staff)
+## Aplicamos filtro para visualizar Mis proyectos 
 <img src="screenshots/misProyectos.png">
 
 ## Solo el usuario logueado podrá editar y eliminar sus proyectos
 <img src="screenshots/editarProyecto.png">
 <img src="screenshots/editarProyecto2.png">
 <img src="screenshots/exitoEditarProyecto.png">
+
+## Proyecto eliminado
 <img src="screenshots/eliminarProyecto.png">
 
 
@@ -69,6 +72,8 @@
 
 ## Antes de eliminar la cuenta deberá confirmar la petición
 <img src="screenshots/eliminaCuentaConfirmacion.png">
+
+## Si tengo proyecto asignado no se podrá eliminar la cuenta
 <img src="screenshots/eliminaCuentaCancelacion.png">
 <img src="screenshots/exitoEliminaCuenta.png">
 
