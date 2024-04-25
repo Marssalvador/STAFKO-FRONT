@@ -70,7 +70,7 @@ const NuevoStaff: React.FC = () => {
       apellido: nuevoStaff.apellidos,
       fecha_nacimiento: nuevoStaff.fechaNacimiento,
       password: hashedPassword,
-      rol: esCliente ? 'cliente' : null, // Establecer el rol según el estado del checkbox
+      rol: esCliente ? 'cliente' : 'staff', // Establecer el rol según el estado del checkbox
     };
 
     // Enviar solicitud para agregar el staff

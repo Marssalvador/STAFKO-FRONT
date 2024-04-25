@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import './ModificarStaff.css';
+import './ModificarUsuarios.css';
 import axios from 'axios';
 
-interface Staff {
+interface Usuario {
   id: number;
   nombre: string;
   apellido: string;
@@ -12,16 +12,16 @@ interface Staff {
 }
 
 interface Props {
-  staff: Staff;
-  onGuardar: (staff: Staff) => void;
+  usuario: Usuario;
+  onGuardar: (usuario: Usuario) => void;
 }
 
-const ModificarStaff: React.FC<Props> = ({ staff, onGuardar }) => {
-  const [datosStaff, setDatosStaff] = useState<Staff>(staff);
+const Modificarusuario: React.FC<Props> = ({ usuario, onGuardar }) => {
+  const [datosusuario, setDatosusuario] = useState<Usuario>(usuario);
 
   const cambiar = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setDatosStaff({ ...datosStaff, [name]: value });
+    setDatosusuario({ ...datosusuario, [name]: value });
   };
 
   const formatearFecha = (fecha: string): string => {
@@ -37,11 +37,11 @@ const ModificarStaff: React.FC<Props> = ({ staff, onGuardar }) => {
 
     try {
       const proyectoFormateado = {
-        ...datosStaff,
-        fecha_nacimiento: formatearFecha(datosStaff.fecha_nacimiento)
+        ...datosusuario,
+        fecha_nacimiento: formatearFecha(datosusuario.fecha_nacimiento)
       };
 
-      await axios.put(`http://localhost:4000/usuarios/modificar/${datosStaff.id}`, proyectoFormateado);
+      await axios.put(`http://localhost:4000/usuarios/modificar/${datosusuario.id}`, proyectoFormateado);
       alert('¡Proyecto actualizado correctamente!'); //alerta de éxito
       onGuardar(proyectoFormateado);
     } catch (error) {
@@ -50,28 +50,28 @@ const ModificarStaff: React.FC<Props> = ({ staff, onGuardar }) => {
   };
 
   return (
-    <div className="modificar-staff-container">
+    <div className="modificar-usuario-container">
       <h2>Edita tus datos</h2>
-      <form onSubmit={enviar} className="modificar-staff-form">
+      <form onSubmit={enviar} className="modificar-usuario-form">
         <div className="input-group">
           <label>Nombre:</label>
-          <input type="text" name="nombre" value={datosStaff.nombre} onChange={cambiar} />
+          <input type="text" name="nombre" value={datosusuario.nombre} onChange={cambiar} />
         </div>
         <div className="input-group">
           <label>Apellidos:</label>
-          <input type="text" name="apellido" value={datosStaff.apellido} onChange={cambiar} />
+          <input type="text" name="apellido" value={datosusuario.apellido} onChange={cambiar} />
         </div>
         <div className="input-group">
           <label>Usuario:</label>
-          <input type="text" name="username" value={datosStaff.username} onChange={cambiar} />
+          <input type="text" name="username" value={datosusuario.username} onChange={cambiar} />
         </div>
         <div className="input-group">
           <label>Teléfono:</label>
-          <input type="text" name="telefono" value={datosStaff.telefono} onChange={cambiar} />
+          <input type="text" name="telefono" value={datosusuario.telefono} onChange={cambiar} />
         </div>
         <div className="input-group">
           <label>Fecha de Nacimiento:</label>
-          <input type="date" name="fecha_nacimiento" value={datosStaff.fecha_nacimiento} onChange={cambiar} />
+          <input type="date" name="fecha_nacimiento" value={datosusuario.fecha_nacimiento} onChange={cambiar} />
         </div>
         <button type="submit" className="button">Guardar Cambios</button>
       </form>
@@ -79,4 +79,4 @@ const ModificarStaff: React.FC<Props> = ({ staff, onGuardar }) => {
   );
 };
 
-export default ModificarStaff;
+export default Modificarusuario;

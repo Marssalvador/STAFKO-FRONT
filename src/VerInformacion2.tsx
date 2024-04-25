@@ -1,19 +1,20 @@
 import React from 'react';
 
-interface Staff {
+interface Usuario {
   id: number;
   nombre: string;
   apellido: string;
+  telefono: string;
   username: string;
   fecha_nacimiento: string;
 }
 
 interface Props {
-  staff: Staff;
+  usuario: Usuario;
   onClose: () => void;
 }
 
-const VerInformacion2: React.FC<Props> = ({ staff, onClose }) => {
+const VerInformacion2: React.FC<Props> = ({ usuario, onClose }) => {
 
   //formateamos la fecha para que tenga formato español
   const formatFecha = (fecha: string): string => {
@@ -30,16 +31,19 @@ const VerInformacion2: React.FC<Props> = ({ staff, onClose }) => {
       <div className="modal-content flex flex-col items-center justify-center bg-gradient-to-r from-orange-200 p-5 rounded-lg shadow-lg mb-6 max-w-md w-full">
         <div>
           <label>Nombre:</label>
-          <input type="text" value={staff.nombre} readOnly />
+          <input type="text" value={usuario.nombre} readOnly />
           <br />
           <label>Apellido:</label>
-          <textarea value={staff.apellido} readOnly />
+          <textarea value={usuario.apellido} readOnly />
           <br />
           <label>Usuario:</label>
-          <input type="text" value={staff.username} readOnly />
+          <input type="text" value={usuario.username} readOnly />
+          <br />
+          <label>Telefono:</label>
+          <textarea value={usuario.telefono} readOnly />
           <br />
           <label>Fecha de nacimiento:</label>
-          <input type="text" value={formatFecha(staff.fecha_nacimiento)} readOnly />
+          <input type="text" value={formatFecha(usuario.fecha_nacimiento)} readOnly />
         </div>
         <button className="close-modal" onClick={onClose}>Cerrar</button>
       </div>

@@ -12,6 +12,10 @@ const proyectos = () => {
   window.location.href = './pagina';
 };
 
+const clientes = () => {
+  window.location.href = './pagina3';
+};
+
 const cerrarSesion = () => {
   cookies.remove('id', { path: "/" });
   cookies.remove("apellido", { path: "/" });
@@ -38,6 +42,9 @@ const Header: React.FC = () => {
           </li>  
           <li>
             <a href="#" onClick={proyectos}>Proyectos</a>
+          </li>
+          <li>
+            <a href="#" onClick={clientes}>Clientes</a>
           </li>
         </ul>
       </nav>

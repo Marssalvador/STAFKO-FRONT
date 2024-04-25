@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Pagina2.css';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
-import ModificarStaff from './ModificarStaff'; 
+import ModificarStaff from './ModificarUsuarios'; 
 import VerInformacion2 from './VerInformacion2';
 import { Button } from 'primereact/button'; 
 
@@ -15,6 +15,7 @@ interface Staff {
   username: string;
   telefono: string; 
   fecha_nacimiento: string; 
+  rol: string;
 }
 
 interface StaffProps {
@@ -36,7 +37,8 @@ const Pagina2: React.FC = () => {
         });
 
         if (Array.isArray(response.data.rows)) {
-          setStaffs(response.data.rows);
+          const staffFiltrado = response.data.rows.filter((staff: Staff) => staff.rol === 'staff');
+          setStaffs(staffFiltrado);
         } else {
           console.error('La respuesta de la API no es un arreglo de staff:', response.data);
         }
@@ -117,7 +119,7 @@ const Pagina2: React.FC = () => {
   };
 
   const añadirStaff = () => {
-    window.location.href = './añadirStaff';
+    window.location.href = './añadirUsuarios';
   };
 
   return (
@@ -139,7 +141,7 @@ const Pagina2: React.FC = () => {
         {staffSeleccionado && (
           mostrarEditar ? (
             <ModificarStaff
-              staff={staffSeleccionado}
+              usuario={staffSeleccionado}
               onGuardar={() => {
                 console.log('Guardar cambios');
                 setStaffSeleccionado(null);
@@ -148,7 +150,7 @@ const Pagina2: React.FC = () => {
             />
           ) : (
             <VerInformacion2
-              staff={staffSeleccionado}
+              usuario={staffSeleccionado}
               onClose={() => {
                 console.log('Cerrar VerInformacion2');
                 setStaffSeleccionado(null);

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import './AñadirStaff.css';
 import md5 from 'md5';
 import { Button } from 'primereact/button';
+import { useNavigate } from 'react-router-dom'; 
+
+import './Registro.css';
 
 interface Staff {
   nombre: string;
@@ -10,6 +12,7 @@ interface Staff {
   username: string;
   password: string;
   fechaNacimiento: string;
+  rol: string | null; // Agregar el tipo de la columna "rol"
 }
 
 const NuevoStaff: React.FC = () => {
@@ -19,11 +22,14 @@ const NuevoStaff: React.FC = () => {
     telefono: '',
     username: '',
     password: '',
-    fechaNacimiento: ''
+    fechaNacimiento: '',
+    rol: null, // Inicializar el estado del rol como null
   });
 
   const [staffs, setStaffs] = useState<Staff[]>([]);
   const [mensaje, setMensaje] = useState<string>('');
+  const [esCliente, setEsCliente] = useState<boolean>(false); // Estado del checkbox
+  const navigate = useNavigate(); // Obtener la función de navegación
 
   const cambio = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,7 +41,7 @@ const NuevoStaff: React.FC = () => {
   };
 
   const agregarStaff = () => {
-    //validar si todos los campos están llenos
+    // Comprobación de datos vacíos 
     if (
       nuevoStaff.nombre.trim() === '' ||
       nuevoStaff.apellidos.trim() === '' ||
@@ -48,25 +54,26 @@ const NuevoStaff: React.FC = () => {
       return;
     }
 
-    //fecha actual en formato ISO (YYYY-MM-DD)
+    // Fecha actual en formato ISO (YYYY-MM-DD)
     const fechaActual = new Date().toISOString().split('T')[0];
 
-    //verificar si la fecha de nacimiento es mayor que la fecha actual
+    // Verificación si la fecha de nacimiento es mayor que la fecha actual
     if (nuevoStaff.fechaNacimiento > fechaActual) {
       mostrarAlerta('La fecha de nacimiento no puede ser mayor que la fecha actual.');
       return;
     }
 
-    //hash de la contraseña
+    // Hash de la contraseña
     const hashedPassword = md5(nuevoStaff.password);
     const nuevoStaffCompleto = {
       ...nuevoStaff,
       apellido: nuevoStaff.apellidos,
       fecha_nacimiento: nuevoStaff.fechaNacimiento,
-      password: hashedPassword
+      password: hashedPassword,
+      rol: esCliente ? 'cliente' : 'staff', // Establecer el rol según el estado del checkbox
     };
 
-    //enviar solicitud para agregar el staff
+    // Enviar solicitud para agregar el staff
     fetch('http://localhost:4000/usuarios/insertar', {
       method: 'POST',
       headers: {
@@ -76,19 +83,22 @@ const NuevoStaff: React.FC = () => {
     })
     .then(response => response.json())
     .then(data => {
-      //si la solicitud fue exitosa, agregar el nuevo staff a la lista
+      // Si la solicitud fue exitosa, agregar el nuevo staff a la lista
       setStaffs([...staffs, nuevoStaff]);
 
-      //limpiamos los campos del formulario y el mensaje
+      // Limpiamos los campos del formulario y el mensaje
       setNuevoStaff({
         nombre: '',
         apellidos: '',
         telefono: '',
         username: '',
         password: '',
-        fechaNacimiento: ''
+        fechaNacimiento: '',
+        rol: null, // Restablecer el estado del rol a null
       });
-      mostrarAlerta('¡Staff añadido con éxito!');
+
+      // Enviar el mensaje 
+      setMensaje('¡Staff añadido con éxito!');
     })
     .catch(error => {
       console.error('Error al agregar staff:', error);
@@ -97,12 +107,15 @@ const NuevoStaff: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center w-full h-full">
-      <div className="nuevo-staff-container ">
-        <img src="/panal2.png" alt="Panal" className="panal-superior-derecho" />
-        <img src="/panal2.png" alt="Panal" className="panal-inferior-izquierdo" />
-
+      <div className="nuevo-staff-container">
+        <img src="/panal.png" alt="Panal" className='panal-superior-derecho' />
+        <img src="/panal.png" alt="Panal" className='panal-inferior-izquierdo' />
+        {/* Mostramos el mensaje de éxito arriba del formulario */}
+        {mensaje && (
+          <div className="text-orange-500 text-center mt-2">{mensaje}</div>
+        )}
         <div className="nuevo-staff-form space-y-4 bg-gradient-to-r from-orange-200 to-orange-100 p-8 rounded-lg shadow-lg mb-6">
-          <h2 className="text-3xl font-semibold mb-6">Agregar Staff</h2>
+          <h2 className="text-3xl font-semibold mb-6">Añade usuario</h2>
           <div className="flex flex-col">
             <label className="text-sm font-semibold mb-1">Nombre:</label>
             <input type="text" name="nombre" value={nuevoStaff.nombre} onChange={cambio} className="input-group" />
@@ -133,7 +146,14 @@ const NuevoStaff: React.FC = () => {
             <input type="date" name="fechaNacimiento" value={nuevoStaff.fechaNacimiento} onChange={cambio} className="input-group" />
           </div>
 
-          <Button type="button" label="Añadir Staff" className="button3" onClick={agregarStaff}/>        
+          <div className="flex flex-col">
+            <label className="text-sm font-semibold mb-1">¿Cliente?:</label>
+            <input type="checkbox" checked={esCliente} onChange={() => setEsCliente(!esCliente)} />
+          </div>
+
+          <div className="flex justify-center mt-4">
+            <Button type="button" label="Añadir Staff" className="p-button-outlined naranja" onClick={agregarStaff}/>        
+          </div>
         </div>
       </div>
     </div>

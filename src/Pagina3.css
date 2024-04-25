@@ -1,0 +1,192 @@
+/*estilos por defecto*/
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    color: white;
+    padding: 10px 20px;
+}
+
+.nav {
+    display: inline-block;
+}
+
+.nav-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-list li {
+    display: inline;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+}
+
+.main {
+    margin: 80px auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #c0bcbc;
+    border-radius: 10px;
+    box-shadow: 0 8px 6px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+}
+
+.space {
+    font-size: 24px;
+    color: #3e3e3e;
+    font-family: 'Lato', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin: auto;
+    margin-top: -10px;
+}
+
+@keyframes jump {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+
+    75% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.jump-animation {
+    animation: jump 0.4s ease 3;
+}
+
+.button5 {
+    background-color: #ffcc00;
+    color: #3e3e3e;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 50px;
+}
+
+.button5:hover {
+    background-color: #ffdb4d;
+}
+
+.add-button {
+    margin-bottom: 20px;
+    margin-left: 3rem;
+}
+
+.usuario {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #dad9d9;
+    align-items: center;
+    margin-bottom: 20px;
+    max-width: 90%;
+}
+
+.nombre-usuario {
+    flex-grow: 1;
+    font-size: 18px;
+    color: #3e3e3e;
+    width: 110px;
+    display: flex;
+}
+
+.ed-button {
+    display: flex;
+    gap: 10px;
+}
+
+.espacio {
+    width: 30rem;
+}
+
+.ed-button .button {
+    background-color: #e68a00;
+}
+
+.ed-button .button:hover {
+    background-color: #ff9900;
+}
+
+.custom-orange-button {
+    color: #fff;
+    background-color: #ff9800;
+    border-color: #ff9800;
+    margin-right: 3.5rem;
+}
+
+.custom-orange-button:hover {
+    background-color: #f57c00;
+    border-color: #f57c00;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+}
+
+.p-button-raised {
+    margin-bottom: 10px;
+    margin-top: 0px;
+}
+
+.p-button-raised2 {
+    margin-bottom: 10px;
+    margin-top: 0px;
+    width: 7rem;
+}
+
+.usuario-logueado {
+    color: #f57c00;
+}
+
+
+/*estilos responsivos*/
+@media (max-width: 800px) {
+    .header {
+        padding: 10px; 
+    }
+
+    .add-button {
+        margin-left: 2rem; 
+    }
+
+    .usuario,
+    .nombre-usuario,
+    .ed-button {
+        max-width: 80%; 
+        display: flex;
+        justify-content: center;
+    }
+
+    .usuario {
+        display: flex;
+        flex-direction: column;
+        border-bottom: 2px solid #dad9d9;
+        align-items: center;
+        margin-bottom: 20px;
+        max-width: 90%;
+    }
+
+    .custom-orange-button {
+        margin-right: 2rem; 
+    }
+}
