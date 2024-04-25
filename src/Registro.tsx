@@ -12,6 +12,7 @@ interface Staff {
   username: string;
   password: string;
   fechaNacimiento: string;
+  rol: string | null; // Agregar el tipo de la columna "rol"
 }
 
 const NuevoStaff: React.FC = () => {
@@ -21,12 +22,14 @@ const NuevoStaff: React.FC = () => {
     telefono: '',
     username: '',
     password: '',
-    fechaNacimiento: ''
+    fechaNacimiento: '',
+    rol: null, // Inicializar el estado del rol como null
   });
 
   const [staffs, setStaffs] = useState<Staff[]>([]);
   const [mensaje, setMensaje] = useState<string>('');
-  const navigate = useNavigate(); //obtener la función de navegación
+  const [esCliente, setEsCliente] = useState<boolean>(false); // Estado del checkbox
+  const navigate = useNavigate(); // Obtener la función de navegación
 
   const cambio = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,7 +41,7 @@ const NuevoStaff: React.FC = () => {
   };
 
   const agregarStaff = () => {
-    //comprobación de datos vacíos 
+    // Comprobación de datos vacíos 
     if (
       nuevoStaff.nombre.trim() === '' ||
       nuevoStaff.apellidos.trim() === '' ||
@@ -51,25 +54,26 @@ const NuevoStaff: React.FC = () => {
       return;
     }
 
-    //fecha actual en formato ISO (YYYY-MM-DD)
+    // Fecha actual en formato ISO (YYYY-MM-DD)
     const fechaActual = new Date().toISOString().split('T')[0];
 
-    //verificación si la fecha de nacimiento es mayor que la fecha actual
+    // Verificación si la fecha de nacimiento es mayor que la fecha actual
     if (nuevoStaff.fechaNacimiento > fechaActual) {
       mostrarAlerta('La fecha de nacimiento no puede ser mayor que la fecha actual.');
       return;
     }
 
-    //hash de la contraseña
+    // Hash de la contraseña
     const hashedPassword = md5(nuevoStaff.password);
     const nuevoStaffCompleto = {
       ...nuevoStaff,
       apellido: nuevoStaff.apellidos,
       fecha_nacimiento: nuevoStaff.fechaNacimiento,
-      password: hashedPassword
+      password: hashedPassword,
+      rol: esCliente ? 'cliente' : null, // Establecer el rol según el estado del checkbox
     };
 
-    //enviar solicitud para agregar el staff
+    // Enviar solicitud para agregar el staff
     fetch('http://localhost:4000/usuarios/insertar', {
       method: 'POST',
       headers: {
@@ -79,23 +83,24 @@ const NuevoStaff: React.FC = () => {
     })
     .then(response => response.json())
     .then(data => {
-      //si la solicitud fue exitosa, agregar el nuevo staff a la lista
+      // Si la solicitud fue exitosa, agregar el nuevo staff a la lista
       setStaffs([...staffs, nuevoStaff]);
 
-      //limpiamos los campos del formulario y el mensaje
+      // Limpiamos los campos del formulario y el mensaje
       setNuevoStaff({
         nombre: '',
         apellidos: '',
         telefono: '',
         username: '',
         password: '',
-        fechaNacimiento: ''
+        fechaNacimiento: '',
+        rol: null, // Restablecer el estado del rol a null
       });
 
-      //enviar el mensaje 
+      // Enviar el mensaje 
       setMensaje('¡Staff añadido con éxito! Redirigiendo...');
 
-      //esperar 5 segundos y luego redirigir
+      // Esperar 5 segundos y luego redirigir
       setTimeout(() => {
         navigate('/pagina');
       }, 2000);
@@ -110,7 +115,7 @@ const NuevoStaff: React.FC = () => {
       <div className="nuevo-staff-container">
         <img src="/panal.png" alt="Panal" className='panal-superior-derecho' />
         <img src="/panal.png" alt="Panal" className='panal-inferior-izquierdo' />
-        {/*mostramos el mensaje de éxito arriba del formulario */}
+        {/* Mostramos el mensaje de éxito arriba del formulario */}
         {mensaje && (
           <div className="text-orange-500 text-center mt-2">{mensaje}</div>
         )}
@@ -144,6 +149,11 @@ const NuevoStaff: React.FC = () => {
           <div className="flex flex-col">
             <label className="text-sm font-semibold mb-1">Fecha de Nacimiento:</label>
             <input type="date" name="fechaNacimiento" value={nuevoStaff.fechaNacimiento} onChange={cambio} className="input-group" />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="text-sm font-semibold mb-1">¿Cliente?:</label>
+            <input type="checkbox" checked={esCliente} onChange={() => setEsCliente(!esCliente)} />
           </div>
 
           <div className="flex justify-center mt-4">
