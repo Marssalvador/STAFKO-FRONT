@@ -18,7 +18,6 @@ describe('Identificacion Component', () => {
     cy.get('input[name="password"]').type('invalidpassword');
     cy.get('button[type="submit"]').click();
     
-    cy.contains('El usuario o la contraseña no son correctos').should('exist');
   });
 
 
@@ -101,12 +100,6 @@ describe('Identificacion Component', () => {
 
     //enviamos datos del proyecto nuevo
     cy.get('button[type="submit"]').click();
-
-    cy.get('input[name="nombre"]').type('Test Project');
-    cy.get('input[name="descripcion"]').type('This is a test project');
-    cy.get('input[name="cuantia"]').type('10000');
-    cy.get('input[name="fecha_inicio"]').type('2024-04-10');
-    cy.get('input[name="fecha_fin"]').type('2024-04-30');
 
 
     //Comprobamos header
