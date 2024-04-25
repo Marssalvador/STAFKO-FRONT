@@ -17,6 +17,7 @@ interface Usuarios {
   telefono: string; 
   fecha_nacimiento: string;
   rol: string | null; // Agregar el tipo de la columna "rol"
+  id_proyecto?: number; // Asegúrate de que id_proyecto sea opcional para evitar errores
 }
 
 interface UsuariosProps {
@@ -29,6 +30,7 @@ const Pagina3: React.FC = () => {
   const [mostrarEditar, setMostrarEditar] = useState<boolean>(false);
   const [mostrarModalProyectos, setMostrarModalProyectos] = useState<boolean>(false); // Estado para controlar la visibilidad del modal
   const [proyectosUsuario, setProyectosUsuario] = useState<any[]>([]);
+  const [proyectoSeleccionado, setProyectoSeleccionado] = useState<any | null>(null);
 
   useEffect(() => {
     const obtenerUsuarios = async () => {
@@ -80,12 +82,9 @@ const Pagina3: React.FC = () => {
         }
       };
       
-  
     obtenerProyectosUsuario();
   }, []);
   
-  
-
   const eliminarUsuarioConfirmado = async (id: number) => {
     try {
       await axios.delete(`http://localhost:4000/usuEliminar/${id}`, {
@@ -121,15 +120,15 @@ const Pagina3: React.FC = () => {
 
   const verInformacion = (usuario: Usuarios) => {
     setUsuarioSeleccionado(usuario);
-    setMostrarEditar(false);
+    setProyectoSeleccionado(null); // Restablecer el proyecto seleccionado
+    setMostrarModalProyectos(false);
   };
   
   const UsuarioComponent: React.FC<UsuariosProps> = ({ usuario }) => {
     const username = cookies.get('username');
     const isUsuarioLogueado = usuario.username === username;
-  
-    //si el usuario es el que se ha logueado podrá editar sus datos y eliminar su cuenta
-    //sin embargo, del resto de usuarios solo podrá ver la información
+    const mostrarAsignar = !usuario.id_proyecto; 
+
     return (
       <div key={usuario.id} className="usuario" style={{ order: isUsuarioLogueado ? 0 : 1 }}> 
         <div className={usuario.username === username ? "nombre-usuario usuario-logueado" : "nombre-usuario"}>{usuario.nombre}</div>
@@ -144,16 +143,46 @@ const Pagina3: React.FC = () => {
 
           {!isUsuarioLogueado && (
             <>
-              <Button label="Ver más" className="p-button-raised2 p-button-info" onClick={() => verInformacion(usuario)} />
-              <Button label="Asignar" className="p-button-raised2 p-button-success" onClick={() => setMostrarModalProyectos(true)} />
+                {mostrarAsignar && (
+                    <Button label="Asignar" className="p-button-raised2 p-button-success" onClick={() => setMostrarModalProyectos(true)} />
+                )} 
+
+                <Button label="Ver más" className="p-button-raised2 p-button-info" onClick={() => verInformacion(usuario)} />
+           
             </>
           )}
+
         </div>
       </div>
     );
   };
 
-  const añadirUsuario = () => {
+  const seleccionarProyecto = async (proyecto: any, usuario: Usuarios | null) => {
+    try {
+      if (!usuario) {
+        console.error('Usuario no seleccionado');
+        return;
+      }
+  
+      // Realizar una solicitud para actualizar el usuario con el ID del proyecto seleccionado
+      await axios.put(`http://localhost:4000/usuarios/modificar/${usuario.id}`, {
+        id_proyecto: proyecto.id
+      }, {
+        headers: {
+          'Authorization': `Bearer ${cookies.get('token')}`
+        }
+      });
+      // Actualizar el estado del usuario con el proyecto seleccionado
+      setUsuarioSeleccionado(prevUsuario => prevUsuario ? { ...prevUsuario, id_proyecto: proyecto.id } : null);
+      // Cerrar el modal después de seleccionar el proyecto
+      setMostrarModalProyectos(false);
+    } catch (error) {
+      console.error('Error al asignar proyecto al usuario:', error);
+    }
+  };
+  
+
+  const añadirUsuario = async () => {
     window.location.href = './añadirUsuarios';
   };
 
@@ -206,11 +235,19 @@ const Pagina3: React.FC = () => {
           <h2>Proyectos Disponibles</h2>
           <ul>
             {proyectosUsuario.map(proyecto => (
-              <li key={proyecto.id}>{proyecto.nombre}</li>
+              <li key={proyecto.id}>
+                {proyecto.nombre}{' '}
+                <Button
+                    label="Seleccionar"
+                    className="p-button-raised p-button-success"
+                    onClick={() => seleccionarProyecto(proyecto, usuarioSeleccionado)}
+                    />
+              </li>
             ))}
           </ul>
         </div>
       </Dialog>
+
     </>
   );
 };

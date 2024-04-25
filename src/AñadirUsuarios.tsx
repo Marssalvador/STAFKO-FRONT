@@ -12,7 +12,7 @@ interface Staff {
   username: string;
   password: string;
   fechaNacimiento: string;
-  rol: string | null; // Agregar el tipo de la columna "rol"
+  rol: string | null; 
 }
 
 const NuevoStaff: React.FC = () => {
@@ -23,7 +23,7 @@ const NuevoStaff: React.FC = () => {
     username: '',
     password: '',
     fechaNacimiento: '',
-    rol: null, // Inicializar el estado del rol como null
+    rol: null, 
   });
 
   const [staffs, setStaffs] = useState<Staff[]>([]);
@@ -98,7 +98,7 @@ const NuevoStaff: React.FC = () => {
       });
 
       // Enviar el mensaje 
-      setMensaje('¡Staff añadido con éxito!');
+      setMensaje('Usuario añadido con éxito!');
     })
     .catch(error => {
       console.error('Error al agregar staff:', error);

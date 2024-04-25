@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Pagina2.css';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
-import ModificarStaff from './ModificarUsuarios'; 
+import ModificarUsuarios from './ModificarUsuarios'; 
 import VerInformacion2 from './VerInformacion2';
 import { Button } from 'primereact/button'; 
 
@@ -140,7 +140,7 @@ const Pagina2: React.FC = () => {
 
         {staffSeleccionado && (
           mostrarEditar ? (
-            <ModificarStaff
+            <ModificarUsuarios
               usuario={staffSeleccionado}
               onGuardar={() => {
                 console.log('Guardar cambios');
