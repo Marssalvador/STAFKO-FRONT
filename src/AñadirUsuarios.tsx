@@ -28,8 +28,8 @@ const NuevoStaff: React.FC = () => {
 
   const [staffs, setStaffs] = useState<Staff[]>([]);
   const [mensaje, setMensaje] = useState<string>('');
-  const [esCliente, setEsCliente] = useState<boolean>(false); // Estado del checkbox
-  const navigate = useNavigate(); // Obtener la función de navegación
+  const [esCliente, setEsCliente] = useState<boolean>(false); 
+  const navigate = useNavigate(); 
 
   const cambio = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -54,26 +54,26 @@ const NuevoStaff: React.FC = () => {
       return;
     }
 
-    // Fecha actual en formato ISO (YYYY-MM-DD)
+    //fecha actual en formato ISO (YYYY-MM-DD)
     const fechaActual = new Date().toISOString().split('T')[0];
 
-    // Verificación si la fecha de nacimiento es mayor que la fecha actual
+    //verificación si la fecha de nacimiento es mayor que la fecha actual
     if (nuevoStaff.fechaNacimiento > fechaActual) {
       mostrarAlerta('La fecha de nacimiento no puede ser mayor que la fecha actual.');
       return;
     }
 
-    // Hash de la contraseña
+    //hash de la contraseña
     const hashedPassword = md5(nuevoStaff.password);
     const nuevoStaffCompleto = {
       ...nuevoStaff,
       apellido: nuevoStaff.apellidos,
       fecha_nacimiento: nuevoStaff.fechaNacimiento,
       password: hashedPassword,
-      rol: esCliente ? 'cliente' : 'staff', // Establecer el rol según el estado del checkbox
+      rol: esCliente ? 'cliente' : 'staff', //establecemos el rol según el estado del checkbox
     };
 
-    // Enviar solicitud para agregar el staff
+    //enviamos solicitud para agregar el staff
     fetch('http://localhost:4000/usuarios/insertar', {
       method: 'POST',
       headers: {
@@ -83,10 +83,10 @@ const NuevoStaff: React.FC = () => {
     })
     .then(response => response.json())
     .then(data => {
-      // Si la solicitud fue exitosa, agregar el nuevo staff a la lista
+      //agregamos el nuevo staff a la lista
       setStaffs([...staffs, nuevoStaff]);
 
-      // Limpiamos los campos del formulario y el mensaje
+      //limpiamos los campos del formulario y el mensaje
       setNuevoStaff({
         nombre: '',
         apellidos: '',
@@ -94,11 +94,11 @@ const NuevoStaff: React.FC = () => {
         username: '',
         password: '',
         fechaNacimiento: '',
-        rol: null, // Restablecer el estado del rol a null
+        rol: null, //restablecemos el estado del rol a null
       });
 
-      // Enviar el mensaje 
-      setMensaje('Usuario añadido con éxito!');
+      //enviar el mensaje 
+      setMensaje('¡Usuario añadido con éxito!');
     })
     .catch(error => {
       console.error('Error al agregar staff:', error);
@@ -110,6 +110,7 @@ const NuevoStaff: React.FC = () => {
       <div className="nuevo-staff-container">
         <img src="/panal.png" alt="Panal" className='panal-superior-derecho' />
         <img src="/panal.png" alt="Panal" className='panal-inferior-izquierdo' />
+
         {/* Mostramos el mensaje de éxito arriba del formulario */}
         {mensaje && (
           <div className="text-orange-500 text-center mt-2">{mensaje}</div>

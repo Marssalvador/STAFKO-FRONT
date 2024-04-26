@@ -1,16 +1,18 @@
 import React from 'react';
 
-interface Usuario {
+interface Usuarios {
   id: number;
   nombre: string;
   apellido: string;
   telefono: string;
   username: string;
   fecha_nacimiento: string;
+  id_proyecto?: number | null | undefined; // Permitir undefined
 }
 
+
 interface Props {
-  usuario: Usuario;
+  usuario: Usuarios;
   onClose: () => void;
 }
 
@@ -44,6 +46,13 @@ const VerInformacion2: React.FC<Props> = ({ usuario, onClose }) => {
           <br />
           <label>Fecha de nacimiento:</label>
           <input type="text" value={formatFecha(usuario.fecha_nacimiento)} readOnly />
+          <br />
+          <div>
+          <label>Id proyecto:</label>
+          <input type="text" value={usuario.id_proyecto !== null ? usuario.id_proyecto : ''} readOnly />
+
+        </div>
+
         </div>
         <button className="close-modal" onClick={onClose}>Cerrar</button>
       </div>

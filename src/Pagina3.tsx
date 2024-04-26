@@ -17,7 +17,7 @@ interface Usuarios {
   telefono: string; 
   fecha_nacimiento: string;
   rol: string | null; // Agregar el tipo de la columna "rol"
-  id_proyecto?: number; // Asegúrate de que id_proyecto sea opcional para evitar errores
+  id_proyecto?: number | null; // Asegúrate de que id_proyecto sea opcional para evitar errores
 }
 
 interface UsuariosProps {
@@ -120,9 +120,10 @@ const Pagina3: React.FC = () => {
 
   const verInformacion = (usuario: Usuarios) => {
     setUsuarioSeleccionado(usuario);
-    setProyectoSeleccionado(null); // Restablecer el proyecto seleccionado
+    setProyectoSeleccionado(usuario.id_proyecto !== null ? usuario.id_proyecto : "No hay proyecto asignado");
     setMostrarModalProyectos(false);
   };
+  
   
   const UsuarioComponent: React.FC<UsuariosProps> = ({ usuario }) => {
     const username = cookies.get('username');
@@ -144,7 +145,15 @@ const Pagina3: React.FC = () => {
           {!isUsuarioLogueado && (
             <>
                 {mostrarAsignar && (
-                    <Button label="Asignar" className="p-button-raised2 p-button-success" onClick={() => setMostrarModalProyectos(true)} />
+                  <Button
+                    label="Asignar"
+                    className="p-button-raised2 p-button-success"
+                    onClick={() => {
+                      setUsuarioSeleccionado(usuario); // Seleccionar el usuario antes de abrir el modal de proyectos
+                      setMostrarModalProyectos(true);
+                    }}
+                  />
+
                 )} 
 
                 <Button label="Ver más" className="p-button-raised2 p-button-info" onClick={() => verInformacion(usuario)} />
@@ -164,22 +173,25 @@ const Pagina3: React.FC = () => {
         return;
       }
   
+      // Actualizar el campo id_proyecto del usuario seleccionado
+      const usuarioActualizado = { ...usuario, id_proyecto: proyecto.id };
+  
       // Realizar una solicitud para actualizar el usuario con el ID del proyecto seleccionado
-      await axios.put(`http://localhost:4000/usuarios/modificar/${usuario.id}`, {
-        id_proyecto: proyecto.id
-      }, {
+      await axios.put(`http://localhost:4000/usuarios/modificar/${usuario.id}`, usuarioActualizado, {
         headers: {
           'Authorization': `Bearer ${cookies.get('token')}`
         }
       });
+  
       // Actualizar el estado del usuario con el proyecto seleccionado
-      setUsuarioSeleccionado(prevUsuario => prevUsuario ? { ...prevUsuario, id_proyecto: proyecto.id } : null);
+      setUsuarioSeleccionado(usuarioActualizado);
       // Cerrar el modal después de seleccionar el proyecto
       setMostrarModalProyectos(false);
     } catch (error) {
       console.error('Error al asignar proyecto al usuario:', error);
     }
   };
+  
   
 
   const añadirUsuario = async () => {
@@ -238,16 +250,15 @@ const Pagina3: React.FC = () => {
               <li key={proyecto.id}>
                 {proyecto.nombre}{' '}
                 <Button
-                    label="Seleccionar"
-                    className="p-button-raised p-button-success"
-                    onClick={() => seleccionarProyecto(proyecto, usuarioSeleccionado)}
-                    />
+                  label="Seleccionar"
+                  className="p-button-raised p-button-success"
+                  onClick={() => seleccionarProyecto(proyecto, usuarioSeleccionado)}
+                />
               </li>
             ))}
           </ul>
         </div>
       </Dialog>
-
     </>
   );
 };
