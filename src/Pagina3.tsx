@@ -120,9 +120,12 @@ const Pagina3: React.FC = () => {
 
   const verInformacion = (usuario: Usuarios) => {
     setUsuarioSeleccionado(usuario);
-    setProyectoSeleccionado(usuario.id_proyecto !== null ? usuario.id_proyecto : "No hay proyecto asignado");
+    const proyecto = usuario.id_proyecto ? proyectosUsuario.find(proyecto => proyecto.id === usuario.id_proyecto) : null;
+    const proyectoNombre = proyecto;
+    setProyectoSeleccionado(proyectoNombre);
     setMostrarModalProyectos(false);
   };
+  
   
   
   const UsuarioComponent: React.FC<UsuariosProps> = ({ usuario }) => {
@@ -227,6 +230,7 @@ const Pagina3: React.FC = () => {
           ) : (
             <VerInformacion2
               usuario={usuarioSeleccionado}
+              proyectos={proyectosUsuario}
               onClose={() => {
                 console.log('Cerrar VerInformacion2');
                 setUsuarioSeleccionado(null);
@@ -237,28 +241,31 @@ const Pagina3: React.FC = () => {
 
       </main>
 
-      <Dialog
-        visible={mostrarModalProyectos}
-        onHide={() => setMostrarModalProyectos(false)}
-        header="Lista de Proyectos"
-        modal
-      >
-        <div className="lista-proyectos">
-          <h2>Proyectos Disponibles</h2>
-          <ul>
-            {proyectosUsuario.map(proyecto => (
-              <li key={proyecto.id}>
-                {proyecto.nombre}{' '}
-                <Button
-                  label="Seleccionar"
-                  className="p-button-raised p-button-success"
-                  onClick={() => seleccionarProyecto(proyecto, usuarioSeleccionado)}
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Dialog>
+      {proyectosUsuario.length > 0 && (
+        <Dialog
+          visible={mostrarModalProyectos}
+          onHide={() => setMostrarModalProyectos(false)}
+          header="Lista de Proyectos"
+          modal
+        >
+          <div className="lista-proyectos">
+            <h2>Proyectos Disponibles</h2>
+            <ul>
+              {proyectosUsuario.map(proyecto => (
+                <li key={proyecto.id}>
+                  {proyecto.nombre}{' '}
+                  <Button
+                    label="Seleccionar"
+                    className="p-button-raised p-button-success"
+                    onClick={() => seleccionarProyecto(proyecto, usuarioSeleccionado)}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Dialog>
+      )}
+
     </>
   );
 };

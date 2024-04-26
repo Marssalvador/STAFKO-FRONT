@@ -10,15 +10,22 @@ interface Usuarios {
   id_proyecto?: number | null | undefined; // Permitir undefined
 }
 
+interface Proyecto {
+  id: number;
+  nombre: string;
+}
 
 interface Props {
   usuario: Usuarios;
+  proyectos: Proyecto[]; // Lista de proyectos
   onClose: () => void;
 }
 
-const VerInformacion2: React.FC<Props> = ({ usuario, onClose }) => {
+const VerInformacion2: React.FC<Props> = ({ usuario, proyectos, onClose }) => {
+  // Buscar el nombre del proyecto correspondiente al id_proyecto del usuario
+  const nombreProyecto = usuario.id_proyecto ? proyectos.find(proyecto => proyecto.id === usuario.id_proyecto)?.nombre : 'No hay proyecto asignado';
 
-  //formateamos la fecha para que tenga formato español
+  // Formatear la fecha para que tenga formato español
   const formatFecha = (fecha: string): string => {
     const fechaObj = new Date(fecha);
     const dia = fechaObj.getDate();
@@ -27,7 +34,7 @@ const VerInformacion2: React.FC<Props> = ({ usuario, onClose }) => {
     return `${dia}/${mes}/${año}`;
   };
 
-  //mostramos los datos en un modal
+  // Mostrar los datos en un modal
   return (
     <div className="modal">
       <div className="modal-content flex flex-col items-center justify-center bg-gradient-to-r from-orange-200 p-5 rounded-lg shadow-lg mb-6 max-w-md w-full">
@@ -47,12 +54,8 @@ const VerInformacion2: React.FC<Props> = ({ usuario, onClose }) => {
           <label>Fecha de nacimiento:</label>
           <input type="text" value={formatFecha(usuario.fecha_nacimiento)} readOnly />
           <br />
-          <div>
-          <label>Id proyecto:</label>
-          <input type="text" value={usuario.id_proyecto !== null ? usuario.id_proyecto : ''} readOnly />
-
-        </div>
-
+          <label>Proyecto:</label>
+          <input type="text" value={nombreProyecto} readOnly />
         </div>
         <button className="close-modal" onClick={onClose}>Cerrar</button>
       </div>
