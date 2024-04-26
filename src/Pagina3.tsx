@@ -5,7 +5,7 @@ import axios from 'axios';
 import ModificarUsuarios from './ModificarUsuarios'; 
 import VerInformacion2 from './VerInformacion2';
 import { Button } from 'primereact/button'; 
-import { Dialog } from 'primereact/dialog'; // Importa el componente Dialog
+import { Dialog } from 'primereact/dialog';
 
 const cookies = new Cookies();
 
@@ -16,8 +16,8 @@ interface Usuarios {
   username: string;
   telefono: string; 
   fecha_nacimiento: string;
-  rol: string | null; // Agregar el tipo de la columna "rol"
-  id_proyecto?: number | null; // Asegúrate de que id_proyecto sea opcional para evitar errores
+  rol: string | null; 
+  id_proyecto?: number | null; 
 }
 
 interface UsuariosProps {
@@ -42,7 +42,7 @@ const Pagina3: React.FC = () => {
         });
 
         if (Array.isArray(response.data.rows)) {
-          // Filtrar solo los usuarios con rol 'cliente'
+          //filtrar solo los usuarios con rol 'cliente'
           const usuariosFiltrados = response.data.rows.filter((usuario: Usuarios) => usuario.rol === 'cliente');
           setUsuarios(usuariosFiltrados);
         } else {
@@ -63,7 +63,7 @@ const Pagina3: React.FC = () => {
   useEffect(() => {
     const obtenerProyectosUsuario = async () => {
         try {
-          const idStaff = parseInt(cookies.get('id')); // Convertir a número
+          const idStaff = parseInt(cookies.get('id')); //convertir a número
           const response = await axios.get('http://localhost:4000/proyecto', {
             headers: {
               'Authorization': `Bearer ${cookies.get('token')}`
@@ -71,7 +71,7 @@ const Pagina3: React.FC = () => {
           });
       
           if (Array.isArray(response.data.rows)) {
-            // Filtrar solo los proyectos que tienen el id_staff del staff logueado
+            //filtrar solo los proyectos que tienen el id_staff del staff logueado
             const proyectosStaffLogueado = response.data.rows.filter((proyecto: any) => parseInt(proyecto.id_staff) === idStaff);
             setProyectosUsuario(proyectosStaffLogueado);
           } else {
@@ -92,15 +92,11 @@ const Pagina3: React.FC = () => {
           'Authorization': `Bearer ${cookies.get('token')}`
         }
       });
-
-      //eliminar la cookie de inicio de sesión
-      cookies.remove('id', { path: "/" });
-      cookies.remove("apellido", { path: "/" });
-      cookies.remove("nombre", { path: "/" });
-      cookies.remove("username", { path: "/" });
-
-      //redirigir al usuario a la página de inicio de sesión
-      window.location.href = "./";
+  
+      //actualizar la lista de usuarios después de eliminar
+      const nuevosUsuarios = usuarios.filter(usuario => usuario.id !== id);
+      setUsuarios(nuevosUsuarios);
+  
     } catch (error) {
       alert('Cancelación: El usuario tiene un proyecto asociado');
     }
@@ -113,11 +109,13 @@ const Pagina3: React.FC = () => {
     }
   };
 
+  //editar usuario con el id del proyecto actualizado
   const editarUsuario = (usuario: Usuarios) => {
     setUsuarioSeleccionado(usuario);
     setMostrarEditar(true);
   };
 
+  //modal para ver información más detallada del usuario
   const verInformacion = (usuario: Usuarios) => {
     setUsuarioSeleccionado(usuario);
     const proyecto = usuario.id_proyecto ? proyectosUsuario.find(proyecto => proyecto.id === usuario.id_proyecto) : null;
@@ -126,14 +124,14 @@ const Pagina3: React.FC = () => {
     setMostrarModalProyectos(false);
   };
   
-  
-  
   const UsuarioComponent: React.FC<UsuariosProps> = ({ usuario }) => {
-    const username = cookies.get('username');
-    const isUsuarioLogueado = usuario.username === username;
-    const mostrarAsignar = !usuario.id_proyecto; 
+  const username = cookies.get('username');
+  const isUsuarioLogueado = usuario.username === username;
+  const mostrarAsignar = !usuario.id_proyecto; 
 
-    return (
+  const esStaff = cookies.get('rol') === 'staff';
+
+  return (
       <div key={usuario.id} className="usuario" style={{ order: isUsuarioLogueado ? 0 : 1 }}> 
         <div className={usuario.username === username ? "nombre-usuario usuario-logueado" : "nombre-usuario"}>{usuario.nombre}</div>
         <div className="espacio"></div>
@@ -152,18 +150,20 @@ const Pagina3: React.FC = () => {
                     label="Asignar"
                     className="p-button-raised2 p-button-success"
                     onClick={() => {
-                      setUsuarioSeleccionado(usuario); // Seleccionar el usuario antes de abrir el modal de proyectos
+                      setUsuarioSeleccionado(usuario); //selecciona el usuario antes de abrir el modal de proyectos
                       setMostrarModalProyectos(true);
                     }}
                   />
-
                 )} 
+
+                {esStaff && ( //verificamos si el usuario logueado es staff
+                  <Button label="Eliminar" className="p-button-raised2 p-button-danger" onClick={() => confirmarEliminarUsuario(usuario.id)} />
+                )}
 
                 <Button label="Ver más" className="p-button-raised2 p-button-info" onClick={() => verInformacion(usuario)} />
            
             </>
           )}
-
         </div>
       </div>
     );
@@ -176,30 +176,29 @@ const Pagina3: React.FC = () => {
         return;
       }
   
-      // Actualizar el campo id_proyecto del usuario seleccionado
+      //actualizar el campo id_proyecto del usuario seleccionado
       const usuarioActualizado = { ...usuario, id_proyecto: proyecto.id };
   
-      // Realizar una solicitud para actualizar el usuario con el ID del proyecto seleccionado
+      //realizar una solicitud para actualizar el usuario con el ID del proyecto seleccionado
       await axios.put(`http://localhost:4000/usuarios/modificar/${usuario.id}`, usuarioActualizado, {
         headers: {
           'Authorization': `Bearer ${cookies.get('token')}`
         }
       });
   
-      // Actualizar el estado del usuario con el proyecto seleccionado
+      //actualizar el estado del usuario con el proyecto seleccionado
       setUsuarioSeleccionado(usuarioActualizado);
-      // Cerrar el modal después de seleccionar el proyecto
+      //cerrar el modal después de seleccionar el proyecto
       setMostrarModalProyectos(false);
     } catch (error) {
       console.error('Error al asignar proyecto al usuario:', error);
     }
   };
-  
-  
 
   const añadirUsuario = async () => {
     window.location.href = './añadirUsuarios';
   };
+  
 
   return (
     <>
