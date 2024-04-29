@@ -19,13 +19,20 @@ interface Proyecto {
   id_staff: string;
 }
 
+interface Usuario {
+  id: number;
+  nombre: string;
+}
+
 const Pagina: React.FC = () => {
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
+  const [usuariosPorProyecto, setUsuariosPorProyecto] = useState<{ [key: number]: Usuario[] }>({});
   const [proyectoSeleccionado, setProyectoSeleccionado] = useState<Proyecto | null>(null);
   const [mensaje, setMensaje] = useState<string>('');
   const [filtrarActivado, setFiltrarActivado] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
+  const [clientesProyecto, setClientesProyecto] = useState<Usuario[]>([]); // Estado para almacenar la lista de clientes del proyecto
   const userId = cookies.get('id');
 
   useEffect(() => {
@@ -43,7 +50,26 @@ const Pagina: React.FC = () => {
             const idStaffNumber = parseInt(proyecto.id_staff);
             return idStaffNumber === userIdNumber;
           });
+    
           setProyectos(filtrarActivado ? proyectosUsuario : response.data.rows);
+          
+          // Obtener los nombres de los usuarios asociados a cada proyecto
+          const usuariosPorProyectoMap: { [key: number]: Usuario[] } = {};
+          await Promise.all(response.data.rows.map(async (proyecto: Proyecto) => {
+            try {
+              const responseUsuarios = await axios.get(`http://localhost:4000/usuarios/datos2/${proyecto.id}`);
+              
+              // Verifica la estructura de la respuesta recibida
+              if (Array.isArray(responseUsuarios.data)) {
+                usuariosPorProyectoMap[proyecto.id] = responseUsuarios.data;
+                setUsuariosPorProyecto(usuariosPorProyectoMap);
+              } else {
+                console.error('La respuesta no es un arreglo:', responseUsuarios.data);
+              }
+            } catch (error) {
+              console.error(`Error al obtener usuarios del proyecto ${proyecto.id}:`, error);
+            }
+          }));
         } else {
           console.error('La propiedad rows de la respuesta de la API no es un arreglo:', response.data.rows);
         }
@@ -51,6 +77,7 @@ const Pagina: React.FC = () => {
         console.error('Error al obtener proyectos del usuario:', error);
       }
     };
+    
 
     if (!cookies.get('username')) {
       window.location.href = "./";
@@ -85,7 +112,6 @@ const Pagina: React.FC = () => {
     );
     setModalVisible(true);
   };
-  
 
   const eliminarProyecto = async (id: number) => {
     try {
@@ -113,6 +139,40 @@ const Pagina: React.FC = () => {
 
   const toggleFiltrar = () => {
     setFiltrarActivado(!filtrarActivado);
+  };
+
+  const verClientes = (idProyecto: number) => {
+    /*const clientes = usuariosPorProyecto[idProyecto] || []; // Obtener la lista de clientes del proyecto o un array vacío si no hay clientes
+    setClientesProyecto(clientes); // Actualizar el estado con la lista de clientes del proyecto
+    setModalContent(
+      <div className="clientes-modal">
+        <h2>Clientes del Proyecto</h2>
+        <ul>
+          {clientes.map(cliente => (
+            <li key={cliente.id}>{cliente.nombre}</li>
+          ))}
+        </ul>
+        <button onClick={() => setClientesProyecto([])}>Cerrar</button>
+      </div>
+    );
+    setModalVisible(true);*/
+
+    console.log("Mostrar clientes del proyecto con ID:", idProyecto);
+    console.log("Clientes del proyecto:", usuariosPorProyecto[idProyecto]);
+  };
+
+  const handleVerClientes = async (idProyecto: number) => {
+    try {
+      const responseUsuarios = await axios.get(`http://localhost:4000/usuarios/datos2/${idProyecto}`);
+      if (Array.isArray(responseUsuarios.data)) {
+        const usuarios = responseUsuarios.data;
+        verClientes(idProyecto);
+      } else {
+        console.error('La respuesta no es un arreglo:', responseUsuarios.data);
+      }
+    } catch (error) {
+      console.error(`Error al obtener usuarios del proyecto ${idProyecto}:`, error);
+    }
   };
 
   return (
@@ -144,22 +204,28 @@ const Pagina: React.FC = () => {
                 <div className="nombre-proyecto">{proyecto.nombre}</div>
                 <div className="espacio"></div>
                 <div className="ed-button">
-                  {filtrarActivado ? (
+                <Button
+                  label="Clientes"
+                  className="p-button-raised p-button-info"
+                  onClick={() => handleVerClientes(proyecto.id)}
+                />
+
+
+                  {filtrarActivado && parseInt(proyecto.id_staff) === parseInt(userId) && (
                     <>
                       <Button
                         label="Editar"
                         className="p-button-raised p-button-info"
                         onClick={() => editarProyecto(proyecto)}
-                        style={{ display: parseInt(proyecto.id_staff) === parseInt(userId) ? 'block' : 'none' }}
                       />
                       <Button
                         label="Eliminar"
                         className="p-button-raised p-button-danger"
                         onClick={() => eliminarProyecto(proyecto.id)}
-                        style={{ display: parseInt(proyecto.id_staff) === parseInt(userId) ? 'block' : 'none' }}
                       />
                     </>
-                  ) : (
+                  )}
+                  {!filtrarActivado && (
                     <Button
                       label="Ver más"
                       className="p-button-raised p-button-info custom-button"

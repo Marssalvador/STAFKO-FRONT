@@ -23,7 +23,7 @@ interface Props {
 
 const VerInformacion2: React.FC<Props> = ({ usuario, proyectos, onClose }) => {
   // Buscar el nombre del proyecto correspondiente al id_proyecto del usuario
-  const nombreProyecto = usuario.id_proyecto ? proyectos.find(proyecto => proyecto.id === usuario.id_proyecto)?.nombre : 'No hay proyecto asignado';
+  const nombreProyecto = usuario.id_proyecto ? proyectos.find(proyecto => proyecto.id === usuario.id_proyecto)?.nombre : null;
 
   // Formatear la fecha para que tenga formato español
   const formatFecha = (fecha: string): string => {
@@ -54,8 +54,12 @@ const VerInformacion2: React.FC<Props> = ({ usuario, proyectos, onClose }) => {
           <label>Fecha de nacimiento:</label>
           <input type="text" value={formatFecha(usuario.fecha_nacimiento)} readOnly />
           <br />
-          <label>Proyecto:</label>
-          <input type="text" value={nombreProyecto} readOnly />
+          {nombreProyecto && ( // Renderizar el campo del proyecto solo si hay un proyecto disponible
+            <>
+              <label>Proyecto:</label>
+              <input type="text" value={nombreProyecto} readOnly />
+            </>
+          )}
         </div>
         <button className="close-modal" onClick={onClose}>Cerrar</button>
       </div>
