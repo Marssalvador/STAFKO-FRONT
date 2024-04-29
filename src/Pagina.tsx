@@ -159,6 +159,12 @@ const Pagina: React.FC = () => {
 
     console.log("Mostrar clientes del proyecto con ID:", idProyecto);
     console.log("Clientes del proyecto:", usuariosPorProyecto[idProyecto]);
+
+    const clientes = usuariosPorProyecto[idProyecto] || []; // Obtener la lista de clientes del proyecto o un array vacío si no hay clientes
+  
+    // Mostrar los clientes del proyecto en un alert
+    alert(`Clientes del proyecto con ID ${idProyecto}:\n${clientes}`);
+  
   };
 
   const handleVerClientes = async (idProyecto: number) => {
