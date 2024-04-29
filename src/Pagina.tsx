@@ -32,7 +32,6 @@ const Pagina: React.FC = () => {
   const [filtrarActivado, setFiltrarActivado] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
-  const [clientesProyecto, setClientesProyecto] = useState<Usuario[]>([]); // Estado para almacenar la lista de clientes del proyecto
   const userId = cookies.get('id');
 
   useEffect(() => {
@@ -44,6 +43,7 @@ const Pagina: React.FC = () => {
           }
         });
     
+        //sacamos un array con los datos obtenidos
         if (Array.isArray(response.data.rows)) {
           const userIdNumber = parseInt(userId);
           const proyectosUsuario = response.data.rows.filter(proyecto => {
@@ -53,13 +53,13 @@ const Pagina: React.FC = () => {
     
           setProyectos(filtrarActivado ? proyectosUsuario : response.data.rows);
           
-          // Obtener los nombres de los usuarios asociados a cada proyecto
+          //obtenemos los nombres de los usuarios asociados a cada proyecto
           const usuariosPorProyectoMap: { [key: number]: Usuario[] } = {};
           await Promise.all(response.data.rows.map(async (proyecto: Proyecto) => {
             try {
               const responseUsuarios = await axios.get(`http://localhost:4000/usuarios/datos2/${proyecto.id}`);
               
-              // Verifica la estructura de la respuesta recibida
+              //verificamos la estructura de la respuesta recibida
               if (Array.isArray(responseUsuarios.data)) {
                 usuariosPorProyectoMap[proyecto.id] = responseUsuarios.data;
                 setUsuariosPorProyecto(usuariosPorProyectoMap);
@@ -126,6 +126,7 @@ const Pagina: React.FC = () => {
     }
   };
 
+  //mostramos la informacion de cada proyecto 
   const verInformacion = (proyecto: Proyecto) => {
     setProyectoSeleccionado(proyecto);
     setModalContent(
@@ -142,29 +143,15 @@ const Pagina: React.FC = () => {
   };
 
   const verClientes = (idProyecto: number) => {
-    /*const clientes = usuariosPorProyecto[idProyecto] || []; // Obtener la lista de clientes del proyecto o un array vacío si no hay clientes
-    setClientesProyecto(clientes); // Actualizar el estado con la lista de clientes del proyecto
-    setModalContent(
-      <div className="clientes-modal">
-        <h2>Clientes del Proyecto</h2>
-        <ul>
-          {clientes.map(cliente => (
-            <li key={cliente.id}>{cliente.nombre}</li>
-          ))}
-        </ul>
-        <button onClick={() => setClientesProyecto([])}>Cerrar</button>
-      </div>
-    );
-    setModalVisible(true);*/
+    const clientes = usuariosPorProyecto[idProyecto] || []; //obtenemos la lista de clientes del proyecto o un array vacío si no hay clientes
 
-    console.log("Mostrar clientes del proyecto con ID:", idProyecto);
-    console.log("Clientes del proyecto:", usuariosPorProyecto[idProyecto]);
-
-    const clientes = usuariosPorProyecto[idProyecto] || []; // Obtener la lista de clientes del proyecto o un array vacío si no hay clientes
-  
-    // Mostrar los clientes del proyecto en un alert
-    alert(`Clientes del proyecto con ID ${idProyecto}:\n${clientes}`);
-  
+    //mostrar un mensaje de alerta si no hay clientes asociados al proyecto
+    if (clientes.length === 0) {
+      alert(`El proyecto con ID ${idProyecto} no tiene clientes asociados.`);
+    } else {
+      //mostrar los clientes del proyecto en un alert
+      alert(`Clientes del proyecto con ID ${idProyecto}:\n${clientes}`);
+    }
   };
 
   const handleVerClientes = async (idProyecto: number) => {
@@ -215,7 +202,6 @@ const Pagina: React.FC = () => {
                   className="p-button-raised p-button-info"
                   onClick={() => handleVerClientes(proyecto.id)}
                 />
-
 
                   {filtrarActivado && parseInt(proyecto.id_staff) === parseInt(userId) && (
                     <>
