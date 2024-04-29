@@ -1,5 +1,5 @@
 /*estilos por defecto*/
-.header {
+.header{
     position: fixed;
     top: 0;
     left: 0;
@@ -8,28 +8,28 @@
     padding: 10px 20px;
 }
 
-.nav {
+.nav{
     display: inline-block;
 }
 
-.nav-list {
+.nav-list{
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-.nav-list li {
+.nav-list li{
     display: inline;
     vertical-align: middle;
     margin-right: 10px;
 }
 
-body {
+body{
     font-family: Arial, sans-serif;
     background-color: #f7f7f7;
 }
 
-.main {
+.main{
     margin: 80px auto;
     text-align: center;
     display: flex;
@@ -41,7 +41,7 @@ body {
     padding: 20px;
 }
 
-.space {
+.space{
     font-size: 24px;
     color: #3e3e3e;
     font-family: 'Lato', sans-serif;
@@ -53,29 +53,29 @@ body {
     margin-top: -10px;
 }
 
-@keyframes jump {
-    0% {
+@keyframes jump{
+    0%{
         transform: translateY(0);
     }
 
-    50% {
+    50%{
         transform: translateY(-20px);
     }
 
-    75% {
+    75%{
         transform: translateY(-10px);
     }
 
-    100% {
+    100%{
         transform: translateY(0);
     }
 }
 
-.jump-animation {
+.jump-animation{
     animation: jump 0.4s ease 3;
 }
 
-.button5 {
+.button5{
     background-color: #ffcc00;
     color: #3e3e3e;
     border: none;
@@ -86,16 +86,16 @@ body {
     margin-right: 50px;
 }
 
-.button5:hover {
+.button5:hover{
     background-color: #ffdb4d;
 }
 
-.add-button {
+.add-button{
     margin-bottom: 20px;
     margin-left: 3rem;
 }
 
-.usuario {
+.usuario{
     display: flex;
     justify-content: space-between;
     border-bottom: 2px solid #dad9d9;
@@ -104,7 +104,7 @@ body {
     max-width: 90%;
 }
 
-.nombre-usuario {
+.nombre-usuario{
     flex-grow: 1;
     font-size: 18px;
     color: #3e3e3e;
@@ -112,55 +112,55 @@ body {
     display: flex;
 }
 
-.ed-button {
+.ed-button{
     display: flex;
     gap: 10px;
 }
 
-.espacio {
+.espacio{
     width: 30rem;
 }
 
-.ed-button .button {
+.ed-button .button{
     background-color: #e68a00;
 }
 
-.ed-button .button:hover {
+.ed-button .button:hover{
     background-color: #ff9900;
 }
 
-.custom-orange-button {
+.custom-orange-button{
     color: #fff;
     background-color: #ff9800;
     border-color: #ff9800;
     margin-right: 3.5rem;
 }
 
-.custom-orange-button:hover {
+.custom-orange-button:hover{
     background-color: #f57c00;
     border-color: #f57c00;
     transition: background-color 0.3s ease, border-color 0.3s ease;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
 }
 
-.p-button-raised {
+.p-button-raised{
     margin-bottom: 10px;
     margin-top: 0px;
 }
 
-.p-button-raised2 {
+.p-button-raised2{
     margin-bottom: 10px;
     margin-top: 0px;
     width: 7rem;
 }
 
-.usuario-logueado {
+.usuario-logueado{
     color: #f57c00;
 }
 
 
 /*estilos responsivos*/
-@media (max-width: 800px) {
+@media (max-width: 800px){
     .header {
         padding: 10px; 
     }
@@ -177,7 +177,7 @@ body {
         justify-content: center;
     }
 
-    .usuario {
+    .usuario{
         display: flex;
         flex-direction: column;
         border-bottom: 2px solid #dad9d9;
@@ -186,7 +186,7 @@ body {
         max-width: 90%;
     }
 
-    .custom-orange-button {
+    .custom-orange-button{
         margin-right: 2rem; 
     }
 }

@@ -8,7 +8,7 @@ import { Button } from 'primereact/button';
 
 const cookies = new Cookies();
 
-interface Staff {
+interface Staff{
   id: number;
   nombre: string;
   apellido: string; 
@@ -18,7 +18,7 @@ interface Staff {
   rol: string;
 }
 
-interface StaffProps {
+interface StaffProps{
   staff: Staff;
 }
 
@@ -47,9 +47,9 @@ const Pagina2: React.FC = () => {
       }
     };
 
-    if (!cookies.get('username')) {
+    if (!cookies.get('username')){
       window.location.href = "./";
-    } else {
+    }else{
       obtenerStaffs();
     }
   }, []);

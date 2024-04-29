@@ -42,12 +42,12 @@
     background-color: #0056b3;
 }
 
-.modificar-project {
+.modificar-project{
     transition: opacity 0.5s ease-in-out;
     opacity: 1;
   }
   
-  .modificar-project-hidden {
+  .modificar-project-hidden{
     opacity: 0;
   }
   

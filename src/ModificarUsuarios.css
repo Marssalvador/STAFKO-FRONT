@@ -1,4 +1,4 @@
-.modificar-staff-container {
+.modificar-staff-container{
     margin: 20px;
     padding: 20px;
     border: 1px solid #ccc;
@@ -7,20 +7,20 @@
     margin-bottom: 5rem;
 }
 
-.modificar-staff-form {
+.modificar-staff-form{
     display: flex;
     flex-direction: column;
 }
 
-.input-group {
+.input-group{
     margin-bottom: 10px;
 }
 
-.input-group label {
+.input-group label{
     margin-bottom: 5px;
 }
 
-.input-group input {
+.input-group input{
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
@@ -28,7 +28,7 @@
     box-sizing: border-box;
 }
 
-.button {
+.button{
     width: 100%;
     padding: 10px;
     background-color: #e68a00;
@@ -38,11 +38,11 @@
     cursor: pointer;
 }
 
-.button:hover {
+.button:hover{
     background-color: #bd7304;
 }
 
-.modificar-staff-modal {
+.modificar-staff-modal{
     display: none;
     position: fixed;
     z-index: 1;
@@ -55,7 +55,7 @@
     background-color: rgba(0,0,0,0.4);
 }
 
-.modificar-staff-modal-content {
+.modificar-staff-modal-content{
     background-color: #fefefe;
     margin: 15% auto;
     padding: 20px;
@@ -63,7 +63,7 @@
     width: 80%;
 }
 
-.modificar-staff-modal-close {
+.modificar-staff-modal-close{
     color: #aaa;
     float: right;
     font-size: 28px;
@@ -71,7 +71,7 @@
 }
 
 .modificar-staff-modal-close:hover,
-.modificar-staff-modal-close:focus {
+.modificar-staff-modal-close:focus{
     color: black;
     text-decoration: none;
     cursor: pointer;

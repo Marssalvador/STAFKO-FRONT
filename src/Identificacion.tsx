@@ -102,7 +102,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
     }
 
     //método de renderizado del componente
-    render() {
+    render(){
         const { form, error } = this.state;
 
         return (

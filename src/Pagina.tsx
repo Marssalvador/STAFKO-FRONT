@@ -9,7 +9,7 @@ import VerInformacion from './VerInformacion';
 
 const cookies = new Cookies();
 
-interface Proyecto {
+interface Proyecto{
   id: number;
   nombre: string;
   descripcion: string;
@@ -19,7 +19,7 @@ interface Proyecto {
   id_staff: string;
 }
 
-interface Usuario {
+interface Usuario{
   id: number;
   nombre: string;
 }
@@ -78,13 +78,14 @@ const Pagina: React.FC = () => {
       }
     };
     
-
+    //comprobamos cookie
     if (!cookies.get('username')) {
       window.location.href = "./";
     } else {
       obtenerProyectosUsuario();
     }
   }, [filtrarActivado, userId]);
+
 
   const añadirProyecto = () => {
     window.location.href = './añadirProj';

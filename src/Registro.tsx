@@ -12,7 +12,7 @@ interface Staff {
   username: string;
   password: string;
   fechaNacimiento: string;
-  rol: string | null; // Agregar el tipo de la columna "rol"
+  rol: string | null; 
 }
 
 const NuevoStaff: React.FC = () => {
@@ -23,13 +23,13 @@ const NuevoStaff: React.FC = () => {
     username: '',
     password: '',
     fechaNacimiento: '',
-    rol: null, // Inicializar el estado del rol como null
+    rol: null,
   });
 
   const [staffs, setStaffs] = useState<Staff[]>([]);
   const [mensaje, setMensaje] = useState<string>('');
-  const [esCliente, setEsCliente] = useState<boolean>(false); // Estado del checkbox
-  const navigate = useNavigate(); // Obtener la función de navegación
+  const [esCliente, setEsCliente] = useState<boolean>(false); //estado del checkbox
+  const navigate = useNavigate(); //obtener la función de navegación
 
   const cambio = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -41,7 +41,7 @@ const NuevoStaff: React.FC = () => {
   };
 
   const agregarStaff = () => {
-    // Comprobación de datos vacíos 
+    //comprobación de datos vacíos 
     if (
       nuevoStaff.nombre.trim() === '' ||
       nuevoStaff.apellidos.trim() === '' ||
@@ -54,26 +54,26 @@ const NuevoStaff: React.FC = () => {
       return;
     }
 
-    // Fecha actual en formato ISO (YYYY-MM-DD)
+    //fecha actual en formato ISO (YYYY-MM-DD)
     const fechaActual = new Date().toISOString().split('T')[0];
 
-    // Verificación si la fecha de nacimiento es mayor que la fecha actual
+    //verificación si la fecha de nacimiento es mayor que la fecha actual
     if (nuevoStaff.fechaNacimiento > fechaActual) {
       mostrarAlerta('La fecha de nacimiento no puede ser mayor que la fecha actual.');
       return;
     }
 
-    // Hash de la contraseña
+    //hash de la contraseña
     const hashedPassword = md5(nuevoStaff.password);
     const nuevoStaffCompleto = {
       ...nuevoStaff,
       apellido: nuevoStaff.apellidos,
       fecha_nacimiento: nuevoStaff.fechaNacimiento,
       password: hashedPassword,
-      rol: esCliente ? 'cliente' : 'staff', // Establecer el rol según el estado del checkbox
+      rol: esCliente ? 'cliente' : 'staff', //establecer el rol según el estado del checkbox
     };
 
-    // Enviar solicitud para agregar el staff
+    //enviar solicitud para agregar el staff
     fetch('http://localhost:4000/usuarios/insertar', {
       method: 'POST',
       headers: {
@@ -83,10 +83,10 @@ const NuevoStaff: React.FC = () => {
     })
     .then(response => response.json())
     .then(data => {
-      // Si la solicitud fue exitosa, agregar el nuevo staff a la lista
+      //si la solicitud fue exitosa, agregar el nuevo staff a la lista
       setStaffs([...staffs, nuevoStaff]);
 
-      // Limpiamos los campos del formulario y el mensaje
+      //limpiamos los campos del formulario y el mensaje
       setNuevoStaff({
         nombre: '',
         apellidos: '',
@@ -94,13 +94,13 @@ const NuevoStaff: React.FC = () => {
         username: '',
         password: '',
         fechaNacimiento: '',
-        rol: null, // Restablecer el estado del rol a null
+        rol: null, //restablecer el estado del rol a null
       });
 
-      // Enviar el mensaje 
+     
       setMensaje('¡Staff añadido con éxito! Redirigiendo...');
 
-      // Esperar 5 segundos y luego redirigir
+      //esperar 5 segundos y luego redirigir
       setTimeout(() => {
         navigate('/pagina');
       }, 2000);
@@ -115,7 +115,7 @@ const NuevoStaff: React.FC = () => {
       <div className="nuevo-staff-container">
         <img src="/panal.png" alt="Panal" className='panal-superior-derecho' />
         <img src="/panal.png" alt="Panal" className='panal-inferior-izquierdo' />
-        {/* Mostramos el mensaje de éxito arriba del formulario */}
+        {/*mostramos el mensaje de éxito arriba del formulario*/}
         {mensaje && (
           <div className="text-orange-500 text-center mt-2">{mensaje}</div>
         )}
