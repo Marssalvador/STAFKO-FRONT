@@ -33,9 +33,7 @@ const Pagina: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
   const userId = cookies.get('id');
-
   const [clientesProyecto, setClientesProyecto] = useState<{ [key: number]: Usuario[] | null }>({});
-
 
   useEffect(() => {
     const obtenerProyectosUsuario = async () => {
@@ -143,15 +141,14 @@ const Pagina: React.FC = () => {
   };
 
   const verClientes = (idProyecto: number) => {
-    console.log("ID del proyecto:", idProyecto);
-    // Si ya hay clientes cargados para este proyecto, limpiar los datos
-    if (clientesProyecto[idProyecto]) {
+    //si ya hay clientes cargados para este proyecto, limpiar los datos
+    if (clientesProyecto[idProyecto]){
       setClientesProyecto(prevState => ({
         ...prevState,
         [idProyecto]: null
       }));
-    } else {
-      // Si no hay clientes cargados, cargarlos
+    }else{
+      //si no hay clientes cargados, cargarlos
       const clientes = usuariosPorProyecto[idProyecto] || [];
       console.log("Clientes cargados:", clientes);
     
@@ -160,8 +157,8 @@ const Pagina: React.FC = () => {
         [idProyecto]: clientes
       }));
     
-      // Actualizar usuariosPorProyecto si no se ha actualizado previamente
-      if (!usuariosPorProyecto[idProyecto]) {
+      //actualizar usuariosPorProyecto si no se ha actualizado previamente
+      if (!usuariosPorProyecto[idProyecto]){
         console.log("Actualizando usuariosPorProyecto...");
         setUsuariosPorProyecto(prevState => ({
           ...prevState,
@@ -260,7 +257,7 @@ const Pagina: React.FC = () => {
             </div>
           </div>
         )}
-        
+
         {mensaje && (
           <div className="mensaje-exito">{mensaje}</div>
         )}

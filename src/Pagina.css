@@ -170,7 +170,7 @@ h1{
 
 
 /*estilos para el modal */
-.modal {
+.modal{
     position: fixed;
     top: 50%;
     left: 50%;
@@ -184,7 +184,7 @@ h1{
     z-index: 1000; /* Asegura que el modal esté por encima de otros elementos */
   }
   
-  .modal-content {
+  .modal-content{
     background-color: white;
     border-radius: 10px;
     box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.5); /* Efecto de relieve */
@@ -192,7 +192,7 @@ h1{
     max-width: 80%;
   }
   
-  .close-modal {
+  .close-modal{
     position: absolute;
     top: 11px;
     right: 50px;
@@ -207,8 +207,8 @@ h1{
 }
   
   
-@media (max-width: 800px) {
-    .space {
+@media (max-width: 800px){
+    .space{
         font-size: 24px;
         color: #3e3e3e; 
         font-family: 'Lato', sans-serif;
@@ -219,7 +219,7 @@ h1{
         margin-left: 0;
     }
     
-    .proyecto {
+    .proyecto{
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -228,40 +228,40 @@ h1{
         margin-bottom: 20px;
     }
     
-    .nombre-proyecto {
+    .nombre-proyecto{
         font-size: 18px;
         color: #3e3e3e;
         margin-bottom: 10px;
     }
     
-    .ed-button {
+    .ed-button{
         display: flex;
         flex-direction: column;
         gap: 10px;
         margin-bottom: 10px;
     }
     
-    .espacio {
+    .espacio{
         width: 100%;
         margin-bottom: 10px;
     }
     
-    .ed-button .button {
+    .ed-button .button{
         background-color: #e68a00; 
     }
     
-    .ed-button .button:hover {
+    .ed-button .button:hover{
         background-color: #fac473; 
     }
     
-    .custom-orange-button1 {
+    .custom-orange-button1{
         color: #fff; 
         background-color: #ff9800; 
         border-color: #ff9800; 
         margin-right: 2rem;
     }
     
-    .custom-orange-button1:hover {
+    .custom-orange-button1:hover{
         background-color: #f57c00; 
         border-color: #f57c00; 
         transition: background-color 0.3s ease, border-color 0.3s ease; 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './ModificarUsuarios.css';
 import axios from 'axios';
 
-interface Usuario {
+interface Usuario{
   id: number;
   nombre: string;
   apellido: string;
@@ -11,7 +11,7 @@ interface Usuario {
   username: string;
 }
 
-interface Props {
+interface Props{
   usuario: Usuario;
   onGuardar: (usuario: Usuario) => void;
 }
@@ -24,6 +24,7 @@ const Modificarusuario: React.FC<Props> = ({ usuario, onGuardar }) => {
     setDatosusuario({ ...datosusuario, [name]: value });
   };
 
+  //formateo de fecha a formato español
   const formatearFecha = (fecha: string): string => {
     const date = new Date(fecha);
     const year = date.getFullYear();
@@ -42,7 +43,7 @@ const Modificarusuario: React.FC<Props> = ({ usuario, onGuardar }) => {
       };
 
       await axios.put(`http://localhost:4000/usuarios/modificar/${datosusuario.id}`, proyectoFormateado);
-      alert('¡Proyecto actualizado correctamente!'); //alerta de éxito
+      alert('¡Proyecto actualizado correctamente!'); 
       onGuardar(proyectoFormateado);
     } catch (error) {
       alert('Error al actualizar el proyecto. Por favor, intenta de nuevo más tarde.'); 

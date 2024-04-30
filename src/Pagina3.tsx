@@ -9,7 +9,7 @@ import { Dialog } from 'primereact/dialog';
 
 const cookies = new Cookies();
 
-interface Usuarios {
+interface Usuarios{
   id: number;
   nombre: string;
   apellido: string; 
@@ -20,7 +20,7 @@ interface Usuarios {
   id_proyecto?: number | null; 
 }
 
-interface UsuariosProps {
+interface UsuariosProps{
   usuario: Usuarios;
 }
 
@@ -53,7 +53,7 @@ const Pagina3: React.FC = () => {
       }
     };
 
-    if (!cookies.get('username')) {
+    if (!cookies.get('username')){
       window.location.href = "./";
     } else {
       obtenerUsuarios();
@@ -86,7 +86,7 @@ const Pagina3: React.FC = () => {
   }, []);
   
   const eliminarUsuarioConfirmado = async (id: number) => {
-    try {
+    try{
       await axios.delete(`http://localhost:4000/usuEliminar/${id}`, {
         headers: {
           'Authorization': `Bearer ${cookies.get('token')}`
@@ -97,14 +97,14 @@ const Pagina3: React.FC = () => {
       const nuevosUsuarios = usuarios.filter(usuario => usuario.id !== id);
       setUsuarios(nuevosUsuarios);
   
-    } catch (error) {
+    }catch (error){
       alert('Cancelación: El usuario tiene un proyecto asociado');
     }
   };
 
   //antes de eliminar la cuenta del usuario, se deberá confirmar la acción
   const confirmarEliminarUsuario = (id: number) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
+    if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")){
       eliminarUsuarioConfirmado(id);
     }
   };
@@ -170,8 +170,8 @@ const Pagina3: React.FC = () => {
   };
 
   const seleccionarProyecto = async (proyecto: any, usuario: Usuarios | null) => {
-    try {
-      if (!usuario) {
+    try{
+      if (!usuario){
         console.error('Usuario no seleccionado');
         return;
       }

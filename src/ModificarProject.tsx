@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './ModificarProject.css';
 import axios from 'axios';
 
-interface Proyecto {
+interface Proyecto{
   id: number;
   nombre: string;
   descripcion: string;
@@ -12,12 +12,12 @@ interface Proyecto {
   id_staff: string;
 }
 
-interface Usuario {
+interface Usuario{
   id: string;
   nombre: string;
 }
 
-interface Props {
+interface Props{
   proyecto: Proyecto;
   onGuardar: (proyectoEditado: Proyecto) => void;
 }
@@ -61,6 +61,7 @@ const ModificarProject: React.FC<Props> = ({ proyecto, onGuardar }) => {
     }
   };
 
+  //formateo de fecha a formato español
   const formatearFecha = (fecha: string): string => {
     const date = new Date(fecha);
     const year = date.getFullYear();

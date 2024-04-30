@@ -11,14 +11,6 @@ body{
     align-items: center;
 }
 
-/*.main {
-    width: 50%;
-    background-color: #686666;
-    padding: 10rem;
-    margin-top: 60px; 
-    z-index: 0
-}*/
-
 .nav{
     display: inline-block;
 }

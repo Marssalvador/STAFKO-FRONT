@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import './Registro.css';
 
-interface Staff {
+interface Staff{
   nombre: string;
   apellidos: string;
   telefono: string;
@@ -96,7 +96,6 @@ const NuevoStaff: React.FC = () => {
         fechaNacimiento: '',
         rol: null, //restablecer el estado del rol a null
       });
-
      
       setMensaje('¡Staff añadido con éxito! Redirigiendo...');
 

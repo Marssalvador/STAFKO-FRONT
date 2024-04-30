@@ -28,7 +28,7 @@ const cerrarSesion = () => {
 const Header: React.FC = () => {
   const isLoggedIn = cookies.get('username') !== undefined;
 
-  if (!isLoggedIn) {
+  if (!isLoggedIn){
     return null; //si el usuario no está autenticado, no renderizar el header
   }
 

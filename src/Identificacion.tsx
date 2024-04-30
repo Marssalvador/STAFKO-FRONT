@@ -3,12 +3,10 @@ import './Identificacion.css';
 import axios from 'axios';
 import md5 from 'md5';
 import Cookies from 'universal-cookie';
+import { Button } from 'primereact/button';
 
 const baseUrl = "http://localhost:4000/usuarios";
 const cookies = new Cookies();
-
-import { Button } from 'primereact/button';
-
 
 //definición de tipos de estado para el formulario y la identificación
 interface FormState {

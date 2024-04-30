@@ -1,8 +1,8 @@
-.custom-button {
+.custom-button{
     width: 120px; 
 }
   
-.modal-content {
+.modal-content{
     background-color: #fff;
     border-radius: 10px;
     padding: 20px;
@@ -10,13 +10,13 @@
     max-width: 80%;
 }
   
-.modal-content label {
+.modal-content label{
     font-weight: bold;
     margin-bottom: 5px;
 }
   
 .modal-content input[type="text"],
-  .modal-content textarea {
+  .modal-content textarea{
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
@@ -24,7 +24,7 @@
     border-radius: 5px;
 }
   
-.modal-content button.close-modal {
+.modal-content button.close-modal{
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -32,7 +32,7 @@
     cursor: pointer;
 }
   
-.modal-content button.close-modal:hover {
+.modal-content button.close-modal:hover{
     background-color: #c54119;
 }
   

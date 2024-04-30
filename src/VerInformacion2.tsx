@@ -1,23 +1,23 @@
 import React from 'react';
 
-interface Usuarios {
+interface Usuarios{
   id: number;
   nombre: string;
   apellido: string;
   telefono: string;
   username: string;
   fecha_nacimiento: string;
-  id_proyecto?: number | null | undefined; //permitir undefined
+  id_proyecto?: number | null | undefined; 
 }
 
-interface Proyecto {
+interface Proyecto{
   id: number;
   nombre: string;
 }
 
-interface Props {
+interface Props{
   usuario: Usuarios;
-  proyectos: Proyecto[]; //pista de proyectos
+  proyectos: Proyecto[]; 
   onClose: () => void;
 }
 

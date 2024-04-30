@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './VerInformacion.css';
 import axios from 'axios';
 
-interface Proyecto {
+interface Proyecto{
   id: number;
   nombre: string;
   descripcion: string;
@@ -12,7 +12,7 @@ interface Proyecto {
   id_staff: string;
 }
 
-interface Props {
+interface Props{
   proyecto: Proyecto;
   onClose: () => void;
 }
@@ -37,7 +37,6 @@ const VerInformacion: React.FC<Props> = ({ proyecto, onClose }) => {
     obtenerUsuarios();
   }, []);
 
-
   //formateamos la fecha para que sea formato español
   const formatFecha = (fecha: string): string => {
     const fechaObj = new Date(fecha);
@@ -46,7 +45,6 @@ const VerInformacion: React.FC<Props> = ({ proyecto, onClose }) => {
     const año = fechaObj.getFullYear();
     return `${dia}/${mes}/${año}`;
   };
-
 
   return (
     <div className="modal">

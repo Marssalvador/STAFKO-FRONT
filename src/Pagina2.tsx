@@ -55,7 +55,7 @@ const Pagina2: React.FC = () => {
   }, []);
 
   const eliminarStaffConfirmado = async (id: number) => {
-    try {
+    try{
       await axios.delete(`http://localhost:4000/usuEliminar/${id}`, {
         headers: {
           'Authorization': `Bearer ${cookies.get('token')}`
