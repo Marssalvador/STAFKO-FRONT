@@ -85,7 +85,9 @@ class Identificacion extends Component<{}, IdentificacionState> {
                 cookies.set('nombre', respuesta.nombre, { path: "/" });
                 cookies.set('username', respuesta.username, { path: "/" });
                 cookies.set('rol', respuesta.rol, { path: "/" });
-                //window.location.href = "./pagina";
+
+                window.location.href = "./pagina";
+
                 enviarRegistroDeTiempo();
             } else {
                 alert('El usuario o la contraseña no son correctos'); 
