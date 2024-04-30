@@ -8,7 +8,26 @@ import { Button } from 'primereact/button';
 const baseUrl = "http://localhost:4000/usuarios";
 const cookies = new Cookies();
 
-//definición de tipos de estado para el formulario y la identificación
+const enviarRegistroDeTiempo = async () => {
+    try {
+        const response = await axios.post(
+            'https://api.clockify.me/api/v1/workspaces/6630a84256361a516299a6a5/time-entries',
+            {
+                start: new Date().toISOString(),
+                description: 'Inicio de sesión en la aplicación',
+            },
+            {
+                headers: {
+                    'X-Api-Key': 'NGMyODhkMjItNDNiMi00MWY1LWI1YTctNGU4MDRjNzZkMDVi',
+                },
+            }
+        );
+        console.log('Registro de tiempo enviado correctamente:', response.data);
+    } catch (error) {
+        console.error('Error al enviar el registro de tiempo a Clockify:', error);
+    }
+};
+
 interface FormState {
     username: string;
     password: string;
@@ -19,7 +38,6 @@ interface IdentificacionState {
     error: string;
 }
 
-//componente de clase para la identificación
 class Identificacion extends Component<{}, IdentificacionState> {
     constructor(props: {}) {
         super(props);
@@ -32,11 +50,8 @@ class Identificacion extends Component<{}, IdentificacionState> {
         };
     }
 
-    //manejador para el cambio en los campos del formulario
     handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-
-        //actualización el estado del formulario con los nuevos valores
         await this.setState((prevState) => ({
             form: {
                 ...prevState.form,
@@ -44,18 +59,13 @@ class Identificacion extends Component<{}, IdentificacionState> {
             },
             error: prevState.error 
         }));
-        console.log(this.state.form);
     };
 
-    //manejador para el envío del formulario
     handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        //iniciar sesión al enviar el formulario
         await this.iniciarSesion();
     };
 
-    //función para iniciar sesión
     iniciarSesion = async () => {
         const { username, password } = this.state.form;
         await axios.get(baseUrl, {
@@ -68,40 +78,33 @@ class Identificacion extends Component<{}, IdentificacionState> {
             return response.data;
         })
         .then(response => {
-            //verificar la respuesta de la API
             if (response.length > 0) {
                 var respuesta = response[0];
-
-                //establecer cookies de sesión
                 cookies.set('id', respuesta.id, { path: "/" });
                 cookies.set('apellido', respuesta.apellido, { path: "/" });
                 cookies.set('nombre', respuesta.nombre, { path: "/" });
                 cookies.set('username', respuesta.username, { path: "/" });
                 cookies.set('rol', respuesta.rol, { path: "/" });
-    
-                //redireccionar a la página principal después de iniciar sesión
-                window.location.href = "./pagina";
+                //window.location.href = "./pagina";
+                enviarRegistroDeTiempo();
             } else {
-                console.log('Datos enviados:', { username, password });
                 alert('El usuario o la contraseña no son correctos'); 
             }
         })
         .catch(error => {
-            console.log(error);
+            console.error('Error en la conexión:', error);
             alert('Error en la conexión'); 
         });
     }
 
-    //método de ciclo de vida que se ejecuta después de montar el componente
     componentDidMount() {
         if (cookies.get('username')) {
             window.location.href = "./pagina";
         }
     }
 
-    //método de renderizado del componente
     render(){
-        const { form, error } = this.state;
+        const { form } = this.state;
 
         return (
             <>

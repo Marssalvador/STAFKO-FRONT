@@ -34,6 +34,7 @@ const Pagina: React.FC = () => {
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
   const userId = cookies.get('id');
   const [clientesProyecto, setClientesProyecto] = useState<{ [key: number]: Usuario[] | null }>({});
+  const [clientesVisible, setClientesVisible] = useState<{ [key: number]: boolean }>({});
 
   useEffect(() => {
     const obtenerProyectosUsuario = async () => {
@@ -83,7 +84,6 @@ const Pagina: React.FC = () => {
       obtenerProyectosUsuario();
     }
   }, [filtrarActivado, userId]);
-
 
   const añadirProyecto = () => {
     window.location.href = './añadirProj';
@@ -141,6 +141,11 @@ const Pagina: React.FC = () => {
   };
 
   const verClientes = (idProyecto: number) => {
+    setClientesVisible(prevState => ({
+      ...prevState,
+      [idProyecto]: !prevState[idProyecto]
+    }));
+    
     //si ya hay clientes cargados para este proyecto, limpiar los datos
     if (clientesProyecto[idProyecto]){
       setClientesProyecto(prevState => ({
@@ -168,8 +173,6 @@ const Pagina: React.FC = () => {
     }
   };
   
-  
-
   return (
     <>
       <main className="main">
@@ -202,7 +205,7 @@ const Pagina: React.FC = () => {
                 <div className="espacio"></div>
                 <div className="ed-button">
                   <Button
-                    label="Clientes"
+                    label={clientesVisible[proyecto.id] ? "Ocultar Clientes" : "Clientes"}
                     className="p-button-raised p-button-info"
                     onClick={() => verClientes(proyecto.id)}
                   />
@@ -231,8 +234,8 @@ const Pagina: React.FC = () => {
                   )}
                 </div>
 
-                {/* Mostrar la lista de clientes del proyecto */}
-                {clientesProyecto[proyecto.id] !== undefined && (
+                {/* Mostrar la lista de clientes del proyecto si es visible */}
+                {clientesVisible[proyecto.id] && clientesProyecto[proyecto.id] !== undefined && (
                   <div className="clientes-info">
                     <h3>Clientes del proyecto:</h3>
                     <ul>
