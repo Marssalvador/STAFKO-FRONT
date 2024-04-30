@@ -85,6 +85,13 @@ h1{
     margin-bottom: 20px;
     max-width: 99%;
 }
+
+  
+  /* Estilos para la lista de clientes */
+  .clientes-info {
+    margin-top: 10px; /* Espacio entre el proyecto y la lista de clientes */
+  }
+  
   
 .nombre-proyecto{
     flex-grow: 1;
