@@ -1,78 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import './Pagina.css';
 import Cookies from 'universal-cookie';
-import axios from 'axios';
-
 import { Button } from 'primereact/button';
 import ModificarProject from './ModificarProject';
 import VerInformacion from './VerInformacion';
+import { Proyecto, Staff } from '../domain/types';
+import { PaginaService } from '../application/PaginaService';
+import { StaffService } from '../application/InformacionService'; // Importamos StaffService
 
 const cookies = new Cookies();
 
-interface Proyecto {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  cuantia: string;
-  fecha_inicio: string;
-  fecha_fin: string;
-  id_staff: string;
-}
-
-interface Usuario {
-  id: number;
-  nombre: string;
-}
-
 const Pagina: React.FC = () => {
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
-  const [usuariosPorProyecto, setUsuariosPorProyecto] = useState<{ [key: number]: Usuario[] }>({});
+  const [usuariosPorProyecto, setUsuariosPorProyecto] = useState<{ [key: number]: Staff[] }>({});
   const [proyectoSeleccionado, setProyectoSeleccionado] = useState<Proyecto | null>(null);
   const [mensaje, setMensaje] = useState<string>('');
   const [filtrarActivado, setFiltrarActivado] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
   const userId = cookies.get('id');
-  const [clientesProyecto, setClientesProyecto] = useState<{ [key: number]: Usuario[] | null }>({});
+  const [clientesProyecto, setClientesProyecto] = useState<{ [key: number]: Staff[] | null }>({});
   const [clientesVisible, setClientesVisible] = useState<{ [key: number]: boolean }>({});
+  
+  // Creamos una instancia de StaffService
+  const staffService = new StaffService();
 
   useEffect(() => {
     const obtenerProyectosUsuario = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/proyecto', {
-          headers: {
-            'Authorization': `Bearer ${cookies.get('token')}`
+        // Obtener proyectos del usuario
+        const proyectos = await PaginaService.obtenerProyectosUsuario(cookies.get('token'));
+        
+        // Filtrar proyectos asociados al usuario logueado
+        const proyectosUsuario = proyectos.filter(p => parseInt(p.id_staff) === parseInt(userId));
+        setProyectos(filtrarActivado ? proyectosUsuario : proyectos);
+  
+        const usuariosPorProyectoMap: { [key: number]: Staff[] } = {};
+        await Promise.all(proyectos.map(async (proyecto: Proyecto) => {
+          try {
+            // Obtener usuarios por proyecto
+            const usuarios = await PaginaService.obtenerUsuariosPorProyecto(proyecto.id);
+            usuariosPorProyectoMap[proyecto.id] = usuarios;
+            setUsuariosPorProyecto(usuariosPorProyectoMap);
+          } catch (error) {
+            console.error(`Error al obtener usuarios del proyecto ${proyecto.id}:`, error);
           }
-        });
-    
-        if (Array.isArray(response.data.rows)) {
-          const userIdNumber = parseInt(userId);
-          const proyectosUsuario = response.data.rows.filter(proyecto => {
-            const idStaffNumber = parseInt(proyecto.id_staff);
-            return idStaffNumber === userIdNumber;
-          });
-    
-          setProyectos(filtrarActivado ? proyectosUsuario : response.data.rows);
-          
-          const usuariosPorProyectoMap: { [key: number]: Usuario[] } = {};
-          await Promise.all(response.data.rows.map(async (proyecto: Proyecto) => {
-            try {
-              const responseUsuarios = await axios.get(`http://localhost:4000/usuarios/datos2/${proyecto.id}`);
-              
-              if (Array.isArray(responseUsuarios.data)) {
-                const usuarios = responseUsuarios.data;
-                usuariosPorProyectoMap[proyecto.id] = usuarios;
-                setUsuariosPorProyecto(usuariosPorProyectoMap);
-              } else {
-                console.error('La respuesta no es un arreglo:', responseUsuarios.data);
-              }
-            } catch (error) {
-              console.error(`Error al obtener usuarios del proyecto ${proyecto.id}:`, error);
-            }
-          }));
-        } else {
-          console.error('La propiedad rows de la respuesta de la API no es un arreglo:', response.data.rows);
-        }
+        }));
       } catch (error) {
         console.error('Error al obtener proyectos del usuario:', error);
       }
@@ -84,18 +57,20 @@ const Pagina: React.FC = () => {
       obtenerProyectosUsuario();
     }
   }, [filtrarActivado, userId]);
+  
 
   const añadirProyecto = () => {
     window.location.href = './añadirProj';
   };
 
-  const editarProyecto = (proyecto: Proyecto) => {
+  const editarProyecto = async (proyecto: Proyecto) => {
     setProyectoSeleccionado(proyecto);
     setModalContent(
       <>
         <ModificarProject
           proyecto={proyecto}
-          onGuardar={(proyectoEditado) => {
+          onGuardar={async (proyectoEditado) => {
+            await PaginaService.actualizarProyecto(proyectoEditado);
             console.log('Guardar cambios:', proyectoEditado);
             setMensaje('¡Proyecto editado correctamente!');
             setProyectoSeleccionado(null);
@@ -114,11 +89,7 @@ const Pagina: React.FC = () => {
 
   const eliminarProyecto = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:4000/proyectoEliminar/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${cookies.get('token')}`
-        }
-      });
+      await PaginaService.eliminarProyecto(id, cookies.get('token'));
       setProyectos(proyectos.filter(proyecto => proyecto.id !== id));
     } catch (error) {
       console.error('Error al eliminar proyecto:', error);
@@ -131,6 +102,7 @@ const Pagina: React.FC = () => {
       <VerInformacion
         proyecto={proyecto}
         onClose={() => setModalVisible(false)}
+        staffService={staffService} 
       />
     );
     setModalVisible(true);
@@ -140,35 +112,34 @@ const Pagina: React.FC = () => {
     setFiltrarActivado(!filtrarActivado);
   };
 
-  const verClientes = (idProyecto: number) => {
+  const verClientes = async (idProyecto: number) => {
     setClientesVisible(prevState => ({
       ...prevState,
       [idProyecto]: !prevState[idProyecto]
     }));
     
-    //si ya hay clientes cargados para este proyecto, limpiar los datos
     if (clientesProyecto[idProyecto]){
       setClientesProyecto(prevState => ({
         ...prevState,
         [idProyecto]: null
       }));
-    }else{
-      //si no hay clientes cargados, cargarlos
-      const clientes = usuariosPorProyecto[idProyecto] || [];
-      console.log("Clientes cargados:", clientes);
-    
-      setClientesProyecto(prevState => ({
-        ...prevState,
-        [idProyecto]: clientes
-      }));
-    
-      //actualizar usuariosPorProyecto si no se ha actualizado previamente
-      if (!usuariosPorProyecto[idProyecto]){
-        console.log("Actualizando usuariosPorProyecto...");
-        setUsuariosPorProyecto(prevState => ({
+    } else {
+      try {
+        const clientes = await PaginaService.obtenerUsuariosPorProyecto(idProyecto);
+        console.log("Clientes cargados:", clientes);
+        setClientesProyecto(prevState => ({
           ...prevState,
           [idProyecto]: clientes
         }));
+        if (!usuariosPorProyecto[idProyecto]){
+          console.log("Actualizando usuariosPorProyecto...");
+          setUsuariosPorProyecto(prevState => ({
+            ...prevState,
+            [idProyecto]: clientes
+          }));
+        }
+      } catch (error) {
+        console.error(`Error al obtener clientes del proyecto ${idProyecto}:`, error);
       }
     }
   };
@@ -234,7 +205,6 @@ const Pagina: React.FC = () => {
                   )}
                 </div>
 
-                {/* Mostrar la lista de clientes del proyecto si es visible */}
                 {clientesVisible[proyecto.id] && clientesProyecto[proyecto.id] !== undefined && (
                   <div className="clientes-info">
                     <h3>Clientes del proyecto:</h3>

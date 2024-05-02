@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import './Pagina3.css';
 import Cookies from 'universal-cookie';
+import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
+import { obtenerUsuarios, eliminarUsuario } from '../application/Pagina3Service';
 import axios from 'axios';
 import ModificarUsuarios from './ModificarUsuarios'; 
 import VerInformacion2 from './VerInformacion2';
-import { Button } from 'primereact/button'; 
-import { Dialog } from 'primereact/dialog';
 
 const cookies = new Cookies();
 
-interface Usuarios{
+interface Usuarios {
   id: number;
   nombre: string;
-  apellido: string; 
+  apellido: string;
   username: string;
-  telefono: string; 
+  telefono: string;
   fecha_nacimiento: string;
-  rol: string | null; 
-  id_proyecto?: number | null; 
+  rol: string | null;
+  id_proyecto?: number | null;
 }
 
-interface UsuariosProps{
+interface UsuariosProps {
   usuario: Usuarios;
 }
 
@@ -33,135 +34,92 @@ const Pagina3: React.FC = () => {
   const [proyectoSeleccionado, setProyectoSeleccionado] = useState<any | null>(null);
 
   useEffect(() => {
-    const obtenerUsuarios = async () => {
-      try {
-        const response = await axios.get('http://localhost:4000/usuarios/datos', {
-          headers: {
-            'Authorization': `Bearer ${cookies.get('token')}` 
-          }
-        });
-
-        if (Array.isArray(response.data.rows)) {
-          //filtrar solo los usuarios con rol 'cliente'
-          const usuariosFiltrados = response.data.rows.filter((usuario: Usuarios) => usuario.rol === 'cliente');
-          setUsuarios(usuariosFiltrados);
-        } else {
-          console.error('La respuesta de la API no es un arreglo de usuario:', response.data);
-        }
-      } catch (error) {
-        console.error('Error al obtener usuario:', error);
-      }
+    const cargarUsuarios = async () => {
+      const usuarios = await obtenerUsuarios();
+      setUsuarios(usuarios);
     };
 
-    if (!cookies.get('username')){
+    if (!cookies.get('username')) {
       window.location.href = "./";
     } else {
-      obtenerUsuarios();
+      cargarUsuarios();
     }
   }, []);
 
   useEffect(() => {
     const obtenerProyectosUsuario = async () => {
-        try {
-          const idStaff = parseInt(cookies.get('id')); //convertir a número
-          const response = await axios.get('http://localhost:4000/proyecto', {
-            headers: {
-              'Authorization': `Bearer ${cookies.get('token')}`
-            }
-          });
-      
-          if (Array.isArray(response.data.rows)) {
-            //filtrar solo los proyectos que tienen el id_staff del staff logueado
-            const proyectosStaffLogueado = response.data.rows.filter((proyecto: any) => parseInt(proyecto.id_staff) === idStaff);
-            setProyectosUsuario(proyectosStaffLogueado);
-          } else {
-            console.error('La respuesta de la API no contiene un arreglo de proyectos:', response.data);
+      try {
+        const idStaff = parseInt(cookies.get('id'));
+        const response = await axios.get('http://localhost:4000/proyecto', {
+          headers: {
+            'Authorization': `Bearer ${cookies.get('token')}`
           }
-        } catch (error) {
-          console.error('Error al obtener proyectos del usuario:', error);
+        });
+
+        if (Array.isArray(response.data.rows)) {
+          const proyectosStaffLogueado = response.data.rows.filter((proyecto: any) => parseInt(proyecto.id_staff) === idStaff);
+          setProyectosUsuario(proyectosStaffLogueado);
+        } else {
+          console.error('La respuesta de la API no contiene un arreglo de proyectos:', response.data);
         }
-      };
-      
+      } catch (error) {
+        console.error('Error al obtener proyectos del usuario:', error);
+      }
+    };
+
     obtenerProyectosUsuario();
   }, []);
-  
+
   const eliminarUsuarioConfirmado = async (id: number) => {
-    try{
-      await axios.delete(`http://localhost:4000/usuEliminar/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${cookies.get('token')}`
-        }
-      });
-  
-      //actualizar la lista de usuarios después de eliminar
+    try {
+      await eliminarUsuario(id);
       const nuevosUsuarios = usuarios.filter(usuario => usuario.id !== id);
       setUsuarios(nuevosUsuarios);
-  
-    }catch (error){
+    } catch (error) {
       alert('Cancelación: El usuario tiene un proyecto asociado');
     }
   };
 
-  //antes de eliminar la cuenta del usuario, se deberá confirmar la acción
   const confirmarEliminarUsuario = (id: number) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")){
+    if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
       eliminarUsuarioConfirmado(id);
     }
   };
 
-  //editar usuario con el id del proyecto actualizado
-  const editarUsuario = (usuario: Usuarios) => {
-    setUsuarioSeleccionado(usuario);
-    setMostrarEditar(true);
-  };
-
-  //modal para ver información más detallada del usuario
-  const verInformacion = (usuario: Usuarios) => {
-    setUsuarioSeleccionado(usuario);
-    const proyecto = usuario.id_proyecto ? proyectosUsuario.find(proyecto => proyecto.id === usuario.id_proyecto) : null;
-    const proyectoNombre = proyecto;
-    setProyectoSeleccionado(proyectoNombre);
-    setMostrarModalProyectos(false);
-  };
-  
   const UsuarioComponent: React.FC<UsuariosProps> = ({ usuario }) => {
-  const username = cookies.get('username');
-  const isUsuarioLogueado = usuario.username === username;
-  const mostrarAsignar = !usuario.id_proyecto; 
+    const username = cookies.get('username');
+    const isUsuarioLogueado = usuario.username === username;
+    const mostrarAsignar = !usuario.id_proyecto;
+    const esStaff = cookies.get('rol') === 'staff';
 
-  const esStaff = cookies.get('rol') === 'staff';
-
-  return (
-      <div key={usuario.id} className="usuario" style={{ order: isUsuarioLogueado ? 0 : 1 }}> 
+    return (
+      <div key={usuario.id} className="usuario" style={{ order: isUsuarioLogueado ? 0 : 1 }}>
         <div className={usuario.username === username ? "nombre-usuario usuario-logueado" : "nombre-usuario"}>{usuario.nombre}</div>
         <div className="espacio"></div>
         <div className="ed-button">
           {isUsuarioLogueado && (
             <>
-              <Button label="Editar" className="p-button-raised2 p-button-primary" onClick={() => editarUsuario(usuario)} />
-              <Button label="Eliminar" className="p-button-raised2 p-button-danger" onClick={() => confirmarEliminarUsuario(usuario.id)}  />
+              <Button label="Editar" className="p-button-raised2 p-button-primary" onClick={() => setMostrarEditar(true)} />
+              <Button label="Eliminar" className="p-button-raised2 p-button-danger" onClick={() => confirmarEliminarUsuario(usuario.id)} />
             </>
           )}
 
           {!isUsuarioLogueado && (
             <>
-                {mostrarAsignar && (
-                  <Button
-                    label="Asignar"
-                    className="p-button-raised2 p-button-success"
-                    onClick={() => {
-                      setUsuarioSeleccionado(usuario); //selecciona el usuario antes de abrir el modal de proyectos
-                      setMostrarModalProyectos(true);
-                    }}
-                  />
-                )} 
-
-                {esStaff && ( //verificamos si el usuario logueado es staff
-                  <Button label="Eliminar" className="p-button-raised2 p-button-danger" onClick={() => confirmarEliminarUsuario(usuario.id)} />
-                )}
-
-                <Button label="Ver más" className="p-button-raised2 p-button-info" onClick={() => verInformacion(usuario)} />
-           
+              {mostrarAsignar && (
+                <Button
+                  label="Asignar"
+                  className="p-button-raised2 p-button-success"
+                  onClick={() => {
+                    setUsuarioSeleccionado(usuario); //selecciona el usuario antes de abrir el modal de proyectos
+                    setMostrarModalProyectos(true);
+                  }}
+                />
+              )}
+              {esStaff && (
+                <Button label="Eliminar" className="p-button-raised2 p-button-danger" onClick={() => confirmarEliminarUsuario(usuario.id)} />
+              )}
+              <Button label="Ver más" className="p-button-raised2 p-button-info" onClick={() => setUsuarioSeleccionado(usuario)} />
             </>
           )}
         </div>
@@ -170,22 +128,22 @@ const Pagina3: React.FC = () => {
   };
 
   const seleccionarProyecto = async (proyecto: any, usuario: Usuarios | null) => {
-    try{
-      if (!usuario){
+    try {
+      if (!usuario) {
         console.error('Usuario no seleccionado');
         return;
       }
-  
+
       //actualizar el campo id_proyecto del usuario seleccionado
       const usuarioActualizado = { ...usuario, id_proyecto: proyecto.id };
-  
+
       //realizar una solicitud para actualizar el usuario con el ID del proyecto seleccionado
-      await axios.put(`http://localhost:4000/usuarios/modificar/${usuario.id}`, usuarioActualizado, {
-        headers: {
-          'Authorization': `Bearer ${cookies.get('token')}`
-        }
-      });
-  
+      // await axios.put(`http://localhost:4000/usuarios/modificar/${usuario.id}`, usuarioActualizado, {
+      //   headers: {
+      //     'Authorization': `Bearer ${cookies.get('token')}`
+      //   }
+      // });
+
       //actualizar el estado del usuario con el proyecto seleccionado
       setUsuarioSeleccionado(usuarioActualizado);
       //cerrar el modal después de seleccionar el proyecto
@@ -198,10 +156,9 @@ const Pagina3: React.FC = () => {
   const añadirUsuario = async () => {
     window.location.href = './añadirUsuarios';
   };
-  
 
   return (
-    <>
+    <div className="pagina3-container">
       <main className="main">
         <h1 className="jump-animation">STAFKO</h1><br />
 
@@ -265,7 +222,7 @@ const Pagina3: React.FC = () => {
         </Dialog>
       )}
 
-    </>
+    </div>
   );
 };
 

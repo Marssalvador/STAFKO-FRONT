@@ -1,31 +1,18 @@
+// src/components/VerInformacion2.tsx
+
 import React from 'react';
+import { Staff, Proyecto } from '../domain/types';
+import Informacion2Service from '../application/Informacion2Service';
 
-interface Usuarios{
-  id: number;
-  nombre: string;
-  apellido: string;
-  telefono: string;
-  username: string;
-  fecha_nacimiento: string;
-  id_proyecto?: number | null | undefined; 
-}
-
-interface Proyecto{
-  id: number;
-  nombre: string;
-}
-
-interface Props{
-  usuario: Usuarios;
-  proyectos: Proyecto[]; 
+interface Props {
+  usuario: Staff;
+  proyectos: Proyecto[];
   onClose: () => void;
 }
 
 const VerInformacion2: React.FC<Props> = ({ usuario, proyectos, onClose }) => {
-  //buscar el nombre del proyecto correspondiente al id_proyecto del usuario
-  const nombreProyecto = usuario.id_proyecto ? proyectos.find(proyecto => proyecto.id === usuario.id_proyecto)?.nombre : null;
+  const nombreProyecto = Informacion2Service.obtenerNombreProyecto(usuario, proyectos);
 
-  //formatear la fecha para que tenga formato español
   const formatFecha = (fecha: string): string => {
     const fechaObj = new Date(fecha);
     const dia = fechaObj.getDate();
@@ -34,7 +21,6 @@ const VerInformacion2: React.FC<Props> = ({ usuario, proyectos, onClose }) => {
     return `${dia}/${mes}/${año}`;
   };
 
-  //mostrar los datos en un modal
   return (
     <div className="modal">
       <div className="modal-content flex flex-col items-center justify-center bg-gradient-to-r from-orange-200 p-5 rounded-lg shadow-lg mb-6 max-w-md w-full">
@@ -48,13 +34,13 @@ const VerInformacion2: React.FC<Props> = ({ usuario, proyectos, onClose }) => {
           <label>Usuario:</label>
           <input type="text" value={usuario.username} readOnly />
           <br />
-          <label>Telefono:</label>
+          <label>Teléfono:</label>
           <textarea value={usuario.telefono} readOnly />
           <br />
           <label>Fecha de nacimiento:</label>
           <input type="text" value={formatFecha(usuario.fecha_nacimiento)} readOnly />
           <br />
-          {nombreProyecto && ( //renderizar el campo del proyecto solo si hay un proyecto disponible
+          {nombreProyecto && (
             <>
               <label>Proyecto:</label>
               <input type="text" value={nombreProyecto} readOnly />

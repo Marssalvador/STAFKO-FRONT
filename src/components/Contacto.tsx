@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
+import { enviarMensaje, enviarEmail } from '../application/ContactoService';
 
 export const Contacto = () => {
     const [name, setName] = useState('');
@@ -13,13 +14,17 @@ export const Contacto = () => {
             alert('Por favor, complete todos los campos.');
             return;
         }
+        enviarMensaje(name, email, message);
     };
     
-    const sendEmail = (e) => {
-      e.preventDefault();
-      const mailtoLink = `mailto:stafko@gmail.com?subject=Contacto desde formulario&body=Nombre: ${name}%0DEmail: ${email}%0DMensaje: ${message}`;
-      window.location.href = mailtoLink;
-  };
+    const handleSendEmail = (e) => {
+        e.preventDefault();
+        if (!name || !email || !message) {
+            alert('Por favor, complete todos los campos.');
+            return;
+        }
+        enviarEmail(name, email, message);
+    };
 
     const handleShowAlert = () => {
         if (!name || !email || !message) {
@@ -56,7 +61,7 @@ export const Contacto = () => {
             </div><br />
             
             <div className="p-field">
-                <Button className='correo' type="submit" onClick={sendEmail} label="Prefiero mandar email" icon="pi pi-info-circle" />
+                <Button className='correo' type="submit" onClick={handleSendEmail} label="Prefiero mandar email" icon="pi pi-info-circle" />
             </div>
 
         </form>

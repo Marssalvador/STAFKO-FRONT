@@ -1,17 +1,9 @@
+// src/components/Modificarusuario.tsx
 import React, { useState } from 'react';
 import './ModificarUsuarios.css';
-import axios from 'axios';
+import { Usuario, actualizarUsuario } from '../application/UsuarioService';
 
-interface Usuario{
-  id: number;
-  nombre: string;
-  apellido: string;
-  telefono: string;
-  fecha_nacimiento: string;
-  username: string;
-}
-
-interface Props{
+interface Props {
   usuario: Usuario;
   onGuardar: (usuario: Usuario) => void;
 }
@@ -19,34 +11,20 @@ interface Props{
 const Modificarusuario: React.FC<Props> = ({ usuario, onGuardar }) => {
   const [datosusuario, setDatosusuario] = useState<Usuario>(usuario);
 
-  const cambiar = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const cambiar = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setDatosusuario({ ...datosusuario, [name]: value });
-  };
-
-  //formateo de fecha a formato español
-  const formatearFecha = (fecha: string): string => {
-    const date = new Date(fecha);
-    const year = date.getFullYear();
-    let month = (1 + date.getMonth()).toString().padStart(2, '0');
-    let day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
   };
 
   const enviar = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const proyectoFormateado = {
-        ...datosusuario,
-        fecha_nacimiento: formatearFecha(datosusuario.fecha_nacimiento)
-      };
-
-      await axios.put(`http://localhost:4000/usuarios/modificar/${datosusuario.id}`, proyectoFormateado);
-      alert('¡Proyecto actualizado correctamente!'); 
-      onGuardar(proyectoFormateado);
+      await actualizarUsuario(datosusuario);
+      alert('¡Usuario actualizado correctamente!');
+      onGuardar(datosusuario);
     } catch (error) {
-      alert('Error al actualizar el proyecto. Por favor, intenta de nuevo más tarde.'); 
+      alert('Error al actualizar el usuario. Por favor, intenta de nuevo más tarde.');
     }
   };
 

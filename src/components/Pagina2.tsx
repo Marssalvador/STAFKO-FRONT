@@ -1,24 +1,26 @@
+// components/Pagina2.tsx
 import React, { useEffect, useState } from 'react';
 import './Pagina2.css';
 import Cookies from 'universal-cookie';
-import axios from 'axios';
-import ModificarUsuarios from './ModificarUsuarios'; 
+import { Button } from 'primereact/button';
+import { obtenerStaffs, eliminarStaff } from '../application/Pagina2Service';
+import ModificarUsuarios from './ModificarUsuarios';
 import VerInformacion2 from './VerInformacion2';
-import { Button } from 'primereact/button'; 
+
 
 const cookies = new Cookies();
 
-interface Staff{
+interface Staff {
   id: number;
   nombre: string;
-  apellido: string; 
+  apellido: string;
   username: string;
-  telefono: string; 
-  fecha_nacimiento: string; 
+  telefono: string;
+  fecha_nacimiento: string;
   rol: string;
 }
 
-interface StaffProps{
+interface StaffProps {
   staff: Staff;
 }
 
@@ -28,59 +30,31 @@ const Pagina2: React.FC = () => {
   const [mostrarEditar, setMostrarEditar] = useState<boolean>(false);
 
   useEffect(() => {
-    const obtenerStaffs = async () => {
+    const cargarStaffs = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/usuarios/datos', {
-          headers: {
-            'Authorization': `Bearer ${cookies.get('token')}` 
-          }
-        });
-
-        if (Array.isArray(response.data.rows)) {
-          const staffFiltrado = response.data.rows.filter((staff: Staff) => staff.rol === 'staff');
-          setStaffs(staffFiltrado);
-        } else {
-          console.error('La respuesta de la API no es un arreglo de staff:', response.data);
-        }
+        const staffs = await obtenerStaffs();
+        setStaffs(staffs);
       } catch (error) {
-        console.error('Error al obtener staff:', error);
+        console.error('Error al cargar staffs:', error);
       }
     };
 
-    if (!cookies.get('username')){
-      window.location.href = "./";
-    }else{
-      obtenerStaffs();
-    }
+    cargarStaffs();
   }, []);
 
   const eliminarStaffConfirmado = async (id: number) => {
-    try{
-      await axios.delete(`http://localhost:4000/usuEliminar/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${cookies.get('token')}`
-        }
-      });
-
-      //eliminar la cookie de inicio de sesión
-      cookies.remove('id', { path: "/" });
-      cookies.remove("apellido", { path: "/" });
-      cookies.remove("nombre", { path: "/" });
-      cookies.remove("username", { path: "/" });
-
-      //redirigir al usuario a la página de inicio de sesión
-      window.location.href = "./";
-    } catch (error) {
-      alert('Cancelación: El Staff tiene un proyecto asociado');
-    }
-  };
-
-  //antes de eliminar la cuenta del usuario, se deberá confirmar la acción
-  const confirmarEliminarStaff = (id: number) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este staff?")) {
-      eliminarStaffConfirmado(id);
+      try {
+        await eliminarStaff(id);
+        // Actualizar la lista de staffs después de eliminar
+        setStaffs(prevStaffs => prevStaffs.filter(staff => staff.id !== id));
+      } catch (error) {
+        console.error('Error al eliminar staff:', error);
+        alert('Cancelación: El Staff tiene un proyecto asociado');
+      }
     }
   };
+  
 
   const editarStaff = (staff: Staff) => {
     setStaffSeleccionado(staff);
@@ -91,22 +65,22 @@ const Pagina2: React.FC = () => {
     setStaffSeleccionado(staff);
     setMostrarEditar(false);
   };
-  
+
   const StaffComponent: React.FC<StaffProps> = ({ staff }) => {
     const username = cookies.get('username');
     const isUsuarioLogueado = staff.username === username;
-  
+
     //si el usuario es el que se ha logueado podrá editar sus datos y eliminar su cuenta
     //sin embargo, del resto de usuarios solo podrá ver la información
     return (
-      <div key={staff.id} className="staff" style={{ order: isUsuarioLogueado ? 0 : 1 }}> 
+      <div key={staff.id} className="staff" style={{ order: isUsuarioLogueado ? 0 : 1 }}>
         <div className={staff.username === username ? "nombre-staff usuario-logueado" : "nombre-staff"}>{staff.nombre}</div>
         <div className="espacio"></div>
         <div className="ed-button">
           {isUsuarioLogueado && (
             <>
               <Button label="Editar" className="p-button-raised p-button-primary" onClick={() => editarStaff(staff)} />
-              <Button label="Eliminar" className="p-button-raised p-button-danger" onClick={() => confirmarEliminarStaff(staff.id)}  />
+              <Button label="Eliminar" className="p-button-raised p-button-danger" onClick={() => eliminarStaffConfirmado(staff.id)} />
             </>
           )}
 
@@ -151,7 +125,7 @@ const Pagina2: React.FC = () => {
           ) : (
             <VerInformacion2
               usuario={staffSeleccionado}
-              proyectos={[]} 
+              proyectos={[]}
               onClose={() => {
                 console.log('Cerrar VerInformacion2');
                 setStaffSeleccionado(null);

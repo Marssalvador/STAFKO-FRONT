@@ -1,43 +1,32 @@
+// Adaptador (Componente React)
 import React, { useEffect, useState } from 'react';
 import './VerInformacion.css';
-import axios from 'axios';
+import { StaffService } from '../application/InformacionService'; // Servicio
+import { Proyecto } from '../domain/types'; // Tipos
 
-interface Proyecto{
-  id: number;
-  nombre: string;
-  descripcion: string;
-  cuantia: string;
-  fecha_inicio: string;
-  fecha_fin: string;
-  id_staff: string;
-}
-
-interface Props{
+interface VerInformacionProps {
   proyecto: Proyecto;
   onClose: () => void;
+  staffService: StaffService; // Inyectamos el servicio
 }
 
-const VerInformacion: React.FC<Props> = ({ proyecto, onClose }) => {
+const VerInformacion: React.FC<VerInformacionProps> = ({ proyecto, onClose, staffService }) => {
   const [nombreStaff, setNombreStaff] = useState("");
 
   useEffect(() => {
-    const obtenerUsuarios = async () => {
+    const obtenerNombreStaff = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/usuarios/datos/${proyecto.id_staff}`);
-        if (response) {
-          setNombreStaff(response.data); //sacamos solo el nombre del Staff
-        } else {
-          setNombreStaff(""); 
-        }
+        const nombre = await staffService.obtenerNombreStaff(proyecto.id_staff);
+        setNombreStaff(nombre);
       } catch (error) {
-        console.error('Error al obtener nombre usuario:', error);
+        console.error('Error al obtener nombre del staff:', error);
       }
     };
   
-    obtenerUsuarios();
+    obtenerNombreStaff();
   }, []);
 
-  //formateamos la fecha para que sea formato español
+  // Función para formatear la fecha
   const formatFecha = (fecha: string): string => {
     const fechaObj = new Date(fecha);
     const dia = fechaObj.getDate();
