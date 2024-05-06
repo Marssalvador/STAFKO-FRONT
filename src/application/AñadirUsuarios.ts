@@ -4,7 +4,7 @@ import { agregarNuevoUsuario as agregarUsuarioHTTP } from "../infrastructure/Usu
 
 export async function agregarNuevoUsuario(nuevoUsuario: any): Promise<any> {
   try {
-    const response = await agregarUsuarioHTTP(nuevoUsuario); // Cambiado el nombre de la función aquí
+    const response = await agregarUsuarioHTTP(nuevoUsuario); 
     return response;
   } catch (error) {
     throw error;

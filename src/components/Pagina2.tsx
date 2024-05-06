@@ -46,7 +46,7 @@ const Pagina2: React.FC = () => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este staff?")) {
       try {
         await eliminarStaff(id);
-        // Actualizar la lista de staffs después de eliminar
+        //actualizamos la lista de staffs después de eliminar
         setStaffs(prevStaffs => prevStaffs.filter(staff => staff.id !== id));
       } catch (error) {
         console.error('Error al eliminar staff:', error);
@@ -55,7 +55,6 @@ const Pagina2: React.FC = () => {
     }
   };
   
-
   const editarStaff = (staff: Staff) => {
     setStaffSeleccionado(staff);
     setMostrarEditar(true);

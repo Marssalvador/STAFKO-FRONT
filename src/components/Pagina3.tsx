@@ -17,7 +17,7 @@ interface Usuarios {
   username: string;
   telefono: string;
   fecha_nacimiento: string;
-  rol: string | null;
+  rol: string;
   id_proyecto?: number | null;
 }
 
@@ -36,8 +36,13 @@ const Pagina3: React.FC = () => {
   useEffect(() => {
     const cargarUsuarios = async () => {
       const usuarios = await obtenerUsuarios();
-      setUsuarios(usuarios);
+      const usuariosValidados = usuarios.map(usuario => ({
+        ...usuario,
+        rol: usuario.rol || 'valor_predeterminado' 
+      }));
+      setUsuarios(usuariosValidados);
     };
+    
 
     if (!cookies.get('username')) {
       window.location.href = "./";
@@ -137,13 +142,6 @@ const Pagina3: React.FC = () => {
       //actualizar el campo id_proyecto del usuario seleccionado
       const usuarioActualizado = { ...usuario, id_proyecto: proyecto.id };
 
-      //realizar una solicitud para actualizar el usuario con el ID del proyecto seleccionado
-      // await axios.put(`http://localhost:4000/usuarios/modificar/${usuario.id}`, usuarioActualizado, {
-      //   headers: {
-      //     'Authorization': `Bearer ${cookies.get('token')}`
-      //   }
-      // });
-
       //actualizar el estado del usuario con el proyecto seleccionado
       setUsuarioSeleccionado(usuarioActualizado);
       //cerrar el modal después de seleccionar el proyecto
@@ -164,9 +162,6 @@ const Pagina3: React.FC = () => {
 
         <div className="space">Clientes</div><br />
 
-        <div className="add-button">
-          <Button label="+" className="p-button-raised p-button-success custom-orange-button botoncin" onClick={añadirUsuario} />
-        </div>
         <br />
 
         {usuarios.map((usuario) => (
