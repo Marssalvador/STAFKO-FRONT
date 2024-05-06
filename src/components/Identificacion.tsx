@@ -3,7 +3,8 @@ import React, { Component, ChangeEvent, FormEvent } from 'react';
 import { IdentificacionAppService } from '../application/IdentificacionService';
 import './Identificacion.css';
 import { Button } from 'primereact/button';
-import Cookies from 'universal-cookie'; // Agrega esta línea
+import Cookies from 'universal-cookie'; 
+import { enviarRegistroDeTiempo } from '../infrastructure/HeaderService';
 
 const cookies = new Cookies();
 
@@ -49,6 +50,10 @@ class Identificacion extends Component<{}, IdentificacionState> {
         cookies.set('nombre', respuesta.nombre, { path: "/" });
         cookies.set('username', respuesta.username, { path: "/" });
         cookies.set('rol', respuesta.rol, { path: "/" });
+
+        // Llama a enviarRegistroDeTiempo aquí al iniciar sesión
+        await enviarRegistroDeTiempo("Inicio de sesión en la aplicación");
+
         window.location.href = "./pagina";
       } else {
         alert('El usuario o la contraseña no son correctos');

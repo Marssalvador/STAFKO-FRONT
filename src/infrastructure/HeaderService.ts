@@ -11,13 +11,14 @@ export const HeaderService = {
     cookies.remove("nombre", { path: "/" });
     cookies.remove("username", { path: "/" });
 
+    // Llamar a enviarRegistroDeTiempo antes de redirigir al usuario
     await enviarRegistroDeTiempo("Cierre de sesión en la aplicación");
 
     window.location.href = './';
   }
 };
 
-const enviarRegistroDeTiempo = async (description: string) => {
+export const enviarRegistroDeTiempo = async (description: string) => {
   try {
     const projectId = await obtenerIdProyecto();
 
