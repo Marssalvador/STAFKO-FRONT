@@ -18,6 +18,17 @@ export const HeaderService = {
     // Detener el contador de inicio de sesión cuando se cierre la sesión
     await detenerContadorSesion(); // Esperamos a que se detenga el contador
 
+    let descripcion = prompt(`Por favor, ${loggedInUsername}, indique en qué ha estado trabajando antes de cerrar sesión:`);
+
+    // Solicitar al usuario que ingrese una descripción si no proporcionó ninguna inicialmente
+    while (!descripcion) {
+      descripcion = prompt("Por favor, indique en qué ha estado trabajando antes de cerrar sesión (este campo es obligatorio):");
+    }
+
+    // Enviar la descripción proporcionada por el usuario
+    await enviarRegistroDeTiempo(`Tarea: ${descripcion} - ${loggedInUsername}`);
+
+    // Limpiar cookies y redirigir a la página de inicio
     cookies.remove('id', { path: "/" });
     cookies.remove("apellido", { path: "/" });
     cookies.remove("nombre", { path: "/" });
@@ -27,6 +38,7 @@ export const HeaderService = {
     window.location.href = './';
   }
 };
+
 
 
 export const enviarRegistroDeTiempo = async (description: string) => {
