@@ -1,10 +1,11 @@
-// src/components/Identificacion.tsx
+// Identificacion.tsx
+
 import React, { Component, ChangeEvent, FormEvent } from 'react';
 import { IdentificacionAppService } from '../application/IdentificacionService';
 import './Identificacion.css';
 import { Button } from 'primereact/button';
 import Cookies from 'universal-cookie'; 
-import { enviarRegistroDeTiempo } from '../infrastructure/HeaderService';
+import { enviarRegistroDeTiempo, iniciarContadorSesion } from '../infrastructure/HeaderService';
 
 const cookies = new Cookies();
 
@@ -50,10 +51,14 @@ class Identificacion extends Component<{}, IdentificacionState> {
         cookies.set('nombre', respuesta.nombre, { path: "/" });
         cookies.set('username', respuesta.username, { path: "/" });
         cookies.set('rol', respuesta.rol, { path: "/" });
-
+  
         // Llama a enviarRegistroDeTiempo aquí al iniciar sesión
-        await enviarRegistroDeTiempo("Inicio de sesión en la aplicación");
-
+        await enviarRegistroDeTiempo(`Inicio de sesión en la aplicación - ${respuesta.username}`);
+  
+        // Inicia el contador de tiempo al iniciar sesión
+        iniciarContadorSesion();
+        console.log("Contador de sesión iniciado.");
+  
         window.location.href = "./pagina";
       } else {
         alert('El usuario o la contraseña no son correctos');
@@ -62,6 +67,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
       alert(error.message);
     }
   };
+  
 
   componentDidMount() {
     if (cookies.get('username')) {

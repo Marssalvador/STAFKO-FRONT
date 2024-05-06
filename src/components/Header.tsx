@@ -1,4 +1,3 @@
-// src/components/Header.tsx
 import React, { useState } from 'react';
 import { HeaderAppService } from '../application/HeaderService';
 import './Header.css';
@@ -20,10 +19,14 @@ const Header: React.FC = () => {
 
   const cerrarSesion = async () => {
     await HeaderAppService.cerrarSesion();
+    setIsLoggedIn(false); // Actualiza el estado para ocultar el botón de cerrar sesión
   };
 
-  if (!isLoggedIn) {
-    return null;
+  // Obtener la ruta actual
+  const currentPath = window.location.pathname;
+
+  if (!isLoggedIn || currentPath === '/') {
+    return null; // No renderiza nada si el usuario no está logueado o si la ruta está vacía
   }
 
   return (
