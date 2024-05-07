@@ -83,7 +83,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
         <img src="/panal.png" alt="Panal" className='panal-superior-derecho' />
         <img src="/panal.png" alt="Panal" className='panal-inferior-izquierdo' />
 
-        <main className="flex items-center justify-center h-screen">
+        <main className="formu">
           <div className="bg-gradient-to-r from-orange-200 to-orange-99 p-12 rounded-lg shadow-lg mb-6 max-w-md w-full">
             <h1 className='text-4xl font-bold mb-4 text-center jump-animation'>STAFKO</h1>
             <form onSubmit={this.handleSubmit} className="space-y-4">
@@ -99,7 +99,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
 
               <Button label="Iniciar sesión" type="submit" className="p-button-outlined custom-orange-button w-full" /> {}
 
-              <p className="text-center text-black mt-4">Si no estás registrado, <a href="/registro" className="text-orange-500">regístrate aquí</a>.</p>
+              <p className="text-center text-black mt-4"><a href="/registro" className="text-orange-500">Regístrate aquí</a></p>
             </form>
           </div>
         </main>

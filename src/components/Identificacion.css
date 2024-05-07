@@ -47,6 +47,10 @@ body{
     animation: jump 0.4s ease 3; /*esto hace que la animación se repita 3 veces (de tres saltos)*/
 }
 
+a{
+    margin: 0px;
+}
+
 .login-container{
     width: 100%;
     max-width: 400px; 
@@ -101,22 +105,30 @@ body{
     background-color: #000000;
 }
 
-.panal-superior-derecho{
+.formu { 
     position: absolute;
-    bottom: 0;
-    left: 0;
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    max-width: 400px; 
+    width: 90%; 
+}
+
+.panal-superior-derecho,
+.panal-inferior-izquierdo {
+    position: absolute;
     width: 700px;
     height: auto;
-    z-index: 0;
+}
+
+.panal-superior-derecho{
+    bottom: 0;
+    left: 0;
 }
 
 .panal-inferior-izquierdo{
-    position: absolute;
     top: 0;
     right: 0;
-    width: 700px;
-    height: auto;
-    z-index: 0;
 }
 
 .custom-orange-button {
@@ -132,8 +144,8 @@ body{
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5); 
 }
 
-a{
-    margin: 0px;
+.text-orange-500{
+    margin-left: 0rem;
 }
   
   
