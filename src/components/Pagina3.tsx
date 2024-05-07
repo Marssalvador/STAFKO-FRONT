@@ -231,6 +231,7 @@ const Pagina3: React.FC = () => {
                 console.log('Cerrar VerInformacion2');
                 setUsuarioSeleccionado(null);
               }}
+              proyectosDisponibles={proyectosUsuario} // Pasar la lista de proyectos disponibles como prop
             />
           )
         )}

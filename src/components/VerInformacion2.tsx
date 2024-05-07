@@ -13,9 +13,10 @@ interface Usuarios {
 interface Props {
   usuario: Usuarios;
   onClose: () => void;
+  proyectosDisponibles: { id: number; nombre: string }[]; // Array de proyectos disponibles
 }
 
-const VerInformacion2: React.FC<Props> = ({ usuario, onClose }) => {
+const VerInformacion2: React.FC<Props> = ({ usuario, onClose, proyectosDisponibles }) => {
   // Formateamos la fecha para que tenga formato español
   const formatFecha = (fecha: string): string => {
     const fechaObj = new Date(fecha);
@@ -25,6 +26,11 @@ const VerInformacion2: React.FC<Props> = ({ usuario, onClose }) => {
     return `${dia}/${mes}/${año}`;
   };
 
+  // Obtener el nombre del proyecto
+  const nombreProyecto = usuario.id_proyecto !== null && usuario.id_proyecto !== undefined
+    ? proyectosDisponibles.find(proyecto => proyecto.id === usuario.id_proyecto)?.nombre || 'Proyecto no encontrado'
+    : 'No hay proyecto asignado';
+
   // Mostramos los datos en un modal
   return (
     <div className="modal">
@@ -33,29 +39,21 @@ const VerInformacion2: React.FC<Props> = ({ usuario, onClose }) => {
           <label>Nombre:</label>
           <input type="text" value={usuario.nombre} readOnly />
           <br />
-
           <label>Apellido:</label>
           <textarea value={usuario.apellido} readOnly />
           <br />
-
           <label>Usuario:</label>
           <input type="text" value={usuario.username} readOnly />
           <br />
-
           <label>Telefono:</label>
           <textarea value={usuario.telefono} readOnly />
           <br />
-          
           <label>Fecha de nacimiento:</label>
           <input type="text" value={formatFecha(usuario.fecha_nacimiento)} readOnly />
           <br />
-
-          {usuario.id_proyecto !== null && usuario.id_proyecto !== undefined && (
-            <div>
-              <label>Id proyecto:</label>
-              <input type="text" value={usuario.id_proyecto} readOnly />
-            </div>
-          )}
+          {/* Mostrar el nombre del proyecto */}
+          <label>Proyecto asociado:</label>
+          <input type="text" value={nombreProyecto} readOnly />
         </div>
         <button className="close-modal" onClick={onClose}>Cerrar</button>
       </div>
