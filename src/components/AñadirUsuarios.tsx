@@ -81,7 +81,6 @@ const AñadirUsuarios: React.FC = () => {
   };
 
   return (
-
     <>
       <img src="/panal2.png" alt="Panal" className="panal-superior-derecho" />
       <img src="/panal2.png" alt="Panal" className="panal-inferior-izquierdo" />
