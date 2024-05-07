@@ -91,7 +91,7 @@ const AñadirProj: React.FC = () => {
                 </select>
               </div>
 
-              <Button type="button" label="Añadir Usuario" className="p-button-outlined naranja" />
+              <Button type="submit" label="Añadir Usuario" className="p-button-outlined naranja" />
           
             </form>
           </div>

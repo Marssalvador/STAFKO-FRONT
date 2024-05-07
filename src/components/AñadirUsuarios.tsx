@@ -73,7 +73,7 @@ const AñadirUsuarios: React.FC = () => {
 
     try {
       const response = await agregarNuevoUsuario(nuevoUsuarioCompleto);
-      setMensaje('¡Usuario añadido con éxito!');
+      showAlert('¡Usuario añadido con éxito!');
     } catch (error) {
       console.error('Error al agregar usuario:', error.message);
       showAlert('Error al agregar usuario. Por favor, inténtalo de nuevo más tarde.');
