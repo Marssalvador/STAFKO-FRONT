@@ -5,7 +5,7 @@ import { IdentificacionAppService } from '../application/IdentificacionService';
 import './Identificacion.css';
 import { Button } from 'primereact/button';
 import Cookies from 'universal-cookie'; 
-import { enviarRegistroDeTiempo, iniciarContadorSesion } from '../infrastructure/HeaderService';
+import { iniciarContadorSesion } from '../infrastructure/HeaderService';
 
 const cookies = new Cookies();
 
@@ -39,6 +39,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
     }));
   };
 
+
   handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { username, password } = this.state.form;
@@ -52,12 +53,10 @@ class Identificacion extends Component<{}, IdentificacionState> {
         cookies.set('username', respuesta.username, { path: "/" });
         cookies.set('rol', respuesta.rol, { path: "/" });
   
-        // Llama a enviarRegistroDeTiempo aquí al iniciar sesión
-        await enviarRegistroDeTiempo(`Inicio de sesión en la aplicación - ${respuesta.username}`);
-  
-        // Inicia el contador de tiempo al iniciar sesión
-        iniciarContadorSesion();
-        console.log("Contador de sesión iniciado.");
+        const descripcion = prompt(`¿En qué vas a trabajar, ${respuesta.username}?)`);
+        if (descripcion) {
+          await iniciarContadorSesion(descripcion+" - "+respuesta.username);
+        }
   
         window.location.href = "./pagina";
       } else {
@@ -74,6 +73,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
       window.location.href = "./pagina";
     }
   }
+
 
   render() {
     const { form } = this.state;

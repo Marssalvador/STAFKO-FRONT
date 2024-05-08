@@ -1,32 +1,22 @@
-import React, { useState } from 'react';
-import { HeaderAppService } from '../application/HeaderService';
+// Header.tsx
+
+import React, { useState, useEffect } from 'react';
+import { cerrarSesion } from '../infrastructure/HeaderService';
 import './Header.css';
+import Cookies from 'universal-cookie';
 
 const Header: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Cambiar esto según la lógica de tu aplicación
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // Estado para el inicio de sesión
+  const cookies = new Cookies();
 
-  const staff = () => {
-    window.location.href = './pagina2';
+  const cerrarSesionHandler = async () => {
+    await cerrarSesion(setIsLoggedIn); // Pasar setIsLoggedIn como argumento
   };
-
-  const proyectos = () => {
-    window.location.href = './pagina';
-  };
-
-  const clientes = () => {
-    window.location.href = './pagina3';
-  };
-
-  const cerrarSesion = async () => {
-    await HeaderAppService.cerrarSesion();
-    setIsLoggedIn(false); // Actualiza el estado para ocultar el botón de cerrar sesión
-  };
-
-  // Obtener la ruta actual
+  
   const currentPath = window.location.pathname;
 
   if (!isLoggedIn || currentPath === '/') {
-    return null; // No renderiza nada si el usuario no está logueado o si la ruta está vacía
+    return null;
   }
 
   return (
@@ -35,17 +25,17 @@ const Header: React.FC = () => {
       <nav className="nav">
         <ul className="nav-list">
           <li>
-            <a href="#" onClick={staff}>Staff</a>
+            <a href="#">Staff</a>
           </li>
           <li>
-            <a href="#" onClick={proyectos}>Proyectos</a>
+            <a href="#">Proyectos</a>
           </li>
           <li>
-            <a href="#" onClick={clientes}>Clientes</a>
+            <a href="#">Clientes</a>
           </li>
         </ul>
       </nav>
-      <button onClick={cerrarSesion} className='cerrarSesion'>Cerrar sesión</button>
+      <button onClick={cerrarSesionHandler} className='cerrarSesion'>Cerrar sesión</button>
     </header>
   );
 };
