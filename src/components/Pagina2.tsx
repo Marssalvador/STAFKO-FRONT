@@ -6,6 +6,7 @@ import { Button } from 'primereact/button';
 import { obtenerStaffs, eliminarStaff } from '../application/Pagina2Service';
 import ModificarUsuarios from './ModificarUsuarios';
 import VerInformacion2 from './VerInformacion2';
+import Reloj from './Reloj';
 
 
 const cookies = new Cookies();
@@ -98,6 +99,8 @@ const Pagina2: React.FC = () => {
   return (
     <>
       <main className="main">
+        <Reloj />
+
         <h1 className="jump-animation">STAFKO</h1><br />
 
         <div className="space">Staffs</div><br />
@@ -123,13 +126,14 @@ const Pagina2: React.FC = () => {
             />
           ) : (
             <VerInformacion2
-              usuario={staffSeleccionado}
-              proyectos={[]}
-              onClose={() => {
-                console.log('Cerrar VerInformacion2');
-                setStaffSeleccionado(null);
-              }}
-            />
+            usuario={staffSeleccionado}
+            onClose={() => {
+              console.log('Cerrar VerInformacion2');
+              setStaffSeleccionado(null);
+            }}
+            proyectosDisponibles={[]}
+          />
+
           )
         )}
 

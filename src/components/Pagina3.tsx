@@ -6,6 +6,7 @@ import ModificarUsuarios from './ModificarUsuarios';
 import VerInformacion2 from './VerInformacion2';
 import { Button } from 'primereact/button'; 
 import { Dialog } from 'primereact/dialog'; // Importa el componente Dialog
+import Reloj from './Reloj';
 
 const cookies = new Cookies();
 
@@ -201,6 +202,9 @@ const Pagina3: React.FC = () => {
   return (
     <>
       <main className="main">
+        
+        <Reloj/>
+
         <h1 className="jump-animation">STAFKO</h1><br />
 
         <div className="space">Clientes</div><br />

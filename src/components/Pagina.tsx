@@ -7,6 +7,7 @@ import VerInformacion from './VerInformacion';
 import { Proyecto, Staff } from '../domain/types';
 import { PaginaService } from '../application/PaginaService';
 import { StaffService } from '../application/InformacionService'; // Importamos StaffService
+import Reloj from './Reloj';
 
 const cookies = new Cookies();
 
@@ -147,6 +148,7 @@ const Pagina: React.FC = () => {
   return (
     <>
       <main className="main">
+        <Reloj /> 
         <h1 className="jump-animation">STAFKO</h1>
         <div className="space">Proyectos</div><br />
         <div className="filtrar-switch">
