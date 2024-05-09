@@ -1,13 +1,13 @@
 // Identificacion.tsx
 
 import React, { Component, ChangeEvent, FormEvent } from 'react';
-import { IdentificacionAppService } from '../application/IdentificacionService';
-import './Identificacion.css';
-import { Button } from 'primereact/button';
+import { IdentificacionAppService } from '../application/IdentificacionService'; 
+import './Identificacion.css'; 
+import { Button } from 'primereact/button'; 
 import Cookies from 'universal-cookie'; 
-import { iniciarContadorSesion } from '../infrastructure/HeaderService';
+import { iniciarContadorSesion } from '../infrastructure/HeaderService'; 
 
-const cookies = new Cookies();
+const cookies = new Cookies(); 
 
 interface FormState {
   username: string;
@@ -18,6 +18,7 @@ interface IdentificacionState {
   form: FormState;
 }
 
+//Obtiene el nombre de usuario y la contraseña 
 class Identificacion extends Component<{}, IdentificacionState> {
   constructor(props: {}) {
     super(props);
@@ -29,6 +30,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
     };
   }
 
+  //Maneja el cambio en los campos del formulario
   handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     await this.setState((prevState) => ({
@@ -39,41 +41,43 @@ class Identificacion extends Component<{}, IdentificacionState> {
     }));
   };
 
-
+  //Maneja el envío del formulario de inicio de sesión
   handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { username, password } = this.state.form;
     try {
-      const response = await IdentificacionAppService.iniciarSesion(username, password);
+      const response = await IdentificacionAppService.iniciarSesion(username, password); //Llama al servicio de aplicación para iniciar sesión
       if (response.length > 0) {
         const respuesta = response[0];
+
+        //Establece las cookies con la información del usuario
         cookies.set('id', respuesta.id, { path: "/" });
         cookies.set('apellido', respuesta.apellido, { path: "/" });
         cookies.set('nombre', respuesta.nombre, { path: "/" });
         cookies.set('username', respuesta.username, { path: "/" });
         cookies.set('rol', respuesta.rol, { path: "/" });
   
+        //Le pregunta al usuario sobre qué va a trabajar y lo inserta en la descripción de Clockify
         const descripcion = prompt(`¿En qué vas a trabajar, ${respuesta.username}?)`);
         if (descripcion) {
-          await iniciarContadorSesion(descripcion+" - "+respuesta.username);
+          await iniciarContadorSesion(descripcion+" - "+respuesta.username); //Inicia el contador de sesión con la descripción proporcionada
         }
   
-        window.location.href = "./pagina";
+        window.location.href = "./pagina"; // Redirige a la página principal
       } else {
         alert('El usuario o la contraseña no son correctos');
       }
     } catch (error) {
-      alert(error.message);
+      alert(error.message); //Muestra un mensaje de error si ocurre un error durante el inicio de sesión
     }
   };
-  
 
+  //Verifica si ya hay un usuario logueado cuando se monta el componente
   componentDidMount() {
     if (cookies.get('username')) {
-      window.location.href = "./pagina";
+      window.location.href = "./pagina"; //Redirige a la página principal si ya hay un usuario logueado
     }
   }
-
 
   render() {
     const { form } = this.state;
