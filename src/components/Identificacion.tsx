@@ -86,6 +86,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
         <main className="formu">
           <div className="bg-gradient-to-r from-orange-200 to-orange-99 p-12 rounded-lg shadow-lg mb-6 max-w-md w-full">
             <h1 className='text-4xl font-bold mb-4 text-center jump-animation'>STAFKO</h1>
+            
             <form onSubmit={this.handleSubmit} className="space-y-4">
               <h2 className="text-xl font-semibold mb-2">Iniciar sesión</h2>
               <div>
@@ -97,7 +98,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
                 <input type="password" name="password" id="password" value={form.password} onChange={this.handleChange} className="login-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50" />
               </div>
 
-              <Button label="Iniciar sesión" type="submit" className="p-button-outlined custom-orange-button w-full" /> {}
+              <Button label="Iniciar sesión" type="submit" className="p-button-outlined custom-orange-button w-full" /> 
 
               <p className="text-center text-black mt-4"><a href="/registro" className="text-orange-500">Regístrate aquí</a></p>
             </form>

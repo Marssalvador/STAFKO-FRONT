@@ -14,7 +14,7 @@ export const cerrarSesion = async (setIsLoggedIn: React.Dispatch<React.SetStateA
 
   detenerContadorSesion();
 
-  // Limpiar cookies y redirigir a la página de inicio
+  //limpiamos cookies y redirigimos a la página de inicio
   cookies.remove('id', { path: "/" });
   cookies.remove("apellido", { path: "/" });
   cookies.remove("nombre", { path: "/" });
@@ -25,67 +25,57 @@ export const cerrarSesion = async (setIsLoggedIn: React.Dispatch<React.SetStateA
   window.location.href = './';
 };
 
-
 export const detenerContadorSesion = async () => {
   console.log("Deteniendo contador de sesión...");
   
-  if (intervaloInicioSesion) {
-    // Si el contador está activo, lo detenemos
-    intervaloInicioSesion = false;
+  try {
+    const workspaceId = '6630a84256361a516299a6a5'; //ID de tu espacio de trabajo en Clockify
 
-    try {
-      // Enviar una solicitud para terminar el seguimiento del tiempo en Clockify
-      const response = await axios.post(
-        `https://api.clockify.me/api/v1/workspaces/6630a84256361a516299a6a5/time-entries`,
-        {
-          end: new Date().toISOString()
-        },
-        {
-          headers: {
-            'X-Api-Key': 'NGMyODhkMjItNDNiMi00MWY1LWI1YTctNGU4MDRjNzZkMDVi',
-          },
+    //enviar una solicitud para detener el seguimiento del tiempo en Clockify
+    const response = await axios.patch(
+      `https://api.clockify.me/api/v1/workspaces/${workspaceId}/user/6630a84256361a516299a6a4/time-entries`,
+      {
+        end: new Date().toISOString(),
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Api-Key': 'NGMyODhkMjItNDNiMi00MWY1LWI1YTctNGU4MDRjNzZkMDVi',
         }
-      );
-      console.log('Contador de sesión pausado correctamente:', response.data);
-    } catch (error) {
-      console.error('Error al pausar el contador de sesión en Clockify:', error);
-    }
-
-  } else {
-    console.log("El contador de sesión no estaba activo.");
+      }
+    );
+    console.log('Contador de sesión pausado correctamente:', response.data);
+    clearInterval('6630a84256361a516299a6a4');
+    setTimeout;
+    
+    
+  } catch (error) {
+    console.error('Error al pausar el contador de sesión en Clockify:', error);
   }
 };
-
 
 
 export const iniciarContadorSesion = async (description: string) => {
   console.log("Iniciando contador de sesión...");
   
   try {
-    const userId = cookies.get('id');
-
-    if (!userId) {
-      console.error('No se pudo obtener el ID del usuario');
-      return;
-    }
-
     const projectId = await obtenerIdProyecto();
 
     if (projectId) {
-      // Si el contador ya está activo, no hacemos nada
+
+      //si el contador ya está activo, no hacemos nada
       if (intervaloInicioSesion) {
         console.log("El contador de sesión ya está iniciado.");
         return;
       }
 
-      // Enviar una solicitud para iniciar el seguimiento del tiempo en Clockify
+      //enviar solicitud para iniciar el seguimiento del tiempo en Clockify
       const response = await axios.post(
         `https://api.clockify.me/api/v1/workspaces/6630a84256361a516299a6a5/time-entries`,
         {
           start: new Date().toISOString(),
-          description: description, // Utiliza la descripción proporcionada por el usuario
+          description: description, 
           projectId: projectId,
-          userId: userId,
         },
         {
           headers: {
@@ -95,7 +85,7 @@ export const iniciarContadorSesion = async (description: string) => {
       );
       console.log('Contador de sesión iniciado correctamente:', response.data);
 
-      // Establecer intervaloInicioSesion a true cuando se inicie el contador
+      //lo pone a true cuando se inicie el contador
       intervaloInicioSesion = true;
     } else {
       console.error('No se pudo obtener el ID del proyecto "STAFKO"');
