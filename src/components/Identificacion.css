@@ -106,12 +106,12 @@ a{
 }
 
 .formu { 
-    position: absolute;
-    top: 50%; 
+    position: absolute; 
+    top: 45%; 
     left: 50%; 
     transform: translate(-50%, -50%); 
-    max-width: 400px; 
-    width: 90%; 
+    max-width: 450px; 
+    width: 100%; 
 }
 
 .panal-superior-derecho,
