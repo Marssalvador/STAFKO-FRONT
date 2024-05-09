@@ -28,7 +28,7 @@ const VerInformacion2: React.FC<Props> = ({ usuario, onClose, proyectosDisponibl
 
   // Obtener el nombre del proyecto
   const nombreProyecto = usuario.id_proyecto !== null && usuario.id_proyecto !== undefined
-    ? proyectosDisponibles.find(proyecto => proyecto.id === usuario.id_proyecto)?.nombre || 'Proyecto no encontrado'
+    ? proyectosDisponibles.find(proyecto => proyecto.id === usuario.id_proyecto)?.nombre || '*******'
     : 'No hay proyecto asignado';
 
   // Mostramos los datos en un modal

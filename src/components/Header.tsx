@@ -25,7 +25,7 @@ const Header: React.FC = () => {
   }, [currentPath]);
 
   // Si no hay un usuario logueado o la ruta actual es '/', no muestra el encabezado
-  if (!isLoggedIn || currentPath === '/') {
+  if (!isLoggedIn || currentPath === '/' || currentPath === '/registro') {
     return null;
   }
 

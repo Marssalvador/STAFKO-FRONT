@@ -1,4 +1,3 @@
-// components/Pagina2.tsx
 import React, { useEffect, useState } from 'react';
 import './Pagina2.css';
 import Cookies from 'universal-cookie';
@@ -7,7 +6,6 @@ import { obtenerStaffs, eliminarStaff } from '../application/Pagina2Service';
 import ModificarUsuarios from './ModificarUsuarios';
 import VerInformacion2 from './VerInformacion2';
 import Reloj from './Reloj';
-
 
 const cookies = new Cookies();
 
@@ -47,15 +45,23 @@ const Pagina2: React.FC = () => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este staff?")) {
       try {
         await eliminarStaff(id);
-        //actualizamos la lista de staffs después de eliminar
+        // Actualizamos la lista de staffs después de eliminar
         setStaffs(prevStaffs => prevStaffs.filter(staff => staff.id !== id));
+        // Cerramos la sesión después de eliminar al usuario
+        cerrarSesionHandler();
       } catch (error) {
         console.error('Error al eliminar staff:', error);
-        alert('Cancelación: El Staff tiene un proyecto asociado');
+        alert('Ocurrió un error al intentar eliminar al staff. Por favor, inténtalo de nuevo más tarde.');
       }
     }
   };
-  
+
+  // Define la función para cerrar la sesión
+  const cerrarSesionHandler = () => {
+    // Aquí debes implementar la lógica para cerrar la sesión del usuario
+    console.log('Cerrando sesión...');
+  };
+
   const editarStaff = (staff: Staff) => {
     setStaffSeleccionado(staff);
     setMostrarEditar(true);
@@ -70,8 +76,8 @@ const Pagina2: React.FC = () => {
     const username = cookies.get('username');
     const isUsuarioLogueado = staff.username === username;
 
-    //si el usuario es el que se ha logueado podrá editar sus datos y eliminar su cuenta
-    //sin embargo, del resto de usuarios solo podrá ver la información
+    // Si el usuario es el que se ha logueado podrá editar sus datos y eliminar su cuenta
+    // sin embargo, del resto de usuarios solo podrá ver la información
     return (
       <div key={staff.id} className="staff" style={{ order: isUsuarioLogueado ? 0 : 1 }}>
         <div className={staff.username === username ? "nombre-staff usuario-logueado" : "nombre-staff"}>{staff.nombre}</div>

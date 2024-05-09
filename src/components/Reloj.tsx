@@ -6,7 +6,7 @@ interface RelojProps {
 
 const Reloj: React.FC<RelojProps> = ({ style }) => {
   const [time, setTime] = useState<number>(() => {
-    const storedTime = localStorage.getItem('currentTime');
+    const storedTime = localStorage.getItem('currentTime');  //Guarda la informacion en localstorage
     return storedTime ? parseInt(storedTime) : 0;
   });
 
@@ -22,13 +22,14 @@ const Reloj: React.FC<RelojProps> = ({ style }) => {
     return () => clearInterval(interval);
   }, []);
 
-  // Limpia el localStorage cuando se desmonta el componente (cuando se cierra la sesión)
+  //Limpia el localStorage cuando se desmonta el componente (cuando se cierra la sesión)
   useEffect(() => {
     return () => {
       localStorage.removeItem('currentTime');
     };
   }, []);
 
+  //Establece el formato del tiempo
   const formatTime = (seconds: number): string => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
