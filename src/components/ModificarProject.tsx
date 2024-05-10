@@ -18,7 +18,7 @@ const ModificarProject: React.FC<Props> = ({ proyecto, onGuardar }) => {
         const usuariosData = await obtenerUsuarios();
         setUsuarios(usuariosData);
       } catch (error) {
-        // Manejo de errores
+        console.log("Error el obtener usuario");
       }
     };
 
@@ -37,7 +37,6 @@ const ModificarProject: React.FC<Props> = ({ proyecto, onGuardar }) => {
       onGuardar(datosProyecto);
     } catch (error) {
       console.error('Error al actualizar el proyecto:', error);
-
     }
   };
 

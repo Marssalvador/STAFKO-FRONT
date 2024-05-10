@@ -59,7 +59,7 @@ const Pagina: React.FC = () => {
     }
   }, [filtrarActivado, userId]);
   
-
+  
   const añadirProyecto = () => {
     window.location.href = './añadirProj';
   };

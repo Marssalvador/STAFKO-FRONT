@@ -31,14 +31,3 @@ const formatearFecha = (fecha: string): string => {
   let day = date.getDate().toString().padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
-
-
-export const quitarProjUsuario = async (usuario: Usuario): Promise<void> => {
-  try {
-    await axios.put(`http://localhost:4000/usuarios/quitar/${usuario.id}`, usuario);
-    console.log('Usuario actualizado correctamente');
-  } catch (error) {
-    console.error('Error al actualizar el usuario:', error);
-    throw new Error('Error al actualizar el usuario');
-  }
-};
