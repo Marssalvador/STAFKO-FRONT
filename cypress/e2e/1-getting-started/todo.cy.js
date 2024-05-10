@@ -128,7 +128,7 @@ describe('Identificacion Component', () => {
     cy.get('input[name="username"]').should('exist');
     cy.get('input[name="password"]').should('exist');
     cy.get('input[name="fechaNacimiento"]').should('exist');
-    cy.get('.button3').should('exist');
+    cy.get('.p-button-outlined').should('exist');
 
 
     //datos del staff
@@ -139,7 +139,7 @@ describe('Identificacion Component', () => {
     cy.get('input[name="username"]').should('exist');
     cy.get('input[name="password"]').should('exist');
     cy.get('input[name="fechaNacimiento"]').should('exist');
-    cy.get('.button3').should('exist');
+    cy.get('.p-button-outlined').should('exist');
 
     //datos de prueba
     const staffName = 'John';

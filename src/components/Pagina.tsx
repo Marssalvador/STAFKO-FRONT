@@ -59,7 +59,7 @@ const Pagina: React.FC = () => {
     }
   }, [filtrarActivado, userId]);
   
-  
+
   const añadirProyecto = () => {
     window.location.href = './añadirProj';
   };
@@ -166,7 +166,7 @@ const Pagina: React.FC = () => {
         </div>
 
         <div className="add-button">
-          <Button label="+" className="p-button-raised p-button-success custom-orange-button1 botoncin" onClick={añadirProyecto} />
+          <Button label="+" className="p-button-raised p-button-success custom-orange-button botoncin" onClick={añadirProyecto} />
         </div>
 
         <br />
