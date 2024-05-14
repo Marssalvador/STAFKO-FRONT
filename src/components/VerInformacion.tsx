@@ -37,7 +37,7 @@ const VerInformacion: React.FC<VerInformacionProps> = ({ proyecto, onClose, staf
 
   return (
     <div className="modal">
-      <div className="modal-content flex flex-col items-center justify-center bg-gradient-to-r from-orange-200 p-5 rounded-lg shadow-lg mb-6 max-w-md w-full">
+      <div className="modal-content flex flex-col items-center justify-center bg-gradient-to-r from-yellow-600 to-orange-400 p-5 rounded-lg shadow-lg mb-6 max-w-md w-full">
         <div>
           <label>Nombre:</label>
           <input type="text" value={proyecto.nombre} readOnly />

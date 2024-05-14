@@ -35,7 +35,7 @@ export const Contacto = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="p-fluid" style={{background:'linear-gradient(to right, #a18205, #ff9800)', borderRadius:'20px'}}>
+        <form onSubmit={handleSubmit} className="p-fluid" style={{background:'linear-gradient(to right, #a18205, #ff9800)', borderRadius:'20px', padding:'2rem'}}>
             <h1>Contáctanos</h1><br />
             <div className="p-field p-grid">
                 <label htmlFor="name" className="p-col-fixed" style={{ width: '100px' }}>Nombre</label>
