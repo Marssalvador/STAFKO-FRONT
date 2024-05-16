@@ -25,23 +25,42 @@ export const IdentificacionService = {
 };*/
 
 
-//Con directus
-const baseUrl = "http://localhost:8055/items/usuarios";
+
+//DIRECTUS
+
+// src/infrastructure/IdentificacionService.ts
+const baseUrl = "http://localhost:8055/auth/login";
 const cookies = new Cookies();
 
 export const IdentificacionService = {
-  iniciarSesion: async (username: string, password: string) => {
+  iniciarSesion: async (email: string, password: string) => {
     try {
-      const response = await axios.get(baseUrl, {
-        params: {
-          username,
-          password: md5(password)
-        }
+      const response = await axios.post(baseUrl, {
+        email: email,
+        password: password
       });
-      return response.data;
+
+      if (response.status === 200 && response.data.data) {
+        const { access_token, refresh_token, expires } = response.data.data;
+        if (!access_token || !refresh_token || !expires) {
+          throw new Error('Error en la respuesta del servidor: falta información de tokens');
+        }
+
+        cookies.set('access_token', access_token, { path: '/' });
+        cookies.set('refresh_token', refresh_token, { path: '/' });
+        cookies.set('expires', expires, { path: '/' });
+
+        return response.data.data;
+      } else {
+        throw new Error('Usuario o contraseña incorrectos');
+      }
     } catch (error) {
-      console.error('Error en la conexión:', error);
-      throw new Error('Error en la conexión');
+      console.error('Error en la conexión:', error.response ? error.response.data : error.message);
+      throw new Error(error.response ? error.response.data.errors[0].message : 'Error en la conexión');
     }
   }
 };
+
+
+
+

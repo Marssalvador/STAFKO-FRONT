@@ -1,6 +1,6 @@
 // Identificacion.tsx
 
-import React, { Component, ChangeEvent, FormEvent } from 'react';
+/*import React, { Component, ChangeEvent, FormEvent } from 'react';
 import { IdentificacionAppService } from '../application/IdentificacionService'; 
 import './Identificacion.css'; 
 import { Button } from 'primereact/button'; 
@@ -113,4 +113,117 @@ class Identificacion extends Component<{}, IdentificacionState> {
   };
 }
 
+export default Identificacion;*/
+
+
+// DIRECTUS
+
+// Identificacion.tsx
+import React, { Component, ChangeEvent, FormEvent } from 'react';
+import { IdentificacionService } from '../infrastructure/IdentificacionService'; 
+import './Identificacion.css'; 
+import { Button } from 'primereact/button'; 
+import Cookies from 'universal-cookie'; 
+import { iniciarContadorSesion } from '../infrastructure/HeaderService'; 
+
+const cookies = new Cookies(); 
+
+interface FormState {
+  email: string;
+  password: string;
+}
+
+interface IdentificacionState {
+  form: FormState;
+}
+
+class Identificacion extends Component<{}, IdentificacionState> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      form: {
+        email: '',
+        password: ''
+      }
+    };
+  }
+
+  handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    await this.setState((prevState) => ({
+      form: {
+        ...prevState.form,
+        [name]: value
+      }
+    }));
+  };
+
+  handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const { email, password } = this.state.form;
+    try {
+      const response = await IdentificacionService.iniciarSesion(email, password);
+      
+      if (response && response.access_token) {
+        cookies.set('access_token', response.access_token, { path: "/", sameSite: 'lax' });
+        cookies.set('refresh_token', response.refresh_token, { path: "/", sameSite: 'lax' });
+        cookies.set('expires', response.expires, { path: "/", sameSite: 'lax' });
+        
+        const descripcion = prompt(`¿En qué vas a trabajar, ${email}?`);
+        if (descripcion) {
+          await iniciarContadorSesion(descripcion + " - " + email);
+        }
+
+        window.location.href = "./pagina";
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  componentDidMount() {
+    const token = cookies.get('access_token');
+    if (token) {
+      window.location.href = "./pagina";
+    }
+  }
+
+  render() {
+    const { form } = this.state;
+
+    return (
+      <>
+        <img src="/panal.png" alt="Panal" className='panal-superior-derecho' />
+        <img src="/panal.png" alt="Panal" className='panal-inferior-izquierdo' />
+
+        <main className="formu">
+          <div className="bg-gradient-to-r from-orange-200 to-orange-99 p-12 rounded-lg shadow-lg mb-6 max-w-md w-full">
+            <h1 className='text-4xl font-bold mb-4 text-center jump-animation'>STAFKO</h1>
+            
+            <form onSubmit={this.handleSubmit} className="space-y-4">
+              <h2 className="text-xl font-semibold mb-2">Iniciar sesión</h2>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Correo electrónico:</label>
+                <input type="email" name="email" id="email" value={form.email} onChange={this.handleChange} className="login-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50" />
+              </div>
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña:</label>
+                <input type="password" name="password" id="password" value={form.password} onChange={this.handleChange} className="login-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50" />
+              </div>
+
+              <Button label="Iniciar sesión" type="submit" className="p-button-outlined custom-orange-button w-full" /> 
+
+              <p className="text-center text-black mt-4"><a href="/registro" className="text-orange-500">Regístrate aquí</a></p>
+            </form>
+          </div>
+        </main>
+      </>
+    );
+  };
+}
+
 export default Identificacion;
+
+
+
+
