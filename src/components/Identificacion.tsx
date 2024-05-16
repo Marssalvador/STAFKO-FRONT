@@ -126,6 +126,8 @@ import './Identificacion.css';
 import { Button } from 'primereact/button'; 
 import Cookies from 'universal-cookie'; 
 import { iniciarContadorSesion } from '../infrastructure/HeaderService'; 
+import { obtenerStaffs } from '../application/Pagina2Service'; // Importamos la función obtenerStaffs
+
 
 const cookies = new Cookies(); 
 
@@ -170,13 +172,29 @@ class Identificacion extends Component<{}, IdentificacionState> {
         cookies.set('refresh_token', response.refresh_token, { path: "/", sameSite: 'lax' });
         cookies.set('expires', response.expires, { path: "/", sameSite: 'lax' });
         
-        const descripcion = prompt(`¿En qué vas a trabajar, ${email}?`);
-        if (descripcion) {
-          await iniciarContadorSesion(descripcion + " - " + email);
-        }
+        const userNameFromEmail = email.split('@')[0];
 
-        window.location.href = "./pagina";
+        cookies.set('firstname', userNameFromEmail, { path: "/", sameSite: 'lax' });
+
+
+        // Obtener la lista de nombres de usuarios
+        //const staffList = await obtenerStaffs();
+        
+        // Verificar si el nombre de usuario extraído coincide con alguno de los nombres de la lista
+        //const isUserInStaffList = staffList.some(staff => staff.nombre === userNameFromEmail);
+
+        //if (isUserInStaffList) {
+          // Si coincide, redirigir y marcar el nombre del usuario en naranja
+          const descripcion = prompt(`¿En qué vas a trabajar, ${email}?`);
+          if (descripcion) {
+            await iniciarContadorSesion(descripcion + " - " + email);
+          }
+          window.location.href = "./pagina";
+        /*} else {
+          alert('Usuario no autorizado');
+        }*/
       }
+
     } catch (error) {
       alert(error.message);
     }
