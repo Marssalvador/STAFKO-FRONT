@@ -116,8 +116,9 @@ class Identificacion extends Component<{}, IdentificacionState> {
 export default Identificacion;*/
 
 
-// DIRECTUS
 
+
+// DIRECTUS
 // Identificacion.tsx
 import React, { Component, ChangeEvent, FormEvent } from 'react';
 import { IdentificacionService } from '../infrastructure/IdentificacionService'; 

@@ -27,7 +27,6 @@ export const IdentificacionService = {
 
 
 //DIRECTUS
-
 // src/infrastructure/IdentificacionService.ts
 const baseUrl = "http://localhost:8055/auth/login";
 const cookies = new Cookies();
