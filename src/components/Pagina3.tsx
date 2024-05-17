@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+/*import React, { useEffect, useState } from 'react';
 import './Pagina3.css';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
@@ -264,6 +264,136 @@ const Pagina3: React.FC = () => {
           </ul>
         </div>
       </Dialog>
+    </>
+  );
+};
+
+export default Pagina3;*/
+
+
+
+import React, { useEffect, useState } from 'react';
+import './Pagina3.css';
+import Cookies from 'universal-cookie';
+import axios from 'axios';
+import ModificarUsuarios from './ModificarUsuarios'; 
+import VerInformacion2 from './VerInformacion2';
+import { obtenerStaffs, eliminarStaff } from '../application/Pagina3Service';
+import { Button } from 'primereact/button'; 
+import { Dialog } from 'primereact/dialog'; // Importa el componente Dialog
+import Reloj from './Reloj';
+
+const cookies = new Cookies();
+
+interface Staff {
+  id: number;
+  first_name: string;
+  apellido: string;
+  username: string;
+  telefono: string;
+  fecha_nacimiento: string;
+}
+
+interface StaffProps {
+  staff: Staff;
+}
+
+const Pagina3: React.FC = () => {
+  const [staffs, setStaffs] = useState<Staff[]>([]);
+  const [staffSeleccionado, setStaffSeleccionado] = useState<Staff | null>(null);
+  const [mostrarEditar, setMostrarEditar] = useState<boolean>(false);
+  const username = cookies.get('firstname');
+
+  useEffect(() => {
+    const cargarStaffs = async () => {
+      try {
+        const staffs = await obtenerStaffs();
+        console.log('Staffs recibidos:', staffs);
+        setStaffs(staffs);
+      } catch (error) {
+        console.error('Error al cargar staffs:', error);
+      }
+    };
+
+    cargarStaffs();
+    console.log('Username almacenado en las cookies:', username);
+  }, [username]);
+
+  const eliminarStaffConfirmado = async (id: number) => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar este staff?")) {
+      try {
+        await eliminarStaff(id);
+        // Actualizamos la lista de staffs después de eliminar
+        setStaffs(prevStaffs => prevStaffs.filter(staff => staff.id !== id));
+      } catch (error) {
+        console.error('Error al eliminar staff:', error);
+        alert('Ocurrió un error al intentar eliminar al staff. Por favor, inténtalo de nuevo más tarde.');
+      }
+    }
+  };
+
+  const editarStaff = (staff: Staff) => {
+    setStaffSeleccionado(staff);
+    setMostrarEditar(true);
+  };
+
+  const verInformacion = (staff: Staff) => {
+    setStaffSeleccionado(staff);
+    setMostrarEditar(false);
+  };
+
+  return (
+    <>
+      <main className="main">
+        <Reloj />
+
+        <h1 className="jump-animation">STAFKO</h1><br />
+
+        <div className="space">Staffs</div><br />
+
+        {staffs.map((staff) => (
+          <div key={staff.id} className="staff">
+            <div className={staff.first_name.toLowerCase() === username.toLowerCase() ? "nombre-staff usuario-logueado" : "nombre-staff"}>
+              {staff.first_name}
+            </div>
+            <div className="espacio"></div>
+            <div className="ed-button">
+              {staff.first_name.toLowerCase() === username.toLowerCase() && (
+                <>
+                  <Button key={`edit_${staff.id}`} label="Editar" className="p-button-raised p-button-primary" onClick={() => editarStaff(staff)} />
+                  <Button key={`delete_${staff.id}`} label="Eliminar" className="p-button-raised p-button-danger" onClick={() => eliminarStaffConfirmado(staff.id)} />
+                </>
+              )}
+              {staff.first_name !== username && (
+                <Button key={`view_${staff.id}`} label="Ver más" className="p-button-raised p-button-info" onClick={() => verInformacion(staff)} />
+              )}
+            </div>
+          </div>
+        ))}
+
+        {staffSeleccionado && (
+          mostrarEditar ? (
+            <ModificarUsuarios
+              usuario={staffSeleccionado}
+              onGuardar={() => {
+                console.log('Guardar cambios');
+                setStaffSeleccionado(null);
+                setMostrarEditar(false);
+              }}
+            />
+          ) : (
+            <VerInformacion2
+              usuario={staffSeleccionado}
+              onClose={() => {
+                console.log('Cerrar VerInformacion2');
+                setStaffSeleccionado(null);
+              }}
+              proyectosDisponibles={[]}
+            />
+          )
+        )}
+
+      </main>
     </>
   );
 };
