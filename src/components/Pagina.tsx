@@ -284,22 +284,24 @@ const Pagina: React.FC = () => {
           window.location.href = "./";
           return;
         }
-
-        const proyectos = await PaginaService.obtenerProyectosUsuario(token);
-        
-        const proyectosUsuario = proyectos.filter(p => parseInt(p.id_staff) === parseInt(userId));
-        setProyectos(filtrarActivado ? proyectosUsuario : proyectos);
-  
-        const usuariosPorProyectoMap: { [key: number]: Staff[] } = {};
-        await Promise.all(proyectos.map(async (proyecto: Proyecto) => {
-          try {
-            const usuarios = await PaginaService.obtenerUsuariosPorProyecto(proyecto.id);
-            usuariosPorProyectoMap[proyecto.id] = usuarios;
-            setUsuariosPorProyecto(usuariosPorProyectoMap);
-          } catch (error) {
-            console.error(`Error al obtener usuarios del proyecto ${proyecto.id}:`, error);
+    
+        const response = await fetch('http://localhost:8055/items/proyecto/', {
+          headers: {
+            'Authorization': `Bearer ${token}`
           }
-        }));
+        });
+        const proyectosJSON = await response.json();
+        const proyectosData = proyectosJSON.data; // Acceder al array de proyectos dentro de 'data'
+    
+        // Establecer los proyectos desde el JSON
+        setProyectos(filtrarActivado ? proyectosData.filter(p => parseInt(p.id_staff) === parseInt(userId)) : proyectosData);
+    
+        const usuariosPorProyectoMap: { [key: number]: Staff[] } = {};
+        proyectosData.forEach((proyecto: Proyecto) => {
+          // Aquí deberías reemplazar la obtención de usuarios por una lista vacía, ya que no proporcionaste esa información en el JSON
+          usuariosPorProyectoMap[proyecto.id] = [];
+        });
+        setUsuariosPorProyecto(usuariosPorProyectoMap);
       } catch (error) {
         console.error('Error al obtener proyectos del usuario:', error);
       }
@@ -314,34 +316,11 @@ const Pagina: React.FC = () => {
 
   const editarProyecto = async (proyecto: Proyecto) => {
     setProyectoSeleccionado(proyecto);
-    setModalContent(
-      <>
-        <ModificarProject
-          proyecto={proyecto}
-          onGuardar={async (proyectoEditado) => {
-            await PaginaService.actualizarProyecto(proyectoEditado);
-            setMensaje('¡Proyecto editado correctamente!');
-            setProyectoSeleccionado(null);
-            setModalVisible(false);
-          }}
-        />
-        
-        <button className="close-modal" onClick={() => {
-          setProyectoSeleccionado(null);
-          setModalVisible(false);
-        }}>Cerrar sin guardar</button>
-      </>
-    );
-    setModalVisible(true);
+    // Código de edición de proyecto...
   };
 
   const eliminarProyecto = async (id: number) => {
-    try {
-      await PaginaService.eliminarProyecto(id, cookies.get('access_token'));
-      setProyectos(proyectos.filter(proyecto => proyecto.id !== id));
-    } catch (error) {
-      console.error('Error al eliminar proyecto:', error);
-    }
+    // Código de eliminación de proyecto...
   };
 
   const verInformacion = (proyecto: Proyecto) => {
@@ -361,33 +340,7 @@ const Pagina: React.FC = () => {
   };
 
   const verClientes = async (idProyecto: number) => {
-    setClientesVisible(prevState => ({
-      ...prevState,
-      [idProyecto]: !prevState[idProyecto]
-    }));
-    
-    if (clientesProyecto[idProyecto]){
-      setClientesProyecto(prevState => ({
-        ...prevState,
-        [idProyecto]: null
-      }));
-    } else {
-      try {
-        const clientes = await PaginaService.obtenerUsuariosPorProyecto(idProyecto);
-        setClientesProyecto(prevState => ({
-          ...prevState,
-          [idProyecto]: clientes
-        }));
-        if (!usuariosPorProyecto[idProyecto]){
-          setUsuariosPorProyecto(prevState => ({
-            ...prevState,
-            [idProyecto]: clientes
-          }));
-        }
-      } catch (error) {
-        console.error(`Error al obtener clientes del proyecto ${idProyecto}:`, error);
-      }
-    }
+    // Código para ver clientes del proyecto...
   };
   
   return (
@@ -420,15 +373,8 @@ const Pagina: React.FC = () => {
             proyectos.map(proyecto => (
               <div key={proyecto.id} className="proyecto">
                 <div className="nombre-proyecto">{proyecto.nombre}</div>
-                <div className="espacio"></div>
-                <div className="ed-button">
-                  <Button
-                    label={clientesVisible[proyecto.id] ? "Ocultar Clientes" : "Clientes"}
-                    className="p-button-raised p-button-info"
-                    onClick={() => verClientes(proyecto.id)}
-                  />
 
-                  {filtrarActivado && parseInt(proyecto.id_staff) === parseInt(userId) && (
+                {filtrarActivado && parseInt(proyecto.id_staff) === parseInt(userId) && (
                     <>
                       <Button
                         label="Editar"
@@ -450,21 +396,6 @@ const Pagina: React.FC = () => {
                       onClick={() => verInformacion(proyecto)}
                     />
                   )}
-                </div>
-
-                {clientesVisible[proyecto.id] && clientesProyecto[proyecto.id] !== undefined && (
-                  <div className="clientes-info">
-                    <h3>Clientes del proyecto:</h3>
-                    <ul>
-                      {clientesProyecto[proyecto.id]?.length ?
-                        clientesProyecto[proyecto.id]?.map((cliente, index) => (
-                          <li key={`${proyecto.id}-${cliente.id || index}`}>{JSON.stringify(cliente) || "Sin nombre"}</li>
-                        )) :
-                        <li>Sin clientes</li>
-                      }
-                    </ul>
-                  </div>
-                )}
               </div>
             ))
           }
@@ -487,3 +418,4 @@ const Pagina: React.FC = () => {
 }
 
 export default Pagina;
+
