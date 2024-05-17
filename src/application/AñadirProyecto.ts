@@ -13,7 +13,6 @@ export const useAñadirProyecto = (proyectoService: ProyectoService = new Proyec
   obtenerStaffs: () => Promise<Staff[]>
 } => {
   const añadir = async (proyecto: Proyecto) => {
-    // Aquí puedes agregar lógica adicional antes de enviar el proyecto al servicio
     await proyectoService.añadirProyecto(proyecto);
   };
 

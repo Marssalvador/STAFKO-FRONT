@@ -315,8 +315,43 @@ const Pagina: React.FC = () => {
   };
 
   const editarProyecto = async (proyecto: Proyecto) => {
-    setProyectoSeleccionado(proyecto);
-    // Código de edición de proyecto...
+      try {
+        // Realizar la solicitud de actualización al backend
+        const token = cookies.get('access_token');
+        if (!token) {
+          window.location.href = "./";
+          return;
+        }
+    
+        const response = await fetch(`http://localhost:8055/items/proyecto/${proyecto.id}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(proyecto)
+        });
+    
+        if (!response.ok) {
+          throw new Error('Error al actualizar el proyecto');
+        }
+    
+        // Si la actualización fue exitosa, actualizar el estado local de proyectos
+        setProyectos(prevProyectos => {
+          const index = prevProyectos.findIndex(p => p.id === proyecto.id);
+          if (index !== -1) {
+            const updatedProyectos = [...prevProyectos];
+            updatedProyectos[index] = proyecto;
+            return updatedProyectos;
+          }
+          return prevProyectos;
+        });
+    
+        setMensaje('¡Proyecto editado correctamente!');
+      } catch (error) {
+        console.error('Error al editar el proyecto:', error);
+        setMensaje('Error al editar el proyecto');
+      }
   };
 
   const eliminarProyecto = async (id: number) => {
