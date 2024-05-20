@@ -246,8 +246,8 @@ export default Pagina;*/
 
 
 //DIRECTUS
-
 // Pagina.tsx
+
 import React, { useState, useEffect } from 'react';
 import './Pagina.css';
 import Cookies from 'universal-cookie';
@@ -284,7 +284,7 @@ const Pagina: React.FC = () => {
           window.location.href = "./";
           return;
         }
-    
+  
         const response = await fetch('http://localhost:8055/items/proyecto/', {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -292,10 +292,16 @@ const Pagina: React.FC = () => {
         });
         const proyectosJSON = await response.json();
         const proyectosData = proyectosJSON.data; // Acceder al array de proyectos dentro de 'data'
-    
+  
         // Establecer los proyectos desde el JSON
-        setProyectos(filtrarActivado ? proyectosData.filter(p => parseInt(p.id_staff) === parseInt(userId)) : proyectosData);
-    
+        if (filtrarActivado) {
+          // Filtrar los proyectos por el staff igual al usuario logueado
+          const proyectosFiltrados = proyectosData.filter(p => parseInt(p.id_staff) === parseInt(userId));
+          setProyectos(proyectosFiltrados);
+        } else {
+          setProyectos(proyectosData);
+        }
+  
         const usuariosPorProyectoMap: { [key: number]: Staff[] } = {};
         proyectosData.forEach((proyecto: Proyecto) => {
           // Aquí deberías reemplazar la obtención de usuarios por una lista vacía, ya que no proporcionaste esa información en el JSON
@@ -306,9 +312,10 @@ const Pagina: React.FC = () => {
         console.error('Error al obtener proyectos del usuario:', error);
       }
     };
-
+  
     obtenerProyectosUsuario();
   }, [filtrarActivado, userId]);
+  
 
   const añadirProyecto = () => {
     window.location.href = './añadirProj';

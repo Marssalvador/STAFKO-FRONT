@@ -126,8 +126,7 @@ import './Identificacion.css';
 import { Button } from 'primereact/button'; 
 import Cookies from 'universal-cookie'; 
 import { iniciarContadorSesion } from '../infrastructure/HeaderService'; 
-import { obtenerStaffs } from '../application/Pagina2Service'; // Importamos la función obtenerStaffs
-
+import axios from 'axios';
 
 const cookies = new Cookies(); 
 
@@ -172,29 +171,41 @@ class Identificacion extends Component<{}, IdentificacionState> {
         cookies.set('refresh_token', response.refresh_token, { path: "/", sameSite: 'lax' });
         cookies.set('expires', response.expires, { path: "/", sameSite: 'lax' });
         
-        const userNameFromEmail = email.split('@')[0];
-
+        const userNameFromEmail = email.split('@')[0].toLowerCase().trim();
+  
         cookies.set('firstname', userNameFromEmail, { path: "/", sameSite: 'lax' });
+  
+        // Buscar el ID del usuario en /items/usuarios
+        const usuarioResponse = await axios.get('http://localhost:8055/items/usuarios', {
+          params: {
+            filter: {
+              nombre: {
+                _icontains: userNameFromEmail
+              }
+            }
+          }
+        });
 
+        console.log("Usuario response:", usuarioResponse.data); // Registrar la respuesta para ver qué datos se obtienen
 
-        // Obtener la lista de nombres de usuarios
-        //const staffList = await obtenerStaffs();
-        
-        // Verificar si el nombre de usuario extraído coincide con alguno de los nombres de la lista
-        //const isUserInStaffList = staffList.some(staff => staff.nombre === userNameFromEmail);
-
-        //if (isUserInStaffList) {
-          // Si coincide, redirigir y marcar el nombre del usuario en naranja
-          const descripcion = prompt(`¿En qué vas a trabajar, ${email}?`);
+        // Verificar si se encontró un usuario con ese nombre
+        if (usuarioResponse.data.data.length > 0) {
+          console.log("Usuario encontrado:", usuarioResponse.data.data[0]); // Registrar el primer usuario encontrado
+          // Obtener el ID del primer usuario encontrado
+          const userId = usuarioResponse.data.data[0].id;
+          console.log("ID del usuario:", userId); // Registrar el ID del usuario
+          // Guardar el ID del usuario en una cookie
+          cookies.set('userId', userId, { path: "/", sameSite: 'lax' });
+        } else {
+          console.log("Usuario no encontrado"); // Registrar si no se encontró ningún usuario con ese nombre
+        }
+  
+        const descripcion = prompt(`¿En qué vas a trabajar, ${email}?`);
           if (descripcion) {
             await iniciarContadorSesion(descripcion + " - " + email);
           }
           window.location.href = "./pagina";
-        /*} else {
-          alert('Usuario no autorizado');
-        }*/
       }
-
     } catch (error) {
       alert(error.message);
     }
@@ -242,6 +253,8 @@ class Identificacion extends Component<{}, IdentificacionState> {
 }
 
 export default Identificacion;
+
+
 
 
 

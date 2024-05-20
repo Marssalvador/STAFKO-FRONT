@@ -149,6 +149,7 @@ export const cerrarSesion = async (setIsLoggedIn: React.Dispatch<React.SetStateA
     cookies.remove('access_token', { path: "/" });
     cookies.remove('refresh_token', { path: "/" });
     cookies.remove('expires', { path: "/" });
+    cookies.remove('firstname', { path: "/" });
 
     // Establecer el estado de inicio de sesión como falso
     setIsLoggedIn(false);
