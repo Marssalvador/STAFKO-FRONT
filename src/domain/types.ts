@@ -11,6 +11,7 @@ export interface Staff {
   }
   
   export interface Proyecto {
+    id:number;
     nombre: string;
     descripcion: string;
     cuantia: string;

@@ -157,29 +157,14 @@ import React, { useEffect, useState } from 'react';
 import './Pagina2.css';
 import Cookies from 'universal-cookie';
 import { Button } from 'primereact/button';
+import { Staff } from '../domain/types';
 import { obtenerStaffs, eliminarStaff } from '../application/Pagina2Service';
 import ModificarUsuarios from './ModificarUsuarios';
 import VerInformacion2 from './VerInformacion2';
 import Reloj from './Reloj';
+import { Informacion2Service } from '../application/Informacion2Service'; 
 
 const cookies = new Cookies();
-
-interface Staff {
-  id: number;
-  first_name: string;
-  apellido: string;
-  username: string;
-  telefono: string;
-  fecha_nacimiento: string;
-}
-
-interface StaffProps {
-  staff: Staff;
-}
-
-const AñadirUsuario = () => {
-  window.location.href = './añadirUsuarios';
-};
 
 const Pagina2: React.FC = () => {
   const [staffs, setStaffs] = useState<Staff[]>([]);
@@ -190,9 +175,25 @@ const Pagina2: React.FC = () => {
   useEffect(() => {
     const cargarStaffs = async () => {
       try {
-        const staffs = await obtenerStaffs();
-        console.log('Staffs recibidos:', staffs);
-        setStaffs(staffs);
+        const token = cookies.get('access_token');
+        if (!token) {
+          window.location.href = "./";
+          return;
+        }
+    
+        const response = await fetch('http://localhost:8055/items/usuarios/', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Unauthorized');
+        }
+    
+        const usuariosData = await response.json();
+        const staffsData = usuariosData.data.filter((usuario: Staff) => usuario.rol === 'staff'); // Filtrar usuarios por rol 'staff'
+        setStaffs(staffsData);
       } catch (error) {
         console.error('Error al cargar staffs:', error);
       }
@@ -225,6 +226,10 @@ const Pagina2: React.FC = () => {
     setMostrarEditar(false);
   };
 
+  const añadirUsuarios = () => {
+    window.location.href = './añadirUsuarios';
+  };
+
   return (
     <>
       <main className="main">
@@ -235,23 +240,23 @@ const Pagina2: React.FC = () => {
         <div className="space">Staffs</div><br />
 
         <div className="add-button">
-          <Button label="+" className="p-button-raised p-button-success custom-orange-button botoncin" onClick={AñadirUsuario} />
+          <Button label="+" className="p-button-raised p-button-success custom-orange-button botoncin" onClick={añadirUsuarios} />
         </div>
 
-        {staffs.map((staff) => (
+        {staffs && staffs.map((staff) => (
           <div key={staff.id} className="staff">
-            <div className={staff.first_name.toLowerCase() === username.toLowerCase() ? "nombre-staff usuario-logueado" : "nombre-staff"}>
-              {staff.first_name}
+            <div className={staff.nombre.toLowerCase() === username.toLowerCase() ? "nombre-staff usuario-logueado" : "nombre-staff"}>
+              {staff.nombre}
             </div>
             <div className="espacio"></div>
             <div className="ed-button">
-              {staff.first_name.toLowerCase() === username.toLowerCase() && (
+              {staff.nombre.toLowerCase() === username.toLowerCase() && (
                 <>
                   <Button key={`edit_${staff.id}`} label="Editar" className="p-button-raised p-button-primary" onClick={() => editarStaff(staff)} />
                   <Button key={`delete_${staff.id}`} label="Eliminar" className="p-button-raised p-button-danger" onClick={() => eliminarStaffConfirmado(staff.id)} />
                 </>
               )}
-              {staff.first_name !== username && (
+              {staff.nombre !== username && (
                 <Button key={`view_${staff.id}`} label="Ver más" className="p-button-raised p-button-info" onClick={() => verInformacion(staff)} />
               )}
             </div>
@@ -286,6 +291,9 @@ const Pagina2: React.FC = () => {
 };
 
 export default Pagina2;
+
+
+
 
 
 

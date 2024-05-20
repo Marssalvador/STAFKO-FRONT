@@ -27,7 +27,7 @@ export async function agregarNuevoUsuario(nuevoUsuario: any): Promise<any> {
 //Directus
 // src/infrastructure/UsuarioServiceHTTP.ts
 
-const API_URL = 'http://localhost:8055/items/usuarios'; // La URL de la API de Directus para usuarios
+const API_URL = 'http://localhost:8055/items/usuarios/'; // La URL de la API de Directus para usuarios
 import Cookies from 'universal-cookie';
 
 export async function agregarNuevoUsuario(nuevoUsuario: any): Promise<any> {
