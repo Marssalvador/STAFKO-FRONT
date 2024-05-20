@@ -247,7 +247,6 @@ export default Pagina;*/
 
 //DIRECTUS
 // Pagina.tsx
-
 import React, { useState, useEffect } from 'react';
 import './Pagina.css';
 import Cookies from 'universal-cookie';
@@ -263,102 +262,106 @@ const cookies = new Cookies();
 
 const Pagina: React.FC = () => {
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
-  const [usuariosPorProyecto, setUsuariosPorProyecto] = useState<{ [key: number]: Staff[] }>({});
+  const [usuarios, setUsuarios] = useState<Staff[]>([]);
   const [proyectoSeleccionado, setProyectoSeleccionado] = useState<Proyecto | null>(null);
   const [mensaje, setMensaje] = useState<string>('');
   const [filtrarActivado, setFiltrarActivado] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
-  const userId = cookies.get('id');
-  const [clientesProyecto, setClientesProyecto] = useState<{ [key: number]: Staff[] | null }>({});
-  const [clientesVisible, setClientesVisible] = useState<{ [key: number]: boolean }>({});
-  
+  const userId = cookies.get('userId');
+
   // Creamos una instancia de StaffService
   const staffService = new StaffService();
 
   useEffect(() => {
-    const obtenerProyectosUsuario = async () => {
+    const obtenerDatos = async () => {
       try {
         const token = cookies.get('access_token');
         if (!token) {
           window.location.href = "./";
           return;
         }
-  
-        const response = await fetch('http://localhost:8055/items/proyecto/', {
+
+        // Obtener todos los proyectos
+        const responseProyectos = await fetch('http://localhost:8055/items/proyecto/', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
-        const proyectosJSON = await response.json();
+        const proyectosJSON = await responseProyectos.json();
         const proyectosData = proyectosJSON.data; // Acceder al array de proyectos dentro de 'data'
-  
-        // Establecer los proyectos desde el JSON
+
+        // Obtener todos los usuarios
+        const responseUsuarios = await fetch('http://localhost:8055/items/usuarios/', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const usuariosJSON = await responseUsuarios.json();
+        const usuariosData = usuariosJSON.data;
+
+        // Establecer los usuarios y proyectos en el estado
+        setUsuarios(usuariosData);
         if (filtrarActivado) {
           // Filtrar los proyectos por el staff igual al usuario logueado
-          const proyectosFiltrados = proyectosData.filter(p => parseInt(p.id_staff) === parseInt(userId));
+          const proyectosFiltrados = proyectosData.filter(p => {
+            const staffUsuario = usuariosData.find((usuario: Staff) => usuario.id === parseInt(p.id_staff));
+            return staffUsuario && staffUsuario.id === parseInt(userId);
+          });
           setProyectos(proyectosFiltrados);
         } else {
           setProyectos(proyectosData);
         }
-  
-        const usuariosPorProyectoMap: { [key: number]: Staff[] } = {};
-        proyectosData.forEach((proyecto: Proyecto) => {
-          // Aquí deberías reemplazar la obtención de usuarios por una lista vacía, ya que no proporcionaste esa información en el JSON
-          usuariosPorProyectoMap[proyecto.id] = [];
-        });
-        setUsuariosPorProyecto(usuariosPorProyectoMap);
       } catch (error) {
-        console.error('Error al obtener proyectos del usuario:', error);
+        console.error('Error al obtener datos del usuario:', error);
       }
     };
-  
-    obtenerProyectosUsuario();
+
+    obtenerDatos();
   }, [filtrarActivado, userId]);
-  
 
   const añadirProyecto = () => {
     window.location.href = './añadirProj';
   };
 
   const editarProyecto = async (proyecto: Proyecto) => {
-      try {
-        // Realizar la solicitud de actualización al backend
-        const token = cookies.get('access_token');
-        if (!token) {
-          window.location.href = "./";
-          return;
-        }
-    
-        const response = await fetch(`http://localhost:8055/items/proyecto/${proyecto.id}`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(proyecto)
-        });
-    
-        if (!response.ok) {
-          throw new Error('Error al actualizar el proyecto');
-        }
-    
-        // Si la actualización fue exitosa, actualizar el estado local de proyectos
-        setProyectos(prevProyectos => {
-          const index = prevProyectos.findIndex(p => p.id === proyecto.id);
-          if (index !== -1) {
-            const updatedProyectos = [...prevProyectos];
-            updatedProyectos[index] = proyecto;
-            return updatedProyectos;
-          }
-          return prevProyectos;
-        });
-    
-        setMensaje('¡Proyecto editado correctamente!');
-      } catch (error) {
-        console.error('Error al editar el proyecto:', error);
-        setMensaje('Error al editar el proyecto');
+    try {
+      // Realizar la solicitud de actualización al backend
+      const token = cookies.get('access_token');
+      if (!token) {
+        window.location.href = "./";
+        return;
       }
+
+      const response = await fetch(`http://localhost:8055/items/proyecto/${proyecto.id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(proyecto)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar el proyecto');
+      }
+
+      // Si la actualización fue exitosa, actualizar el estado local de proyectos
+      setProyectos(prevProyectos => {
+        const index = prevProyectos.findIndex(p => p.id === proyecto.id);
+        if (index !== -1) {
+          const updatedProyectos = [...prevProyectos];
+          updatedProyectos[index] = proyecto;
+          return updatedProyectos;
+        }
+        return prevProyectos;
+      });
+
+      setMensaje('¡Proyecto editado correctamente!');
+    } catch (error) {
+      console.error('Error al editar el proyecto:', error);
+      setMensaje('Error al editar el proyecto');
+    }
   };
 
   const eliminarProyecto = async (id: number) => {
@@ -381,10 +384,6 @@ const Pagina: React.FC = () => {
     setFiltrarActivado(!filtrarActivado);
   };
 
-  const verClientes = async (idProyecto: number) => {
-    // Código para ver clientes del proyecto...
-  };
-  
   return (
     <>
       <main className="main">
@@ -460,4 +459,5 @@ const Pagina: React.FC = () => {
 }
 
 export default Pagina;
+
 
