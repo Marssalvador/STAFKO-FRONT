@@ -254,8 +254,7 @@ import { Button } from 'primereact/button';
 import ModificarProject from './ModificarProject';
 import VerInformacion from './VerInformacion';
 import { Proyecto, Staff } from '../domain/types';
-import { PaginaService } from '../application/PaginaService';
-import { StaffService } from '../application/InformacionService'; 
+import { StaffService } from '../application/InformacionService';
 import Reloj from './Reloj';
 
 const cookies = new Cookies();
@@ -324,7 +323,19 @@ const Pagina: React.FC = () => {
     window.location.href = './añadirProj';
   };
 
-  const editarProyecto = async (proyecto: Proyecto) => {
+  const editarProyecto = (proyecto: Proyecto) => {
+    setProyectoSeleccionado(proyecto);
+    setModalContent(
+      <ModificarProject
+        proyecto={proyecto}
+        onClose={() => setModalVisible(false)}
+        onSave={actualizarProyecto}
+      />
+    );
+    setModalVisible(true);
+  };
+
+  const actualizarProyecto = async (proyecto: Proyecto) => {
     try {
       // Realizar la solicitud de actualización al backend
       const token = cookies.get('access_token');
@@ -358,6 +369,7 @@ const Pagina: React.FC = () => {
       });
 
       setMensaje('¡Proyecto editado correctamente!');
+      setModalVisible(false);
     } catch (error) {
       console.error('Error al editar el proyecto:', error);
       setMensaje('Error al editar el proyecto');
@@ -365,7 +377,32 @@ const Pagina: React.FC = () => {
   };
 
   const eliminarProyecto = async (id: number) => {
-    // Código de eliminación de proyecto...
+    try {
+      const token = cookies.get('access_token');
+      if (!token) {
+        window.location.href = "./";
+        return;
+      }
+
+      const response = await fetch(`http://localhost:8055/items/proyecto/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar el proyecto');
+      }
+
+      // Si la eliminación fue exitosa, actualizar el estado local de proyectos
+      setProyectos(prevProyectos => prevProyectos.filter(p => p.id !== id));
+
+      setMensaje('¡Proyecto eliminado correctamente!');
+    } catch (error) {
+      console.error('Error al eliminar el proyecto:', error);
+      setMensaje('Error al eliminar el proyecto');
+    }
   };
 
   const verInformacion = (proyecto: Proyecto) => {
@@ -374,7 +411,7 @@ const Pagina: React.FC = () => {
       <VerInformacion
         proyecto={proyecto}
         onClose={() => setModalVisible(false)}
-        staffService={staffService} 
+        staffService={staffService}
       />
     );
     setModalVisible(true);
@@ -416,27 +453,27 @@ const Pagina: React.FC = () => {
                 <div className="nombre-proyecto">{proyecto.nombre}</div>
 
                 {filtrarActivado && parseInt(proyecto.id_staff) === parseInt(userId) && (
-                    <>
-                      <Button
-                        label="Editar"
-                        className="p-button-raised p-button-info"
-                        onClick={() => editarProyecto(proyecto)}
-                      />
-                      <Button
-                        label="Eliminar"
-                        className="p-button-raised p-button-danger"
-                        onClick={() => eliminarProyecto(proyecto.id)}
-                      />
-                    </>
-                  )}
-
-                  {!filtrarActivado && (
+                  <>
                     <Button
-                      label="Ver más"
-                      className="p-button-raised p-button-info custom-button"
-                      onClick={() => verInformacion(proyecto)}
+                      label="Editar"
+                      className="p-button-raised p-button-info"
+                      onClick={() => editarProyecto(proyecto)}
                     />
-                  )}
+                    <Button
+                      label="Eliminar"
+                      className="p-button-raised p-button-danger"
+                      onClick={() => eliminarProyecto(proyecto.id)}
+                    />
+                  </>
+                )}
+
+                {!filtrarActivado && (
+                  <Button
+                    label="Ver más"
+                    className="p-button-raised p-button-info custom-button"
+                    onClick={() => verInformacion(proyecto)}
+                  />
+                )}
               </div>
             ))
           }
@@ -455,9 +492,10 @@ const Pagina: React.FC = () => {
         )}
       </main>
     </>
-  )
+  );
 }
 
 export default Pagina;
+
 
 
