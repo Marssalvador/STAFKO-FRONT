@@ -177,6 +177,10 @@ interface StaffProps {
   staff: Staff;
 }
 
+const AñadirUsuario = () => {
+  window.location.href = './añadirUsuarios';
+};
+
 const Pagina2: React.FC = () => {
   const [staffs, setStaffs] = useState<Staff[]>([]);
   const [staffSeleccionado, setStaffSeleccionado] = useState<Staff | null>(null);
@@ -229,6 +233,10 @@ const Pagina2: React.FC = () => {
         <h1 className="jump-animation">STAFKO</h1><br />
 
         <div className="space">Staffs</div><br />
+
+        <div className="add-button">
+          <Button label="+" className="p-button-raised p-button-success custom-orange-button botoncin" onClick={AñadirUsuario} />
+        </div>
 
         {staffs.map((staff) => (
           <div key={staff.id} className="staff">
