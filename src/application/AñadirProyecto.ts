@@ -30,7 +30,7 @@ export const useAñadirProyecto = (proyectoService: ProyectoService = new Proyec
 
 
 // DIRECTUS 
-// src/application/AñadirProyecto.ts
+// AñadirProyecto.ts
 import { Proyecto, Staff } from '../domain/types';
 import { ProyectoServiceHTTP } from '../infrastructure/ProyectoServiceHTTP';
 
@@ -39,7 +39,6 @@ interface ProyectoService {
   obtenerStaffs(): Promise<Staff[]>;
 }
 
-// La URL base de la API Directus
 const API_BASE_URL = 'http://localhost:8055';
 
 export const useAñadirProyecto = (proyectoService: ProyectoService = new ProyectoServiceHTTP(API_BASE_URL)): {
@@ -59,4 +58,5 @@ export const useAñadirProyecto = (proyectoService: ProyectoService = new Proyec
     obtenerStaffs
   };
 };
+
 

@@ -38,7 +38,9 @@ export class ProyectoServiceHTTP {
 
 
 // DIRECTUS
-import { Proyecto, Staff } from '../domain/types'; // Suponiendo que tienes definidos los tipos en otro archivo
+//ProjectoServiceHTTP.ts
+import { Proyecto, Staff } from '../domain/types';
+import Cookies from 'universal-cookie';
 
 export class ProyectoServiceHTTP {
 
@@ -50,34 +52,41 @@ export class ProyectoServiceHTTP {
 
   async añadirProyecto(nuevoProyecto: Proyecto): Promise<void> {
     try {
-      const response = await fetch(`${this.baseURL}/items/proyectos`, {
+      const response = await fetch(`${this.baseURL}/items/proyecto`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${new Cookies().get('access_token')}`,
         },
         body: JSON.stringify(nuevoProyecto),
       });
-      
+
       if (!response.ok) {
+        const errorDetail = await response.json();  // Capturar los detalles del error
+        console.error('Detalles del error:', errorDetail);
         throw new Error('Error al agregar el nuevo proyecto');
       }
-      
+
       console.log('Nuevo proyecto agregado correctamente');
     } catch (error) {
       console.error('Error al agregar el nuevo proyecto:', error);
-      throw error; 
+      throw error;
     }
   }
-  
 
   async obtenerStaffs(): Promise<Staff[]> {
-    const response = await fetch('http://localhost:8055/items/usuarios?fields=nombre&fields=id');
+    const response = await fetch(`${this.baseURL}/items/usuarios?fields=nombre&fields=id`, {
+      headers: {
+        'Authorization': `Bearer ${new Cookies().get('access_token')}`,
+      }
+    });
+
     if (!response.ok) {
       throw new Error('Error al obtener usuarios');
     }
+
     const data = await response.json();
-    
-    // Verificamos si la propiedad "data" existe en la respuesta
+
     if (data && Array.isArray(data.data)) {
       return data.data.map((usuario: any) => ({
         id: usuario.id,
@@ -93,3 +102,4 @@ export class ProyectoServiceHTTP {
     }
   }
 }
+
