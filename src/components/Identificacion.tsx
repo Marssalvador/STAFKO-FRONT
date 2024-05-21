@@ -173,14 +173,14 @@ class Identificacion extends Component<{}, IdentificacionState> {
         
         const userNameFromEmail = email.split('@')[0].toLowerCase().trim();
   
-        cookies.set('firstname', userNameFromEmail, { path: "/", sameSite: 'lax' });
+        cookies.set('email', email, { path: "/", sameSite: 'lax' });
   
         // Buscar el ID del usuario en /items/usuarios
         const usuarioResponse = await axios.get('http://localhost:8055/items/usuarios', {
           params: {
             filter: {
-              nombre: {
-                _icontains: userNameFromEmail
+              email: {
+                _icontains: email
               }
             }
           }

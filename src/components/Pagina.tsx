@@ -328,8 +328,11 @@ const Pagina: React.FC = () => {
     setModalContent(
       <ModificarProject
         proyecto={proyecto}
-        onClose={() => setModalVisible(false)}
-        onSave={actualizarProyecto}
+        onClose={() => {
+          setModalVisible(false);
+          setProyectoSeleccionado(null); // Limpiar el proyecto seleccionado
+        }}
+        onSave={(proyectoEditado: Proyecto) => actualizarProyecto(proyectoEditado)}
       />
     );
     setModalVisible(true);
@@ -421,6 +424,7 @@ const Pagina: React.FC = () => {
     setFiltrarActivado(!filtrarActivado);
   };
 
+
   return (
     <>
       <main className="main">
@@ -451,7 +455,6 @@ const Pagina: React.FC = () => {
             proyectos.map(proyecto => (
               <div key={proyecto.id} className="proyecto">
                 <div className="nombre-proyecto">{proyecto.nombre}</div>
-
                 {filtrarActivado && parseInt(proyecto.id_staff) === parseInt(userId) && (
                   <>
                     <Button
@@ -496,6 +499,4 @@ const Pagina: React.FC = () => {
 }
 
 export default Pagina;
-
-
 
