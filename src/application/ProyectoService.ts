@@ -33,7 +33,7 @@ export const actualizarProyecto = async (proyecto: Proyecto): Promise<void> => {
       fecha_inicio: formatearFecha(proyecto.fecha_inicio),
       fecha_fin: formatearFecha(proyecto.fecha_fin)
     };
-    await axios.put(`http://localhost:4000/proyecto/${proyecto.id}`, proyectoFormateado);
+    await axios.put(`http://localhost:8055/items/proyecto/${proyecto.id}`, proyectoFormateado);
     console.log('Proyecto actualizado correctamente');
   } catch (error) {
     console.error('Error al actualizar el proyecto:', error);

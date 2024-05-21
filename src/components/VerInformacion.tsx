@@ -7,7 +7,7 @@ import { Proyecto } from '../domain/types'; // Tipos
 interface VerInformacionProps {
   proyecto: Proyecto;
   onClose: () => void;
-  staffService: StaffService; // Inyectamos el servicio
+  staffService: StaffService; 
 }
 
 const VerInformacion: React.FC<VerInformacionProps> = ({ proyecto, onClose, staffService }) => {
@@ -16,16 +16,28 @@ const VerInformacion: React.FC<VerInformacionProps> = ({ proyecto, onClose, staf
   useEffect(() => {
     const obtenerNombreStaff = async () => {
       try {
-        const nombre = await staffService.obtenerNombreStaff(proyecto.id_staff);
-        setNombreStaff(nombre);
+        // Realizar la solicitud para obtener todos los usuarios
+        const response = await fetch('http://localhost:8055/items/usuarios');
+        const usuariosJSON = await response.json();
+  
+        // Buscar el usuario cuyo ID coincide con id_staff del proyecto
+        const usuarioEncontrado = usuariosJSON.data.find((usuario: any) => usuario.id === proyecto.id_staff);
+  
+        // Si se encuentra el usuario, obtener su nombre
+        if (usuarioEncontrado) {
+          const nombre = usuarioEncontrado.nombre;
+          setNombreStaff(nombre);
+        } else {
+          console.error('No se encontró el usuario correspondiente');
+        }
       } catch (error) {
         console.error('Error al obtener nombre del staff:', error);
       }
     };
   
     obtenerNombreStaff();
-  }, []);
-
+  }, [proyecto.id_staff]); // Agregar proyecto.id_staff como dependencia para volver a ejecutar si cambia
+  
   // Función para formatear la fecha
   const formatFecha = (fecha: string): string => {
     const fechaObj = new Date(fecha);
@@ -64,3 +76,4 @@ const VerInformacion: React.FC<VerInformacionProps> = ({ proyecto, onClose, staf
 };
 
 export default VerInformacion;
+

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import md5 from 'md5';
 import { Button } from 'primereact/button';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import { agregarNuevoUsuario } from '../application/AñadirUsuarios';
 
 import './Registro.css';
@@ -12,8 +12,9 @@ interface Usuario {
   telefono: string;
   username: string;
   password: string;
+  email: string;
   fechaNacimiento: string;
-  rol: string | null; 
+  rol: string | null;
 }
 
 const AñadirUsuarios: React.FC = () => {
@@ -23,13 +24,14 @@ const AñadirUsuarios: React.FC = () => {
     telefono: '',
     username: '',
     password: '',
+    email: '',
     fechaNacimiento: '',
-    rol: null, 
+    rol: null,
   });
 
   const [mensaje, setMensaje] = useState<string>('');
-  const [esCliente, setEsCliente] = useState<boolean>(false); 
-  const navigate = useNavigate(); 
+  const [esCliente, setEsCliente] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const cambio = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -40,6 +42,29 @@ const AñadirUsuarios: React.FC = () => {
     alert(message);
   };
 
+  const enviarDatosPorRol = async (usuarioDatos: any, url: string) => {
+    try {
+      console.log('Enviando datos a URL:', url);
+      console.log('Datos del usuario:', JSON.stringify(usuarioDatos));
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(usuarioDatos)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error en la solicitud');
+      }
+
+      console.log('Datos enviados correctamente:', usuarioDatos);
+    } catch (error) {
+      console.error('Error al enviar datos:', error.message);
+    }
+  };
+
   const agregarUsuario = async () => {
     console.log('Nuevo Usuario:', nuevoUsuario);
 
@@ -48,6 +73,7 @@ const AñadirUsuarios: React.FC = () => {
       nuevoUsuario.apellidos.trim() === '' ||
       nuevoUsuario.telefono.trim() === '' ||
       nuevoUsuario.username.trim() === '' ||
+      nuevoUsuario.email.trim() === '' ||
       nuevoUsuario.password.trim() === '' ||
       nuevoUsuario.fechaNacimiento.trim() === ''
     ) {
@@ -68,11 +94,28 @@ const AñadirUsuarios: React.FC = () => {
       apellido: nuevoUsuario.apellidos,
       fecha_nacimiento: nuevoUsuario.fechaNacimiento,
       password: hashedPassword,
+      email: nuevoUsuario.email,
       rol: esCliente ? 'cliente' : 'staff',
     };
 
+    const usuarioDatos = {
+      first_name: nuevoUsuario.nombre,
+      last_name: nuevoUsuario.apellidos,
+      email: nuevoUsuario.email,
+      password: hashedPassword,
+      role: esCliente ? '8e86c02e-1ef4-4765-aba9-537923a19ffb' : 'e5fd067e-362e-471c-8aa8-e7201c1c8411',
+      status: 'active',
+      provider: 'default',
+      email_notifications: true,
+    };
+
+    const url = esCliente
+      ? 'http://localhost:8055/users?filter[role]=8e86c02e-1ef4-4765-aba9-537923a19ffb'
+      : 'http://localhost:8055/users?filter[role]=e5fd067e-362e-471c-8aa8-e7201c1c8411';
+
     try {
-      const response = await agregarNuevoUsuario(nuevoUsuarioCompleto);
+      await agregarNuevoUsuario(nuevoUsuarioCompleto);
+      await enviarDatosPorRol(usuarioDatos, url);
       showAlert('¡Usuario añadido con éxito!');
     } catch (error) {
       console.error('Error al agregar usuario:', error.message);
@@ -92,10 +135,15 @@ const AñadirUsuarios: React.FC = () => {
               <label className="text-sm font-semibold mb-1">Nombre:</label>
               <input type="text" name="nombre" value={nuevoUsuario.nombre} onChange={cambio} className="input-group" />
             </div>
-          
+
             <div className="flex flex-col">
               <label className="text-sm font-semibold mb-1">Apellidos:</label>
               <input type="text" name="apellidos" value={nuevoUsuario.apellidos} onChange={cambio} className="input-group" />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-sm font-semibold mb-1">Email:</label>
+              <input type="text" name="email" value={nuevoUsuario.email} onChange={cambio} className="input-group" />
             </div>
 
             <div className="flex flex-col">
@@ -118,13 +166,13 @@ const AñadirUsuarios: React.FC = () => {
               <input type="date" name="fechaNacimiento" value={nuevoUsuario.fechaNacimiento} onChange={cambio} className="input-group" />
             </div>
 
-            <div className="flex items-center"> 
-                <label className="text-sm font-semibold mb-1 mr-2">¿Cliente?:</label> 
+            <div className="flex items-center">
+                <label className="text-sm font-semibold mb-1 mr-2">¿Cliente?:</label>
                 <input type="checkbox" checked={esCliente} onChange={() => setEsCliente(!esCliente)} />
             </div>
 
             <div className="flex justify-center mt-4">
-              <Button type="button" label="Añadir Usuario" className="p-button-outlined naranja" onClick={agregarUsuario}/>        
+              <Button type="button" label="Añadir Usuario" className="p-button-outlined naranja" onClick={agregarUsuario}/>
             </div>
         </div>
       </main>

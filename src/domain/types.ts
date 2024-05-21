@@ -4,6 +4,7 @@ export interface Staff {
     id: number;
     nombre: string;
     apellido:string;
+    email:string;
     username:string;
     telefono:string;
     fecha_nacimiento:string;
@@ -11,7 +12,7 @@ export interface Staff {
   }
   
   export interface Proyecto {
-    id: number;
+    id:number;
     nombre: string;
     descripcion: string;
     cuantia: string;

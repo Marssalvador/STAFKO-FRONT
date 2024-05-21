@@ -98,3 +98,31 @@
 # Cerrar Sesión
 ## Se destruye la cookie
 <img src="screenshots/cerrarSesionCookie.png">
+
+
+# ACTUALIZACIONES
+
+## Copia de seguridad Backend
+<img src="screenshots/copia_seguridad.png">
+
+## En el caso de no tener los permisos se han cifrado los proyectos a los que han sido asociados los demás usuarios para una mayor privacidad además de un cambio de estilo en el color del Modal de cada sección
+<img src="screenshots/estiloModal.png">
+
+## Sección Cliente
+### Contamos con dos tipos de usuarios, los Staffs y los Clientes.
+### Si el usuario que se loguea es un Staff se habilitará el botón de + (agregar un nuevo usuario)
+<img src="screenshots/clientes.png">
+
+## Implementación Clockify
+
+### Al validar los datos introducidos, antes de hacer login, se le pregunta al usuario la tarea en la que va a trabajar
+<img src="screenshots/clocki1.png">
+
+### Esta tarea es enviada a Clockify, se añade a la descripción junto con el email de inicio sesión y automáticamente activa el contador con el proyecto en el que se está trabajando 
+<img src="screenshots/clocki3.png">
+
+### Al hacer login va a salir un contador en cada pantalla para que el usuario siempre tenga conocimiento del tiempo que se ha dedicado a la tarea
+<img src="screenshots/clocki2.png">
+
+### Al cerrar sesión ambos contadores se paran automáticamente y Clockify registra el tiempo de la tarea especificada junto con el usuario que la ha relaizado y su proyecto.
+<img src="screenshots/clocki4.png">
