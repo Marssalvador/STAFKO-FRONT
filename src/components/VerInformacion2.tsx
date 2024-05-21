@@ -4,9 +4,12 @@ interface Usuarios {
   id: number;
   nombre: string;
   apellido: string;
-  telefono: string;
-  username: string;
+  telefono: number;
   fecha_nacimiento: string;
+  email: string;
+  username: string;
+  password: string;
+  rol: string;
   id_proyecto?: number | null | undefined; // Permitir undefined
 }
 

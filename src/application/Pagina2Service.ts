@@ -42,7 +42,6 @@ export const eliminarStaff = async (id: number): Promise<void> => {
 
 
 // DIRECTUS
-
 import axios from 'axios';
 import { Staff } from '../domain/types';
 import Cookies from 'universal-cookie';
@@ -75,7 +74,7 @@ export const obtenerStaffs = async (): Promise<Staff[]> => {
 
 
 export const eliminarStaff = async (id: number): Promise<void> => {
-  /*try {
+  try {
     const accessToken = cookies.get('access_token');
     if (!accessToken) {
       throw new Error('Token de acceso no encontrado en las cookies');
@@ -89,6 +88,6 @@ export const eliminarStaff = async (id: number): Promise<void> => {
   } catch (error) {
     console.error('Error al eliminar staff:', error);
     throw new Error('Error al eliminar staff');
-  }*/
+  }
 };
 

@@ -89,29 +89,42 @@ import { Proyecto } from '../domain/types';
 interface ModificarProjectProps {
   proyecto: Proyecto;
   onClose: () => void;
-  onSave: (nombre: string) => void; // Cambiado el tipo de onSave para recibir solo el nombre
+  onSave: (proyectoEditado: Proyecto) => void;
 }
 
 const ModificarProject: React.FC<ModificarProjectProps> = ({ proyecto, onClose, onSave }) => {
-  const [nombre, setNombre] = useState(proyecto.nombre);
+  const [nombre, setNombre] = useState<string>(proyecto.nombre);
+  const [descripcion, setDescripcion] = useState<string>(proyecto.descripcion);
 
   const handleSave = () => {
-    onSave(nombre); // Llama a onSave con el nombre modificado
+    const proyectoEditado: Proyecto = {
+      ...proyecto,
+      nombre,
+      descripcion
+    };
+    onSave(proyectoEditado);
   };
 
   return (
-    <div>
+    <div className="modificar-project">
       <h2>Modificar Proyecto</h2>
+      <label>Nombre</label>
       <input
         type="text"
         value={nombre}
-        onChange={e => setNombre(e.target.value)}
+        onChange={(e) => setNombre(e.target.value)}
+      />
+      <label>Descripción</label>
+      <textarea
+        value={descripcion}
+        onChange={(e) => setDescripcion(e.target.value)}
       />
       <button onClick={handleSave}>Guardar</button>
       <button onClick={onClose}>Cancelar</button>
     </div>
   );
-}
+};
 
 export default ModificarProject;
+
 
