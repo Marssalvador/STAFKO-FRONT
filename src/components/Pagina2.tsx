@@ -171,6 +171,7 @@ const Pagina2: React.FC = () => {
   const [staffSeleccionado, setStaffSeleccionado] = useState<Staff | null>(null);
   const [mostrarEditar, setMostrarEditar] = useState<boolean>(false);
   const email = cookies.get('email');
+  const rol = cookies.get('rol');
 
   useEffect(() => {
     const cargarStaffs = async () => {
@@ -239,9 +240,11 @@ const Pagina2: React.FC = () => {
 
         <div className="space">Staffs</div><br />
 
-        <div className="add-button">
-          <Button label="+" className="p-button-raised p-button-success custom-orange-button botoncin" onClick={añadirUsuarios} />
-        </div>
+        {rol === 'staff' && (
+          <div className="add-button">
+            <Button label="+" className="p-button-raised p-button-success custom-orange-button botoncin" onClick={añadirUsuarios} />
+          </div>
+        )}
 
         {staffs && staffs.map((staff) => (
           <div key={staff.id} className="staff">
@@ -250,7 +253,7 @@ const Pagina2: React.FC = () => {
             </div>
             <div className="espacio"></div>
             <div className="ed-button">
-              {staff.email=== email && (
+              {staff.email === email && (
                 <>
                   <Button key={`edit_${staff.id}`} label="Editar" className="p-button-raised p-button-primary" onClick={() => editarStaff(staff)} />
                   <Button key={`delete_${staff.id}`} label="Eliminar" className="p-button-raised p-button-danger" onClick={() => eliminarStaffConfirmado(staff.id)} />
@@ -291,6 +294,7 @@ const Pagina2: React.FC = () => {
 };
 
 export default Pagina2;
+
 
 
 

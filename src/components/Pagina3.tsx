@@ -289,7 +289,7 @@ const Pagina2: React.FC = () => {
   const [staffs, setStaffs] = useState<Staff[]>([]);
   const [staffSeleccionado, setStaffSeleccionado] = useState<Staff | null>(null);
   const [mostrarEditar, setMostrarEditar] = useState<boolean>(false);
-  const username = cookies.get('firstname');
+  const email = cookies.get('email');
 
   useEffect(() => {
     const cargarStaffs = async () => {
@@ -319,8 +319,8 @@ const Pagina2: React.FC = () => {
     };
 
     cargarStaffs();
-    console.log('Username almacenado en las cookies:', username);
-  }, [username]);
+    console.log('email almacenado en las cookies:', email);
+  }, [email]);
 
   const eliminarStaffConfirmado = async (id: number) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este staff?")) {
@@ -356,26 +356,22 @@ const Pagina2: React.FC = () => {
 
         <h1 className="jump-animation">STAFKO</h1><br />
 
-        <div className="space">Staffs</div><br />
-
-        <div className="add-button">
-          <Button label="+" className="p-button-raised p-button-success custom-orange-button botoncin" onClick={añadirUsuarios} />
-        </div>
+        <div className="space">Clientes</div><br />
 
         {staffs && staffs.map((staff) => (
           <div key={staff.id} className="staff">
-            <div className={staff.nombre.toLowerCase() === username.toLowerCase() ? "nombre-staff usuario-logueado" : "nombre-staff"}>
+            <div className={staff.email === email ? "nombre-staff usuario-logueado" : "nombre-staff"}>
               {staff.nombre}
             </div>
             <div className="espacio"></div>
             <div className="ed-button">
-              {staff.nombre.toLowerCase() === username.toLowerCase() && (
+              {staff.email === email && (
                 <>
                   <Button key={`edit_${staff.id}`} label="Editar" className="p-button-raised p-button-primary" onClick={() => editarStaff(staff)} />
                   <Button key={`delete_${staff.id}`} label="Eliminar" className="p-button-raised p-button-danger" onClick={() => eliminarStaffConfirmado(staff.id)} />
                 </>
               )}
-              {staff.nombre !== username && (
+              {staff.nombre !== email && (
                 <Button key={`view_${staff.id}`} label="Ver más" className="p-button-raised p-button-info" onClick={() => verInformacion(staff)} />
               )}
             </div>

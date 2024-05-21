@@ -196,6 +196,10 @@ class Identificacion extends Component<{}, IdentificacionState> {
           console.log("ID del usuario:", userId); // Registrar el ID del usuario
           // Guardar el ID del usuario en una cookie
           cookies.set('userId', userId, { path: "/", sameSite: 'lax' });
+
+          // Guardar el rol del usuario en una cookie
+          const userRole = usuarioResponse.data.data[0].rol;
+          cookies.set('rol', userRole, { path: "/", sameSite: 'lax' });
         } else {
           console.log("Usuario no encontrado"); // Registrar si no se encontró ningún usuario con ese nombre
         }
@@ -242,8 +246,6 @@ class Identificacion extends Component<{}, IdentificacionState> {
               </div>
 
               <Button label="Iniciar sesión" type="submit" className="p-button-outlined custom-orange-button w-full" /> 
-
-              <p className="text-center text-black mt-4"><a href="/registro" className="text-orange-500">Regístrate aquí</a></p>
             </form>
           </div>
         </main>
@@ -253,6 +255,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
 }
 
 export default Identificacion;
+
 
 
 
