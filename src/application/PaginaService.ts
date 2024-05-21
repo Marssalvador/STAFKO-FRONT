@@ -27,7 +27,7 @@ export const PaginaService = {
   },
 
   actualizarProyecto: async (proyecto: Proyecto): Promise<void> => {
-    try {
+    /*try {
       const proyectoFormateado = {
         ...proyecto,
         fecha_inicio: formatearFecha(proyecto.fecha_inicio),
@@ -38,7 +38,7 @@ export const PaginaService = {
     } catch (error) {
       console.error('Error al actualizar el proyecto:', error);
       throw new Error('Error al actualizar el proyecto');
-    }
+    }*/
   },
 
   eliminarProyecto: async (id: number, token: string | undefined): Promise<void> => {
