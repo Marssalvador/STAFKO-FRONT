@@ -4,6 +4,7 @@ export interface Staff {
     id: number;
     nombre: string;
     apellido:string;
+    email:string;
     username:string;
     telefono:string;
     fecha_nacimiento:string;

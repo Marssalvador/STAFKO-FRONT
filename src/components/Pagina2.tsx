@@ -250,7 +250,7 @@ const Pagina2: React.FC = () => {
             </div>
             <div className="espacio"></div>
             <div className="ed-button">
-              {staff.nombre.toLowerCase() === email.toLowerCase() && (
+              {staff.email=== email && (
                 <>
                   <Button key={`edit_${staff.id}`} label="Editar" className="p-button-raised p-button-primary" onClick={() => editarStaff(staff)} />
                   <Button key={`delete_${staff.id}`} label="Eliminar" className="p-button-raised p-button-danger" onClick={() => eliminarStaffConfirmado(staff.id)} />
