@@ -30,7 +30,7 @@ const ModificarUsuarios: React.FC<Props> = ({ usuario, onGuardar }) => {
 
   return (
     <div className="modificar-usuario-container">
-      <h2>Edita tus datos</h2>
+      <h2>Edita los datos</h2>
       <form onSubmit={enviar} className="modificar-usuario-form">
         <div className="input-group">
           <label>Nombre:</label>

@@ -31,21 +31,3 @@ export const obtenerStaffs = async (): Promise<Staff[]> => {
   }
 };
 
-
-export const eliminarStaff = async (id: number): Promise<void> => {
-  /*try {
-    const accessToken = cookies.get('access_token');
-    if (!accessToken) {
-      throw new Error('Token de acceso no encontrado en las cookies');
-    }
-
-    await axios.delete(`http://localhost:8055/usuarios/${id}`, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }
-    });
-  } catch (error) {
-    console.error('Error al eliminar staff:', error);
-    throw new Error('Error al eliminar staff');
-  }*/
-};
