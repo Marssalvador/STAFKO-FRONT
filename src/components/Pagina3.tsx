@@ -122,54 +122,61 @@ const Pagina3: React.FC = () => {
   const handleSeleccionarProyecto = (proyecto: any) => {
     setProyectoSeleccionado(proyecto);
     console.log("Proyecto seleccionado:", proyecto.id);
-  };
   
-  const asignarProyecto = async () => {
-    try {
-
-      console.log('Usuario seleccionado:', usuarioSeleccionado);
-      console.log('Proyecto seleccionado:', proyectoSeleccionado);
-      
-      if (!usuarioSeleccionado || !proyectoSeleccionado) {
-        console.error('Usuario o proyecto no seleccionado');
-        return;
-      }
+    // Remover la clase 'selected' de todos los elementos de la lista de proyectos
+    const listaProyectos = document.querySelectorAll('.proyectos-lista li');
+    listaProyectos.forEach((elemento) => {
+      elemento.classList.remove('selected');
+    });
   
-      const token = cookies.get('access_token');
-      if (!token) {
-        window.location.href = "./";
-        return;
-      }
-  
-      const usuarioActualizado = {
-        ...usuarioSeleccionado,
-        id_proyecto: proyectoSeleccionado.id
-      };
-  
-      const response = await fetch(`http://localhost:8055/items/usuarios/${usuarioSeleccionado.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(usuarioActualizado)
-      });
-  
-      if (!response.ok) {
-        throw new Error('Error al asignar proyecto al usuario');
-      }else{
-        alert("Proyecto asignado");
-      }
-  
-      // Actualizar el estado de usuarioSeleccionado
-      setUsuarioSeleccionado(usuarioActualizado);
-  
-      // Limpiar el proyecto seleccionado después de asignarlo al usuario
-      setProyectoSeleccionado(null);
-    } catch (error) {
-      console.error('Error al asignar proyecto al usuario:', error);
+    // Agregar la clase 'selected' al elemento seleccionado
+    const proyectoSeleccionadoElemento = document.querySelector(`.proyectos-lista li[data-id="${proyecto.id}"]`);
+    if (proyectoSeleccionadoElemento) {
+      proyectoSeleccionadoElemento.classList.add('selected');
     }
   };
+  
+  
+  // En el archivo Pagina3.tsx
+
+const asignarProyecto = async () => {
+  try {
+    if (!usuarioSeleccionado || !proyectoSeleccionado) {
+      console.error('Usuario o proyecto no seleccionado');
+      return;
+    }
+
+    const token = cookies.get('access_token');
+    if (!token) {
+      window.location.href = "./";
+      return;
+    }
+
+    const usuarioActualizado = {
+      ...usuarioSeleccionado,
+      id_proyecto: proyectoSeleccionado.id
+    };
+
+    const response = await fetch(`http://localhost:8055/items/usuarios/${usuarioSeleccionado.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(usuarioActualizado)
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al asignar proyecto al usuario');
+    }
+
+    alert("Proyecto asignado");
+    window.location.reload(); // Recargar la página después de mostrar el alerta
+  } catch (error) {
+    console.error('Error al asignar proyecto al usuario:', error);
+  }
+};
+
   
   return (
     <>
