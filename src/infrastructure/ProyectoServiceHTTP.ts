@@ -1,44 +1,3 @@
-// src/infrastructure/ProyectoServiceHTTP.ts
-/*
-
-// src/infrastructure/ProyectoServiceHTTP.ts
-
-import { Proyecto, Staff } from '../domain/types'; // Suponiendo que tienes definidos los tipos en otro archivo
-
-export class ProyectoServiceHTTP {
-  async añadirProyecto(proyecto: Proyecto): Promise<void> {
-    // Implementación para enviar solicitud HTTP para añadir proyecto
-    const response = await fetch('http://localhost:4000/proyecto/insertar', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(proyecto),
-    });
-    if (!response.ok) {
-      throw new Error('Error al añadir proyecto');
-    }
-  }
-
-  async obtenerStaffs(): Promise<Staff[]> {
-    const response = await fetch('http://localhost:4000/usuarios/ids-nombres');
-    if (!response.ok) {
-      throw new Error('Error al obtener usuarios');
-    }
-    const data = await response.json();
-    if (data && Array.isArray(data.rows)) {
-      return data.rows;
-    } else {
-      throw new Error('La respuesta de la API no contiene un arreglo de usuarios en la propiedad "rows"');
-    }
-  }
-}
-
-*/
-
-
-// DIRECTUS
-//ProjectoServiceHTTP.ts
 import { Proyecto, Staff } from '../domain/types';
 import Cookies from 'universal-cookie';
 
@@ -74,6 +33,30 @@ export class ProyectoServiceHTTP {
     }
   }
 
+  async actualizarProyecto(proyectoActualizado: Proyecto): Promise<void> {
+    try {
+      const response = await fetch(`${this.baseURL}/items/proyecto/${proyectoActualizado.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${new Cookies().get('access_token')}`,
+        },
+        body: JSON.stringify(proyectoActualizado),
+      });
+
+      if (!response.ok) {
+        const errorDetail = await response.json();  // Capturar los detalles del error
+        console.error('Detalles del error:', errorDetail);
+        throw new Error('Error al actualizar el proyecto');
+      }
+
+      console.log('Proyecto actualizado correctamente');
+    } catch (error) {
+      console.error('Error al actualizar el proyecto:', error);
+      throw error;
+    }
+  }
+
   async obtenerStaffs(): Promise<Staff[]> {
     const response = await fetch(`${this.baseURL}/items/usuarios?fields=nombre&fields=id`, {
       headers: {
@@ -102,4 +85,3 @@ export class ProyectoServiceHTTP {
     }
   }
 }
-

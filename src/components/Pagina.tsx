@@ -102,17 +102,13 @@ const Pagina: React.FC = () => {
       }
 
       const response = await fetch(`http://localhost:8055/items/proyecto/${proyecto.id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(proyecto)
       });
-
-      if (!response.ok) {
-        throw new Error('Error al actualizar el proyecto');
-      }
 
       // Si la actualización fue exitosa, actualizar el estado local de proyectos
       setProyectos(prevProyectos => {
@@ -219,7 +215,7 @@ const Pagina: React.FC = () => {
                     <Button
                       label="Eliminar"
                       className="p-button-raised p-button-danger"
-                      onClick={() => eliminarProyecto(proyecto.id)}
+                      onClick={() => proyecto.id && eliminarProyecto(proyecto.id)}
                     />
                   </>
                 )}

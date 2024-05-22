@@ -1,11 +1,8 @@
-//Pagina2.tsx
-// DIRECTUS
-
 import React, { useEffect, useState } from 'react';
 import './Pagina2.css';
 import Cookies from 'universal-cookie';
 import { Button } from 'primereact/button';
-import { Usuario } from '../application/UsuarioService';
+import { Staff } from '../domain/types';
 import { eliminarStaff } from '../application/Pagina2Service';
 import ModificarUsuarios from './ModificarUsuarios';
 import VerInformacion2 from './VerInformacion2';
@@ -14,8 +11,8 @@ import Reloj from './Reloj';
 const cookies = new Cookies();
 
 const Pagina2: React.FC = () => {
-  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState<Usuario | null>(null);
+  const [usuarios, setUsuarios] = useState<Staff[]>([]);
+  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState<Staff | null>(null);
   const [mostrarEditar, setMostrarEditar] = useState<boolean>(false);
   const email = cookies.get('email');
   const rol = cookies.get('rol');
@@ -40,7 +37,7 @@ const Pagina2: React.FC = () => {
         }
 
         const usuariosData = await response.json();
-        const usuariosFiltrados = usuariosData.data.filter((usuario: Usuario) => usuario.rol === 'staff');
+        const usuariosFiltrados = usuariosData.data.filter((usuario: Staff) => usuario.rol === 'staff');
         setUsuarios(usuariosFiltrados);
       } catch (error) {
         console.error('Error al cargar usuarios:', error);
@@ -63,12 +60,12 @@ const Pagina2: React.FC = () => {
     }
   };
 
-  const editarUsuario = (usuario: Usuario) => {
+  const editarUsuario = (usuario: Staff) => {
     setUsuarioSeleccionado(usuario);
     setMostrarEditar(true);
   };
 
-  const verInformacion = (usuario: Usuario) => {
+  const verInformacion = (usuario: Staff) => {
     setUsuarioSeleccionado(usuario);
     setMostrarEditar(false);
   };
@@ -116,8 +113,9 @@ const Pagina2: React.FC = () => {
           mostrarEditar ? (
             <ModificarUsuarios
               usuario={usuarioSeleccionado}
-              onGuardar={() => {
+              onGuardar={(usuarioActualizado) => {
                 console.log('Guardar cambios');
+                setUsuarios(prevUsuarios => prevUsuarios.map(u => u.id === usuarioActualizado.id ? usuarioActualizado : u));
                 setUsuarioSeleccionado(null);
                 setMostrarEditar(false);
               }}
@@ -139,14 +137,4 @@ const Pagina2: React.FC = () => {
   );
 };
 
-export default Pagina2;
-
-
-
-
-
-
-
-
-
-
+export default Pagina2

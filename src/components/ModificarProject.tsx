@@ -1,8 +1,6 @@
-// src/components/ModificarProject.tsx
-//Directus
-
 import React, { useState } from 'react';
 import { Proyecto } from '../domain/types';
+import { ProyectoServiceHTTP } from '../infrastructure/ProyectoServiceHTTP';
 
 interface ModificarProjectProps {
   proyecto: Proyecto;
@@ -14,13 +12,22 @@ const ModificarProject: React.FC<ModificarProjectProps> = ({ proyecto, onClose, 
   const [nombre, setNombre] = useState<string>(proyecto.nombre);
   const [descripcion, setDescripcion] = useState<string>(proyecto.descripcion);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const proyectoEditado: Proyecto = {
       ...proyecto,
       nombre,
       descripcion
     };
-    onSave(proyectoEditado);
+
+    const proyectoService = new ProyectoServiceHTTP('http://localhost:8055');
+    
+    try {
+      await proyectoService.actualizarProyecto(proyectoEditado);
+      onSave(proyectoEditado);
+    } catch (error) {
+      console.error('Error al guardar el proyecto:', error);
+      // Manejar el error aquí
+    }
   };
 
   return (
@@ -44,5 +51,3 @@ const ModificarProject: React.FC<ModificarProjectProps> = ({ proyecto, onClose, 
 };
 
 export default ModificarProject;
-
-

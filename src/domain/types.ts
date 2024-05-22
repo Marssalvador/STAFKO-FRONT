@@ -6,7 +6,8 @@ export interface Staff {
     apellido:string;
     email:string;
     username:string;
-    telefono:string;
+    password:string;
+    telefono:number;
     fecha_nacimiento:string;
     rol: string;
   }
