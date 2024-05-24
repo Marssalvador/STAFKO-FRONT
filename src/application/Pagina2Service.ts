@@ -17,7 +17,7 @@ export const obtenerStaffs = async (): Promise<Staff[]> => {
     throw new Error('Token de acceso no encontrado en las cookies');
   }
 
-  const response = await axios.get('http://localhost:8055/users?filter[role]=e5fd067e-362e-471c-8aa8-e7201c1c8411&fields=first_name', {
+  const response = await axios.get('http://localhost:8055/users?filter[role]=a68f33cb-127c-45da-92e9-ea1ddb4ac7fd&fields=first_name', {
     headers: {
       'Authorization': `Bearer ${accessToken}`
     }
