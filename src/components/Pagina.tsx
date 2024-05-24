@@ -1,5 +1,4 @@
-//Pagina.tsx
-//DIRECTUS
+// Pagina.tsx
 
 import React, { useState, useEffect } from 'react';
 import './Pagina.css';
@@ -35,35 +34,33 @@ const Pagina: React.FC = () => {
           return;
         }
 
-        // Obtener todos los proyectos
-        const responseProyectos = await fetch('http://localhost:8055/items/proyecto/', {
+        // Obtener todos los proyectos desde el backend
+        const responseProyectos = await fetch('http://localhost:4000/proyectos/proyecto', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
         const proyectosJSON = await responseProyectos.json();
-        const proyectosData = proyectosJSON.data; // Acceder al array de proyectos dentro de 'data'
 
-        // Obtener todos los usuarios
-        const responseUsuarios = await fetch('http://localhost:8055/items/usuarios/', {
+        // Obtener todos los usuarios desde el backend (asumiendo que tienes un endpoint para esto)
+        const responseUsuarios = await fetch('http://localhost:4000/usuarios', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
         const usuariosJSON = await responseUsuarios.json();
-        const usuariosData = usuariosJSON.data;
 
         // Establecer los usuarios y proyectos en el estado
-        setUsuarios(usuariosData);
+        setUsuarios(usuariosJSON);
         if (filtrarActivado) {
           // Filtrar los proyectos por el staff igual al usuario logueado
-          const proyectosFiltrados = proyectosData.filter(p => {
-            const staffUsuario = usuariosData.find((usuario: Staff) => usuario.id === parseInt(p.id_staff));
+          const proyectosFiltrados = proyectosJSON.filter((p: Proyecto) => {
+            const staffUsuario = usuariosJSON.find((usuario: Staff) => usuario.id === parseInt(p.id_staff));
             return staffUsuario && staffUsuario.id === parseInt(userId);
           });
           setProyectos(proyectosFiltrados);
         } else {
-          setProyectos(proyectosData);
+          setProyectos(proyectosJSON);
         }
       } catch (error) {
         console.error('Error al obtener datos del usuario:', error);
@@ -101,14 +98,18 @@ const Pagina: React.FC = () => {
         return;
       }
 
-      const response = await fetch(`http://localhost:8055/items/proyecto/${proyecto.id}`, {
-        method: 'PATCH',
+      const response = await fetch(`http://localhost:4000/proyectos/proyecto/${proyecto.id}`, {
+        method: 'PUT', // Cambiado a 'PUT' para coincidir con el método en el backend
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(proyecto)
       });
+
+      if (!response.ok) {
+        throw new Error('Error al editar el proyecto');
+      }
 
       // Si la actualización fue exitosa, actualizar el estado local de proyectos
       setProyectos(prevProyectos => {
@@ -137,7 +138,7 @@ const Pagina: React.FC = () => {
         return;
       }
 
-      const response = await fetch(`http://localhost:8055/items/proyecto/${id}`, {
+      const response = await fetch(`http://localhost:4000/proyectos/proyectoEliminar/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -173,7 +174,6 @@ const Pagina: React.FC = () => {
   const toggleFiltrar = () => {
     setFiltrarActivado(!filtrarActivado);
   };
-
 
   return (
     <>
@@ -249,4 +249,3 @@ const Pagina: React.FC = () => {
 }
 
 export default Pagina;
-

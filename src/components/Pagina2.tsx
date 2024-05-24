@@ -26,7 +26,7 @@ const Pagina2: React.FC = () => {
           return;
         }
 
-        const response = await fetch('http://localhost:8055/items/usuarios/', {
+        const response = await fetch('http://localhost:4000/usuarios/datos', { // Cambia la URL al backend de NestJS
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -37,7 +37,7 @@ const Pagina2: React.FC = () => {
         }
 
         const usuariosData = await response.json();
-        const usuariosFiltrados = usuariosData.data.filter((usuario: Staff) => usuario.rol === 'staff');
+        const usuariosFiltrados = usuariosData.filter((usuario: Staff) => usuario.rol === 'staff');
         setUsuarios(usuariosFiltrados);
       } catch (error) {
         console.error('Error al cargar usuarios:', error);
@@ -137,4 +137,4 @@ const Pagina2: React.FC = () => {
   );
 };
 
-export default Pagina2
+export default Pagina2;
