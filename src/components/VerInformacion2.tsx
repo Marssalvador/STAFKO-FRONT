@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 interface Usuarios {
   id: number;
@@ -10,16 +12,57 @@ interface Usuarios {
   username: string;
   password: string;
   rol: string;
-  id_proyecto?: number | null | undefined; // Permitir undefined
+  id_proyecto?: number | null | undefined; 
 }
 
 interface Props {
   usuario: Usuarios;
   onClose: () => void;
-  proyectosDisponibles: { id: number; nombre: string }[]; // Array de proyectos disponibles
 }
 
-const VerInformacion2: React.FC<Props> = ({ usuario, onClose, proyectosDisponibles }) => {
+const VerInformacion2: React.FC<Props> = ({ usuario, onClose }) => {
+  const [nombreProyecto, setNombreProyecto] = useState<string>('No hay proyecto asignado');
+
+  useEffect(() => {
+    const cargarProyectosDisponibles = async () => {
+      try {
+        const token = cookies.get('access_token');
+        if (!token) {
+          window.location.href = "./";
+          return;
+        }
+  
+        const response = await fetch('http://localhost:8055/items/proyecto/', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+  
+        if (!response.ok) {
+          throw new Error('Unauthorized');
+        }
+  
+        const proyectosData = await response.json();
+        const proyectosDisponibles = proyectosData.data.map((proyecto: any) => ({
+          id: proyecto.id,
+          nombre: proyecto.nombre
+        }));
+  
+        // Buscar el nombre del proyecto asociado al usuario
+        const proyectoAsociado = proyectosDisponibles.find(proyecto => proyecto.id === usuario.id_proyecto);
+        if (proyectoAsociado) {
+          setNombreProyecto(proyectoAsociado.nombre);
+        } else {
+          setNombreProyecto('No se encuentra el proyecto asignado.');
+        }
+      } catch (error) {
+        console.error('Error al cargar proyectos disponibles:', error);
+      }
+    };
+
+    cargarProyectosDisponibles();
+  }, [usuario.id_proyecto]);
+
   // Formateamos la fecha para que tenga formato español
   const formatFecha = (fecha: string): string => {
     const fechaObj = new Date(fecha);
@@ -29,12 +72,7 @@ const VerInformacion2: React.FC<Props> = ({ usuario, onClose, proyectosDisponibl
     return `${dia}/${mes}/${año}`;
   };
 
-  // Obtener el nombre del proyecto
-  const nombreProyecto = usuario.id_proyecto !== null && usuario.id_proyecto !== undefined
-    ? proyectosDisponibles.find(proyecto => proyecto.id === usuario.id_proyecto)?.nombre || '*******'
-    : 'No hay proyecto asignado';
-
-  // Mostramos los datos en un modal
+  // Mostrar los datos en un modal
   return (
     <div className="modal">
       <div className="modal-content flex flex-col items-center justify-center bg-gradient-to-r from-yellow-600 to-orange-400 p-5 rounded-lg shadow-lg mb-6 max-w-md w-full">
@@ -48,7 +86,7 @@ const VerInformacion2: React.FC<Props> = ({ usuario, onClose, proyectosDisponibl
           <label>Usuario:</label>
           <input type="text" value={usuario.username} readOnly />
           <br />
-          <label>Telefono:</label>
+          <label>Teléfono:</label>
           <textarea value={usuario.telefono} readOnly />
           <br />
           <label>Fecha de nacimiento:</label>

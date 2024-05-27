@@ -21,6 +21,8 @@ const Pagina3: React.FC = () => {
   const [proyectos, setProyectos] = useState<any[]>([]);
   const [proyectoSeleccionado, setProyectoSeleccionado] = useState<any | null>(null);
   const email = cookies.get('email');
+  const [proyectosDisponibles, setProyectosDisponibles] = useState<{ id: number; nombre: string }[]>([]);
+
 
   useEffect(() => {
     const cargarUsuarios = async () => {
@@ -43,6 +45,14 @@ const Pagina3: React.FC = () => {
 
         const usuariosData = await response.json();
         const usuariosFiltrados = usuariosData.data.filter((usuario: Usuario) => usuario.rol === 'cliente'); // Filtrar usuarios por rol 'cliente'
+
+        // Ordenar usuarios: el usuario logueado primero
+        usuariosFiltrados.sort((a: Usuario, b: Usuario) => {
+          if (a.email === email) return -1;
+          if (b.email === email) return 1;
+          return 0;
+        });
+
         setUsuarios(usuariosFiltrados);
       } catch (error) {
         console.error('Error al cargar usuarios:', error);
@@ -54,35 +64,40 @@ const Pagina3: React.FC = () => {
   }, [email]);
 
   useEffect(() => {
-    const cargarProyectos = async () => {
+    const cargarProyectosDisponibles = async () => {
       try {
         const token = cookies.get('access_token');
         if (!token) {
           window.location.href = "./";
           return;
         }
-
+  
         const response = await fetch('http://localhost:8055/items/proyecto/', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
-
+  
         if (!response.ok) {
           throw new Error('Unauthorized');
         }
-
+  
         const proyectosData = await response.json();
-        setProyectos(proyectosData.data);
+        const proyectosDisponibles = proyectosData.data.map((proyecto: any) => ({
+          id: proyecto.id,
+          nombre: proyecto.nombre
+        }));
+        setProyectosDisponibles(proyectosDisponibles);
       } catch (error) {
-        console.error('Error al cargar proyectos:', error);
+        console.error('Error al cargar proyectos disponibles:', error);
       }
     };
-
+  
     if (mostrarProyectos) {
-      cargarProyectos();
+      cargarProyectosDisponibles();
     }
   }, [mostrarProyectos]);
+  
 
   const eliminarUsuarioConfirmado = async (id: number) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
@@ -118,7 +133,6 @@ const Pagina3: React.FC = () => {
     setMostrarProyectos(true);
   };
   
-  
   const handleSeleccionarProyecto = (proyecto: any) => {
     setProyectoSeleccionado(proyecto);
     console.log("Proyecto seleccionado:", proyecto.id);
@@ -136,46 +150,43 @@ const Pagina3: React.FC = () => {
     }
   };
   
-  
-  // En el archivo Pagina3.tsx
+  const asignarProyecto = async () => {
+    try {
+      if (!usuarioSeleccionado || !proyectoSeleccionado) {
+        console.error('Usuario o proyecto no seleccionado');
+        return;
+      }
 
-const asignarProyecto = async () => {
-  try {
-    if (!usuarioSeleccionado || !proyectoSeleccionado) {
-      console.error('Usuario o proyecto no seleccionado');
-      return;
+      const token = cookies.get('access_token');
+      if (!token) {
+        window.location.href = "./";
+        return;
+      }
+
+      const usuarioActualizado = {
+        ...usuarioSeleccionado,
+        id_proyecto: proyectoSeleccionado.id
+      };
+
+      const response = await fetch(`http://localhost:8055/items/usuarios/${usuarioSeleccionado.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(usuarioActualizado)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al asignar proyecto al usuario');
+      }
+
+      alert("Proyecto asignado");
+      window.location.reload(); // Recargar la página después de mostrar el alerta
+    } catch (error) {
+      console.error('Error al asignar proyecto al usuario:', error);
     }
-
-    const token = cookies.get('access_token');
-    if (!token) {
-      window.location.href = "./";
-      return;
-    }
-
-    const usuarioActualizado = {
-      ...usuarioSeleccionado,
-      id_proyecto: proyectoSeleccionado.id
-    };
-
-    const response = await fetch(`http://localhost:8055/items/usuarios/${usuarioSeleccionado.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(usuarioActualizado)
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al asignar proyecto al usuario');
-    }
-
-    alert("Proyecto asignado");
-    window.location.reload(); // Recargar la página después de mostrar el alerta
-  } catch (error) {
-    console.error('Error al asignar proyecto al usuario:', error);
-  }
-};
+  };
 
   
   return (
@@ -251,7 +262,6 @@ const asignarProyecto = async () => {
                 console.log('Cerrar VerInformacion2');
                 setUsuarioSeleccionado(null);
               }}
-              proyectosDisponibles={[]}
             />
           )
         )}
@@ -262,4 +272,3 @@ const asignarProyecto = async () => {
 };
 
 export default Pagina3;
-

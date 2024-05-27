@@ -38,6 +38,14 @@ const Pagina2: React.FC = () => {
 
         const usuariosData = await response.json();
         const usuariosFiltrados = usuariosData.data.filter((usuario: Staff) => usuario.rol === 'staff');
+
+        // Ordenar usuarios: el usuario logueado primero
+        usuariosFiltrados.sort((a: Staff, b: Staff) => {
+          if (a.email === email) return -1;
+          if (b.email === email) return 1;
+          return 0;
+        });
+
         setUsuarios(usuariosFiltrados);
       } catch (error) {
         console.error('Error al cargar usuarios:', error);
@@ -102,7 +110,7 @@ const Pagina2: React.FC = () => {
                   <Button key={`delete_${staff.id}`} label="Eliminar" className="p-button-raised p-button-danger" onClick={() => eliminarUsuarioConfirmado(staff.id)} style={{ width: '8rem' }}/>
                 </>
               )}
-              {staff.nombre !== email && (
+              {staff.email !== email && (
                 <Button key={`view_${staff.id}`} label="Ver más" className="p-button-raised p-button-info" onClick={() => verInformacion(staff)} style={{ width: '8rem' }}/>
               )}
             </div>
@@ -137,4 +145,4 @@ const Pagina2: React.FC = () => {
   );
 };
 
-export default Pagina2
+export default Pagina2;

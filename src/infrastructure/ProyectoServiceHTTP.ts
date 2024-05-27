@@ -58,7 +58,7 @@ export class ProyectoServiceHTTP {
   }
 
   async obtenerStaffs(): Promise<Staff[]> {
-    const response = await fetch(`${this.baseURL}/items/usuarios?fields=nombre&fields=id`, {
+    const response = await fetch(`${this.baseURL}/items/usuarios?filter[rol][_eq]=staff&fields=nombre,id`, {
       headers: {
         'Authorization': `Bearer ${new Cookies().get('access_token')}`,
       }

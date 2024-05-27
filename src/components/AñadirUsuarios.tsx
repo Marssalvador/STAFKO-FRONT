@@ -4,6 +4,8 @@ import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import './Registro.css';
+import { agregarNuevoUsuario } from '../application/AñadirUsuarios';
+
 
 interface Usuario {
   nombre: string;
@@ -108,9 +110,10 @@ const AñadirUsuarios: React.FC = () => {
       email_notifications: true,
     };
 
-    const url = 'http://localhost:8055/users'; // Sin filtro de rol en la URL
+    const url = 'http://localhost:8055/users';
 
     try {
+      await agregarNuevoUsuario(nuevoUsuarioCompleto);
       await enviarDatosPorRol(usuarioDatos, url);
       showAlert('¡Usuario añadido con éxito!');
     } catch (error) {
