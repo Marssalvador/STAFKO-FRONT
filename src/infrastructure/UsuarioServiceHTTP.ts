@@ -1,6 +1,6 @@
-// src/infrastructure/UsuarioServiceHTTP.ts
+import Cookies from 'universal-cookie';
 
-/*const API_URL = 'http://localhost:4000/usuarios/insertar';
+const API_URL = 'http://localhost:8055/items/usuarios/';
 
 export async function agregarNuevoUsuario(nuevoUsuario: any): Promise<any> {
   try {
@@ -8,6 +8,7 @@ export async function agregarNuevoUsuario(nuevoUsuario: any): Promise<any> {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${new Cookies().get('access_token')}`,
       },
       body: JSON.stringify(nuevoUsuario),
     });
@@ -21,38 +22,26 @@ export async function agregarNuevoUsuario(nuevoUsuario: any): Promise<any> {
     console.error('Error al agregar usuario:', error.message);
     throw error;
   }
-}*/
+}
 
-
-//Directus
-// src/infrastructure/UsuarioServiceHTTP.ts
-
-const API_URL = 'http://localhost:8055/items/usuarios/'; // La URL de la API de Directus para usuarios
-import Cookies from 'universal-cookie';
-
-export async function agregarNuevoUsuario(nuevoUsuario: any): Promise<any> {
+export async function actualizarUsuario(usuarioActualizado: any): Promise<any> {
   try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
+    const response = await fetch(`${API_URL}${usuarioActualizado.id}`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${new Cookies().get('access_token')}`,
       },
-      body: JSON.stringify({
-        ...nuevoUsuario,
-        // Asegúrate de que los nombres de las propiedades coincidan con los campos de tu colección de usuarios en Directus
-        // Si las propiedades no coinciden, deberás mapearlas adecuadamente
-      }),
+      body: JSON.stringify(usuarioActualizado),
     });
 
     if (!response.ok) {
-      throw new Error('Error al agregar usuario');
+      throw new Error('Error al actualizar usuario');
     }
 
     return await response.json();
   } catch (error) {
-    console.error('Error al agregar usuario:', error.message);
+    console.error('Error al actualizar usuario:', error.message);
     throw error;
   }
 }
-

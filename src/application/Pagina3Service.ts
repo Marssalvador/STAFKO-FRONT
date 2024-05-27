@@ -17,7 +17,7 @@ export const obtenerStaffs = async (): Promise<Staff[]> => {
     throw new Error('Token de acceso no encontrado en las cookies');
   }
 
-  const response = await axios.get('http://localhost:8055/users?filter[role]=8e86c02e-1ef4-4765-aba9-537923a19ffb&fields=first_name', {
+  const response = await axios.get('http://localhost:8055/users?filter[role]=2290deb2-f0ed-4502-9ff9-013fdcbcae0c&fields=first_name', {
     headers: {
       'Authorization': `Bearer ${accessToken}`
     }
@@ -31,21 +31,3 @@ export const obtenerStaffs = async (): Promise<Staff[]> => {
   }
 };
 
-
-export const eliminarStaff = async (id: number): Promise<void> => {
-  /*try {
-    const accessToken = cookies.get('access_token');
-    if (!accessToken) {
-      throw new Error('Token de acceso no encontrado en las cookies');
-    }
-
-    await axios.delete(`http://localhost:8055/usuarios/${id}`, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }
-    });
-  } catch (error) {
-    console.error('Error al eliminar staff:', error);
-    throw new Error('Error al eliminar staff');
-  }*/
-};

@@ -1,16 +1,15 @@
-// src/components/Modificarusuario.tsx
-
 import React, { useState } from 'react';
 import './ModificarUsuarios.css';
-import { Usuario, actualizarUsuario } from '../application/UsuarioService';
+import { Staff } from '../domain/types';
+import { actualizarUsuario } from '../infrastructure/UsuarioServiceHTTP';
 
 interface Props {
-  usuario: Usuario;
-  onGuardar: (usuario: Usuario) => void;
+  usuario: Staff;
+  onGuardar: (usuario: Staff) => void;
 }
 
 const ModificarUsuarios: React.FC<Props> = ({ usuario, onGuardar }) => {
-  const [datosUsuario, setDatosUsuario] = useState<Usuario>(usuario);
+  const [datosUsuario, setDatosUsuario] = useState<Staff>(usuario);
 
   const cambiar = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -31,7 +30,7 @@ const ModificarUsuarios: React.FC<Props> = ({ usuario, onGuardar }) => {
 
   return (
     <div className="modificar-usuario-container">
-      <h2>Edita tus datos</h2>
+      <h2>Edita los datos</h2>
       <form onSubmit={enviar} className="modificar-usuario-form">
         <div className="input-group">
           <label>Nombre:</label>

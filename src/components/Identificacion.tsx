@@ -1,15 +1,14 @@
 // Identificacion.tsx
-// DIRECTUS
-
 import React, { Component, ChangeEvent, FormEvent } from 'react';
-import { IdentificacionService } from '../infrastructure/IdentificacionService'; 
-import './Identificacion.css'; 
-import { Button } from 'primereact/button'; 
-import Cookies from 'universal-cookie'; 
-import { iniciarContadorSesion } from '../infrastructure/HeaderService'; 
+import { IdentificacionService } from '../infrastructure/IdentificacionService';
+import './Identificacion.css';
+import { Button } from 'primereact/button';
+import Cookies from 'universal-cookie';
+import { iniciarContadorSesion } from '../infrastructure/HeaderService';
 import axios from 'axios';
+import md5 from 'md5'; // Importa la biblioteca md5
 
-const cookies = new Cookies(); 
+const cookies = new Cookies();
 
 interface FormState {
   email: string;
@@ -44,18 +43,22 @@ class Identificacion extends Component<{}, IdentificacionState> {
   handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { email, password } = this.state.form;
+
+    // Encripta la contraseña con MD5
+    const hashedPassword = md5(password);
+
     try {
-      const response = await IdentificacionService.iniciarSesion(email, password);
+      const response = await IdentificacionService.iniciarSesion(email, hashedPassword); // Usa la contraseña encriptada
       
       if (response && response.access_token) {
         cookies.set('access_token', response.access_token, { path: "/", sameSite: 'lax' });
         cookies.set('refresh_token', response.refresh_token, { path: "/", sameSite: 'lax' });
         cookies.set('expires', response.expires, { path: "/", sameSite: 'lax' });
-        
+
         const userNameFromEmail = email.split('@')[0].toLowerCase().trim();
-  
+
         cookies.set('email', email, { path: "/", sameSite: 'lax' });
-  
+
         // Buscar el ID del usuario en /items/usuarios
         const usuarioResponse = await axios.get('http://localhost:8055/items/usuarios', {
           params: {
@@ -84,12 +87,12 @@ class Identificacion extends Component<{}, IdentificacionState> {
         } else {
           console.log("Usuario no encontrado"); // Registrar si no se encontró ningún usuario con ese nombre
         }
-  
+
         const descripcion = prompt(`¿En qué vas a trabajar, ${email}?`);
-          if (descripcion) {
-            await iniciarContadorSesion(descripcion + " - " + email);
-          }
-          window.location.href = "./pagina";
+        if (descripcion) {
+          await iniciarContadorSesion(descripcion + " - " + email);
+        }
+        window.location.href = "./pagina";
       }
     } catch (error) {
       alert(error.message);
@@ -114,7 +117,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
         <main className="formu">
           <div className="bg-gradient-to-r from-orange-200 to-orange-99 p-12 rounded-lg shadow-lg mb-6 max-w-md w-full">
             <h1 className='text-4xl font-bold mb-4 text-center jump-animation'>STAFKO</h1>
-            
+
             <form onSubmit={this.handleSubmit} className="space-y-4">
               <h2 className="text-xl font-semibold mb-2">Iniciar sesión</h2>
               <div>
@@ -126,20 +129,13 @@ class Identificacion extends Component<{}, IdentificacionState> {
                 <input type="password" name="password" id="password" value={form.password} onChange={this.handleChange} className="login-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50" />
               </div>
 
-              <Button label="Iniciar sesión" type="submit" className="p-button-outlined custom-orange-button w-full" /> 
+              <Button label="Iniciar sesión" type="submit" className="p-button-outlined custom-orange-button w-full" />
             </form>
           </div>
         </main>
       </>
     );
-  };
+  }
 }
 
 export default Identificacion;
-
-
-
-
-
-
-

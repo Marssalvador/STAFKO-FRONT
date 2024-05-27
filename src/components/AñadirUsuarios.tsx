@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import md5 from 'md5';
 import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'universal-cookie';
+import './Registro.css';
 import { agregarNuevoUsuario } from '../application/AñadirUsuarios';
 
-import './Registro.css';
 
 interface Usuario {
   nombre: string;
@@ -29,7 +30,6 @@ const AñadirUsuarios: React.FC = () => {
     rol: null,
   });
 
-  const [mensaje, setMensaje] = useState<string>('');
   const [esCliente, setEsCliente] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -50,7 +50,8 @@ const AñadirUsuarios: React.FC = () => {
       const response = await fetch(url, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${new Cookies().get('access_token')}`, 
         },
         body: JSON.stringify(usuarioDatos)
       });
@@ -103,15 +104,13 @@ const AñadirUsuarios: React.FC = () => {
       last_name: nuevoUsuario.apellidos,
       email: nuevoUsuario.email,
       password: hashedPassword,
-      role: esCliente ? '8e86c02e-1ef4-4765-aba9-537923a19ffb' : 'e5fd067e-362e-471c-8aa8-e7201c1c8411',
+      role: esCliente ? '2290deb2-f0ed-4502-9ff9-013fdcbcae0c' : 'a68f33cb-127c-45da-92e9-ea1ddb4ac7fd',
       status: 'active',
       provider: 'default',
       email_notifications: true,
     };
 
-    const url = esCliente
-      ? 'http://localhost:8055/users?filter[role]=8e86c02e-1ef4-4765-aba9-537923a19ffb'
-      : 'http://localhost:8055/users?filter[role]=e5fd067e-362e-471c-8aa8-e7201c1c8411';
+    const url = 'http://localhost:8055/users';
 
     try {
       await agregarNuevoUsuario(nuevoUsuarioCompleto);
@@ -131,49 +130,49 @@ const AñadirUsuarios: React.FC = () => {
       <main className="formu">
         <div className="nuevo-usuario-form space-y-4 bg-gradient-to-r from-orange-200 to-orange-100 p-8 rounded-lg shadow-lg mb-6">
           <h2 className="text-3xl font-semibold mb-6">Añadir usuario</h2>
-            <div className="flex flex-col">
-              <label className="text-sm font-semibold mb-1">Nombre:</label>
-              <input type="text" name="nombre" value={nuevoUsuario.nombre} onChange={cambio} className="input-group" />
-            </div>
+          <div className="flex flex-col">
+            <label className="text-sm font-semibold mb-1">Nombre:</label>
+            <input type="text" name="nombre" value={nuevoUsuario.nombre} onChange={cambio} className="input-group" />
+          </div>
 
-            <div className="flex flex-col">
-              <label className="text-sm font-semibold mb-1">Apellidos:</label>
-              <input type="text" name="apellidos" value={nuevoUsuario.apellidos} onChange={cambio} className="input-group" />
-            </div>
+          <div className="flex flex-col">
+            <label className="text-sm font-semibold mb-1">Apellidos:</label>
+            <input type="text" name="apellidos" value={nuevoUsuario.apellidos} onChange={cambio} className="input-group" />
+          </div>
 
-            <div className="flex flex-col">
-              <label className="text-sm font-semibold mb-1">Email:</label>
-              <input type="text" name="email" value={nuevoUsuario.email} onChange={cambio} className="input-group" />
-            </div>
+          <div className="flex flex-col">
+            <label className="text-sm font-semibold mb-1">Email:</label>
+            <input type="text" name="email" value={nuevoUsuario.email} onChange={cambio} className="input-group" />
+          </div>
 
-            <div className="flex flex-col">
-              <label className="text-sm font-semibold mb-1">Teléfono:</label>
-              <input type="text" name="telefono" value={nuevoUsuario.telefono} onChange={cambio} className="input-group" />
-            </div>
+          <div className="flex flex-col">
+            <label className="text-sm font-semibold mb-1">Teléfono:</label>
+            <input type="text" name="telefono" value={nuevoUsuario.telefono} onChange={cambio} className="input-group" />
+          </div>
 
-            <div className="flex flex-col">
-              <label className="text-sm font-semibold mb-1">Username:</label>
-              <input type="text" name="username" value={nuevoUsuario.username} onChange={cambio} className="input-group" />
-            </div>
+          <div className="flex flex-col">
+            <label className="text-sm font-semibold mb-1">Username:</label>
+            <input type="text" name="username" value={nuevoUsuario.username} onChange={cambio} className="input-group" />
+          </div>
 
-            <div className="flex flex-col">
-              <label className="text-sm font-semibold mb-1">Password:</label>
-              <input type="password" name="password" value={nuevoUsuario.password} onChange={cambio} className="input-group" />
-            </div>
+          <div className="flex flex-col">
+            <label className="text-sm font-semibold mb-1">Password:</label>
+            <input type="password" name="password" value={nuevoUsuario.password} onChange={cambio} className="input-group" />
+          </div>
 
-            <div className="flex flex-col">
-              <label className="text-sm font-semibold mb-1">Fecha de Nacimiento:</label>
-              <input type="date" name="fechaNacimiento" value={nuevoUsuario.fechaNacimiento} onChange={cambio} className="input-group" />
-            </div>
+          <div className="flex flex-col">
+            <label className="text-sm font-semibold mb-1">Fecha de Nacimiento:</label>
+            <input type="date" name="fechaNacimiento" value={nuevoUsuario.fechaNacimiento} onChange={cambio} className="input-group" />
+          </div>
 
-            <div className="flex items-center">
-                <label className="text-sm font-semibold mb-1 mr-2">¿Cliente?:</label>
-                <input type="checkbox" checked={esCliente} onChange={() => setEsCliente(!esCliente)} />
-            </div>
+          <div className="flex items-center">
+            <label className="text-sm font-semibold mb-1 mr-2">¿Cliente?:</label>
+            <input type="checkbox" checked={esCliente} onChange={() => setEsCliente(!esCliente)} />
+          </div>
 
-            <div className="flex justify-center mt-4">
-              <Button type="button" label="Añadir Usuario" className="p-button-outlined naranja" onClick={agregarUsuario}/>
-            </div>
+          <div className="flex justify-center mt-4">
+            <Button type="button" label="Añadir Usuario" className="p-button-outlined naranja" onClick={agregarUsuario} />
+          </div>
         </div>
       </main>
     </>
