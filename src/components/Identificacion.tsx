@@ -1,5 +1,5 @@
 // Identificacion.tsx
-// DIRECTUS
+// MICROSERVICIOS
 
 import React, { Component, ChangeEvent, FormEvent } from 'react';
 import { IdentificacionService } from '../infrastructure/IdentificacionService'; 
@@ -8,6 +8,7 @@ import { Button } from 'primereact/button';
 import Cookies from 'universal-cookie'; 
 import { iniciarContadorSesion } from '../infrastructure/HeaderService'; 
 import axios from 'axios';
+import md5 from 'md5'; // Importa la biblioteca md5
 
 const cookies = new Cookies(); 
 
@@ -44,8 +45,11 @@ class Identificacion extends Component<{}, IdentificacionState> {
   handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { email, password } = this.state.form;
+
+    const hashedPassword = md5(password);
+
     try {
-      const response = await IdentificacionService.iniciarSesion(email, password);
+      const response = await IdentificacionService.iniciarSesion(email, hashedPassword);
       
       if (response && response.access_token) {
         cookies.set('access_token', response.access_token, { path: "/", sameSite: 'lax' });
