@@ -110,14 +110,15 @@ a{
     top: 45%; 
     left: 50%; 
     transform: translate(-50%, -50%); 
-    max-width: 450px; 
+    max-width: 650px; 
+    max-height: 700px;
     width: 100%; 
 }
 
 .panal-superior-derecho,
 .panal-inferior-izquierdo {
     position: absolute;
-    width: 700px;
+    width: 970px;
     height: auto;
 }
 
