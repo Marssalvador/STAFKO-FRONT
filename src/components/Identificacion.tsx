@@ -6,7 +6,7 @@ import { Button } from 'primereact/button';
 import Cookies from 'universal-cookie';
 import { iniciarContadorSesion } from '../infrastructure/HeaderService';
 import axios from 'axios';
-import md5 from 'md5'; // Importa la biblioteca md5
+import md5 from 'md5';
 
 const cookies = new Cookies();
 
@@ -45,8 +45,8 @@ class Identificacion extends Component<{}, IdentificacionState> {
     const { email, password } = this.state.form;
 
     // Encripta la contraseña con MD5
-    const hashedPassword = md5(password);
-
+    const hashedPassword: string = md5(password) as string; 
+    
     try {
       const response = await IdentificacionService.iniciarSesion(email, hashedPassword); // Usa la contraseña encriptada
       
