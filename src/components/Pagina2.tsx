@@ -11,9 +11,12 @@ import Reloj from './Reloj';
 const cookies = new Cookies();
 
 const Pagina2: React.FC = () => {
+  //definicion de estados para usuarios, usuario seleccionado y mostrarEditar
   const [usuarios, setUsuarios] = useState<Staff[]>([]);
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState<Staff | null>(null);
   const [mostrarEditar, setMostrarEditar] = useState<boolean>(false);
+
+  //obtener email y rol desde las cookies
   const email = cookies.get('email');
   const rol = cookies.get('rol');
 
@@ -56,6 +59,8 @@ const Pagina2: React.FC = () => {
     console.log('email almacenado en las cookies:', email);
   }, [email]);
 
+
+  //funcion para eliminar 
   const eliminarUsuarioConfirmado = async (id: number) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
       try {
@@ -68,16 +73,19 @@ const Pagina2: React.FC = () => {
     }
   };
 
+  //funcion para editar
   const editarUsuario = (usuario: Staff) => {
     setUsuarioSeleccionado(usuario);
     setMostrarEditar(true);
   };
 
+  //funcion para verInformacion
   const verInformacion = (usuario: Staff) => {
     setUsuarioSeleccionado(usuario);
     setMostrarEditar(false);
   };
 
+  //funcion para añadir nuevo usuario
   const añadirUsuarios = () => {
     window.location.href = './añadirUsuarios';
   };

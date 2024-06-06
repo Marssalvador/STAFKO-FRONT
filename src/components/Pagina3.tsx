@@ -182,7 +182,7 @@ const Pagina3: React.FC = () => {
       }
 
       alert("Proyecto asignado");
-      window.location.reload(); // Recargar la página después de mostrar el alerta
+      window.location.reload(); 
     } catch (error) {
       console.error('Error al asignar proyecto al usuario:', error);
     }
@@ -256,6 +256,7 @@ const Pagina3: React.FC = () => {
               }}
             />
           ) : (
+
             <VerInformacion2
                 usuario={usuarioSeleccionado}
                 onClose={() => {

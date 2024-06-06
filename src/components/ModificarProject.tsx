@@ -26,7 +26,6 @@ const ModificarProject: React.FC<ModificarProjectProps> = ({ proyecto, onClose, 
       onSave(proyectoEditado);
     } catch (error) {
       console.error('Error al guardar el proyecto:', error);
-      // Manejar el error aquí
     }
   };
 

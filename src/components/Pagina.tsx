@@ -23,7 +23,6 @@ const Pagina: React.FC = () => {
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
   const userId = cookies.get('userId');
 
-  // Creamos una instancia de StaffService
   const staffService = new StaffService();
 
   useEffect(() => {
@@ -84,7 +83,7 @@ const Pagina: React.FC = () => {
         proyecto={proyecto}
         onClose={() => {
           setModalVisible(false);
-          setProyectoSeleccionado(null); // Limpiar el proyecto seleccionado
+          setProyectoSeleccionado(null); 
         }}
         onSave={(proyectoEditado: Proyecto) => actualizarProyecto(proyectoEditado)}
       />
@@ -150,14 +149,15 @@ const Pagina: React.FC = () => {
 
       // Si la eliminación fue exitosa, actualizar el estado local de proyectos
       setProyectos(prevProyectos => prevProyectos.filter(p => p.id !== id));
-
       setMensaje('¡Proyecto eliminado correctamente!');
+      
     } catch (error) {
       console.error('Error al eliminar el proyecto:', error);
       setMensaje('Error al eliminar el proyecto');
     }
   };
 
+  //muestra el modal con la información
   const verInformacion = (proyecto: Proyecto) => {
     setProyectoSeleccionado(proyecto);
     setModalContent(
