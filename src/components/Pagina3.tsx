@@ -257,12 +257,11 @@ const Pagina3: React.FC = () => {
             />
           ) : (
             <VerInformacion2
-              usuario={usuarioSeleccionado}
-              onClose={() => {
-                console.log('Cerrar VerInformacion2');
-                setUsuarioSeleccionado(null);
-              }}
-            />
+                usuario={usuarioSeleccionado}
+                onClose={() => {
+                  console.log('Cerrar VerInformacion2');
+                  setUsuarioSeleccionado(null);
+                } } proyectosDisponibles={[]} />
           )
         )}
 

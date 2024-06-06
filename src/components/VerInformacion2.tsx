@@ -18,6 +18,7 @@ interface Usuarios {
 interface Props {
   usuario: Usuarios;
   onClose: () => void;
+  proyectosDisponibles: any[]; 
 }
 
 const VerInformacion2: React.FC<Props> = ({ usuario, onClose }) => {

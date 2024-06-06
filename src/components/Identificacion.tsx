@@ -6,7 +6,7 @@ import { Button } from 'primereact/button';
 import Cookies from 'universal-cookie';
 import { iniciarContadorSesion } from '../infrastructure/HeaderService';
 import axios from 'axios';
-import md5 from 'md5'; // Importa la biblioteca md5
+import md5 from 'md5';
 
 const cookies = new Cookies();
 
@@ -17,6 +17,7 @@ interface FormState {
 
 interface IdentificacionState {
   form: FormState;
+  errorMessage: string; 
 }
 
 class Identificacion extends Component<{}, IdentificacionState> {
@@ -26,7 +27,8 @@ class Identificacion extends Component<{}, IdentificacionState> {
       form: {
         email: '',
         password: ''
-      }
+      },
+      errorMessage: '' 
     };
   }
 
@@ -45,7 +47,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
     const { email, password } = this.state.form;
 
     // Encripta la contraseña con MD5
-    const hashedPassword = md5(password);
+    const hashedPassword: string = md5(password) as string; 
 
     try {
       const response = await IdentificacionService.iniciarSesion(email, hashedPassword); // Usa la contraseña encriptada
@@ -95,6 +97,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
         window.location.href = "./pagina";
       }
     } catch (error) {
+      this.setState({ errorMessage: 'Invalid user credentials.' }); 
       alert(error.message);
     }
   };
@@ -107,7 +110,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
   }
 
   render() {
-    const { form } = this.state;
+    const { form, errorMessage } = this.state;
 
     return (
       <>
@@ -131,6 +134,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
 
               <Button label="Iniciar sesión" type="submit" className="p-button-outlined custom-orange-button w-full" />
             </form>
+            {errorMessage && <div className="error-message">{errorMessage}</div>} 
           </div>
         </main>
       </>
