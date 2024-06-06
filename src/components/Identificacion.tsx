@@ -32,6 +32,7 @@ class Identificacion extends Component<{}, IdentificacionState> {
     };
   }
 
+  //para cambiar
   handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     await this.setState((prevState) => ({
@@ -42,11 +43,13 @@ class Identificacion extends Component<{}, IdentificacionState> {
     }));
   };
 
+
+  //para añadir
   handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { email, password } = this.state.form;
 
-    // Encripta la contraseña con MD5
+    //encripta la contraseña con MD5
     const hashedPassword: string = md5(password) as string; 
 
     try {

@@ -106,6 +106,7 @@ const NuevoStaff: React.FC = () => {
       email_notifications: true,
     };
 
+    //comprobamos el tipo de cliente que es 
     const url = esCliente
       ? 'http://localhost:8055/users?filter[role]=8e86c02e-1ef4-4765-aba9-537923a19ffb'
       : 'http://localhost:8055/users?filter[role]=e5fd067e-362e-471c-8aa8-e7201c1c8411';
@@ -131,6 +132,7 @@ const NuevoStaff: React.FC = () => {
       setTimeout(() => {
         navigate('/pagina');
       }, 2000);
+      
     } catch (error) {
       console.error('Error al agregar staff:', error);
       mostrarAlerta('Error al agregar staff. Por favor, inténtalo de nuevo más tarde.');
